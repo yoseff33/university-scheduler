@@ -1,10 +1,8 @@
 /* css/style.css */
 
 /* Google Fonts Import */
-/* For Arabic: 'Almarai' */
-/* For Latin (fallback/numbers): 'Inter' or 'Roboto' (I'll use Inter as it's clean) */
-@import url('https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
-
+/* Noto Sans Arabic for Arabic text, Roboto for Latin text (numbers, fallback) */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap');
 
 /* Global Reset */
 * {
@@ -15,14 +13,15 @@
 
 /* Base Body Styles */
 body {
-    font-family: 'Almarai', 'Inter', sans-serif; /* Prioritize Almarai for Arabic, Inter for numbers/latin */
+    font-family: 'Noto Sans Arabic', 'Roboto', sans-serif; /* Primary for Arabic, Roboto for Latin fallback */
     /* Soft, professional background gradient */
-    background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%); /* Very light blue gradient */
+    background: linear-gradient(135deg, #f7f9fc 0%, #eef2f5 100%); /* Very light, subtle grey-blue gradient */
     min-height: 100vh;
-    color: #34495e; /* Dark slate gray for main text */
+    color: #263238; /* Dark Blue Gray 900 for main text */
     direction: rtl; /* Right-to-left support */
     text-align: right; /* Default text alignment for RTL */
     overflow-x: hidden; /* Prevent horizontal scroll */
+    line-height: 1.6; /* Better readability */
 }
 
 /* Custom Scrollbar for Webkit (Chrome, Safari, Edge) */
@@ -32,49 +31,50 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: #f8f9fa; /* Light background for the track */
+    background: #f0f4f7; /* Lighter track */
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #a7d08c; /* Accent color for the thumb */
+    background: #90a4ae; /* Muted thumb color */
     border-radius: 10px;
     transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #81b214; /* Darker accent on hover */
+    background: #78909c; /* Darker thumb on hover */
 }
 
 /* Custom Scrollbar for Firefox */
 html {
     scrollbar-width: thin;
-    scrollbar-color: #a7d08c #f8f9fa;
+    scrollbar-color: #90a4ae #f0f4f7;
 }
 
 
-/* --- Navigation Bar --- */
+/* --- Navbar (Sleek and Professional) --- */
 .navbar {
-    background: rgba(255, 255, 255, 0.98); /* Almost opaque white */
-    backdrop-filter: blur(15px); /* Strong blur for frosted glass effect */
-    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1); /* Soft, deep shadow */
+    background: rgba(255, 255, 255, 0.99); /* Almost opaque white */
+    backdrop-filter: blur(20px); /* Stronger frosted glass effect */
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1); /* Soft, prominent shadow */
     position: sticky;
     top: 0;
     z-index: 1000;
-    height: 75px; /* Comfortable height */
-    transition: height 0.3s ease, box-shadow 0.3s ease;
+    height: 75px; /* Elegant height */
+    transition: all 0.3s ease-in-out; /* Smooth transition for shrink */
+    border-bottom: 1px solid #eceff1; /* Subtle bottom border */
 }
 
 /* Navbar shrinking effect on scroll */
 .navbar.shrink {
-    height: 60px; /* Smaller height */
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08); /* Lighter shadow on shrink */
+    height: 60px; /* Smaller height on scroll */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Lighter shadow on shrink */
 }
 
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 30px; /* Generous horizontal padding */
+    padding: 0 35px; /* Generous horizontal padding */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -84,80 +84,82 @@ html {
 .nav-brand {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 1.6rem;
-    font-weight: 700; /* Bolder font */
-    color: #2c3e50; /* Primary dark blue */
+    gap: 12px; /* Good spacing */
+    font-size: 1.8rem; /* Impactful size */
+    font-weight: 700; /* Bold */
+    color: #3f51b5; /* Deeper blue for brand */
     text-decoration: none;
     transition: all 0.3s ease;
+    letter-spacing: -0.5px; /* Slightly tighter letter spacing */
 }
 
 .nav-brand:hover {
-    color: #1a2734; /* Even darker on hover */
-    transform: translateY(-2px); /* Slight lift */
+    color: #283593; /* Darker blue on hover */
+    transform: translateY(-2px); /* Gentle lift */
 }
 
 /* Adjust brand size on shrink */
 .navbar.shrink .nav-brand {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
 }
 
 .nav-brand i {
-    font-size: 2rem;
-    color: #3498db; /* A vibrant blue for the icon */
+    font-size: 2.2rem; /* Larger icon */
+    color: #00796B; /* Dark Teal for icon */
     transition: all 0.3s ease;
 }
 
 /* Adjust brand icon size on shrink */
 .navbar.shrink .nav-brand i {
-    font-size: 1.8rem;
+    font-size: 1.9rem;
 }
 
 
 .nav-menu {
     display: flex;
     list-style: none;
-    gap: 15px; /* Good spacing between links */
+    gap: 20px; /* Generous spacing between links */
 }
 
 .nav-link {
     text-decoration: none;
-    color: #607d8b; /* Muted grayish blue for links */
+    color: #546E7A; /* Muted Blue Gray for links */
     padding: 10px 18px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
+    border-radius: 10px; /* Soft corners */
+    transition: all 0.3s ease-in-out; /* Smooth transition */
     display: flex;
     align-items: center;
     gap: 8px;
     white-space: nowrap;
     position: relative;
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: 1rem;
+    letter-spacing: 0.2px; /* Slightly spaced out letters */
 }
 
 .nav-link:hover {
-    background: #3498db; /* Vibrant blue background on hover */
+    background: #00796B; /* Dark Teal background on hover */
     color: white;
     transform: translateY(-3px); /* Pronounced lift */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* Soft shadow on hover */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* Soft shadow */
 }
 
 /* Underline effect on hover */
 .nav-link::after {
     content: '';
     position: absolute;
-    bottom: -8px; /* Lower position for emphasis */
+    bottom: -6px; /* Slightly lower position */
     right: 50%;
     width: 0;
     height: 3px; /* Thicker underline */
-    background-color: #2ecc71; /* Accent green underline */
+    background-color: #4CAF50; /* Accent Green underline */
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother animation */
     transform: translateX(50%);
 }
 
 .nav-link:hover::after {
-    width: calc(100% - 20px); /* Fill most of the link width */
-    right: 10px;
+    width: calc(100% - 24px); /* Fills most of the link width */
+    right: 12px;
     transform: translateX(0);
 }
 
@@ -166,66 +168,68 @@ html {
 .main-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 40px 25px; /* Generous top padding */
+    padding: 50px 30px; /* Generous top padding */
     min-height: calc(100vh - 150px); /* Adjust based on navbar and footer height */
 }
 
 /* --- Hero Section (Homepage banner) --- */
 .hero-section {
     text-align: center;
-    padding: 80px 30px; /* More padding */
-    background: rgba(255, 255, 255, 0.9); /* Slightly more opaque white */
-    border-radius: 25px; /* Softer corners */
-    margin-bottom: 60px; /* More margin */
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15); /* Stronger shadow */
-    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); /* Smoother transition */
-    border: 1px solid rgba(255, 255, 255, 0.8); /* Subtle white border */
-    position: relative; /* For background animations */
-    overflow: hidden; /* Hide overflowing background animation */
+    padding: 90px 40px; /* More generous padding */
+    background: #ffffff; /* Pure white background */
+    border-radius: 30px; /* More rounded corners */
+    margin-bottom: 70px; /* More margin */
+    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.1); /* Prominent, soft shadow */
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); /* Elegant transition */
+    border: 1px solid #e0e6f0; /* Subtle border */
+    position: relative;
+    overflow: hidden;
 }
 
-/* Subtle background animation */
+/* Subtle background animation for hero */
 .hero-section::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, rgba(230, 243, 255, 0.5), rgba(167, 208, 140, 0.2));
-    background-size: 200% 200%;
-    animation: moveGradient 10s ease infinite alternate;
-    opacity: 0.7;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, rgba(240, 248, 255, 0.7), rgba(229, 246, 255, 0.4), rgba(200, 230, 250, 0.2));
+    animation: rotateGradient 20s linear infinite;
+    opacity: 0.6;
     z-index: 0;
+    border-radius: inherit; /* Inherit border-radius */
 }
 
-@keyframes moveGradient {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 100% 100%; }
+@keyframes rotateGradient {
+    0% { transform: rotate(0deg) scale(1); }
+    100% { transform: rotate(360deg) scale(1.2); }
 }
 
 .hero-section:hover {
-    transform: translateY(-5px); /* Gentle lift */
-    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.2);
+    transform: translateY(-8px); /* More pronounced lift */
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15); /* Stronger hover shadow */
 }
 
 .hero-content {
-    position: relative; /* Ensure content is above ::before */
+    position: relative;
     z-index: 1;
 }
 
 .hero-content h1 {
-    font-size: 3.8rem; /* Larger, impactful heading */
-    color: #2c3e50; /* Primary dark blue */
-    margin-bottom: 25px;
-    text-shadow: 2px 3px 8px rgba(0, 0, 0, 0.25); /* Deeper shadow */
+    font-size: 4.2rem; /* Very large, impactful heading */
+    color: #263238; /* Dark Blue Gray */
+    margin-bottom: 30px;
+    text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1); /* Soft, subtle shadow */
     font-weight: 800; /* Extra bold */
+    line-height: 1.2;
+    letter-spacing: -1px; /* Tighter letter spacing for impact */
 }
 
 .hero-content p {
-    font-size: 1.4rem; /* Larger text for readability */
-    color: #5a6b8c; /* Muted text color */
-    max-width: 700px;
+    font-size: 1.5rem; /* Larger, readable body text */
+    color: #546E7A; /* Muted text color */
+    max-width: 800px;
     margin: 0 auto;
     line-height: 1.8;
 }
@@ -233,83 +237,82 @@ html {
 /* --- Features Grid --- */
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Wider min-width */
-    gap: 40px; /* More spacing */
-    margin-bottom: 60px;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Wider min-width for cards */
+    gap: 45px; /* More spacing */
+    margin-bottom: 70px;
 }
 
 .feature-card {
-    background: rgba(255, 255, 255, 0.98);
+    background: #ffffff;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); /* More prominent shadow */
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother transition */
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1); /* Prominent shadow */
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: 1px solid #e0e6f0; /* Subtle border */
     position: relative;
-    overflow: hidden; /* For pseudo-element effects */
 }
 
-.feature-card::before {
+.feature-card::before { /* Subtle overlay on hover */
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(45deg, transparent 0%, rgba(167, 208, 140, 0.05) 50%, transparent 100%);
+    background-color: rgba(0, 121, 107, 0.05); /* Very light teal overlay */
     opacity: 0;
-    transition: opacity 0.4s ease;
-    z-index: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* Ensure clicks pass through */
 }
 
 .feature-card:hover::before {
-    opacity: 1; /* Show subtle gradient on hover */
+    opacity: 1;
 }
 
-
 .feature-card:hover {
-    transform: translateY(-15px); /* More pronounced lift */
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-    border-color: #81b214; /* Accent color border on hover */
+    transform: translateY(-18px); /* More pronounced lift */
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2); /* Stronger hover shadow */
+    border-color: #00796B; /* Dark Teal border on hover */
 }
 
 .feature-card a {
     text-decoration: none;
     color: inherit;
-    padding: 40px; /* More padding */
+    padding: 45px; /* More padding */
     display: block;
     text-align: center;
-    position: relative; /* Ensure content is above pseudo-element */
+    position: relative; /* Ensure content is above ::before */
     z-index: 1;
 }
 
 .feature-card i {
-    font-size: 3.5rem; /* Larger, impactful icon */
-    color: #3498db; /* Vibrant blue */
-    margin-bottom: 25px;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother icon transition */
+    font-size: 4rem; /* Larger, impactful icon */
+    color: #3f51b5; /* Deeper blue */
+    margin-bottom: 30px;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .feature-card:hover i {
-    transform: scale(1.2) rotate(10deg); /* More dynamic effect */
-    color: #2ecc71; /* Emerald green on hover */
+    transform: scale(1.2) rotate(15deg); /* Dynamic effect */
+    color: #00796B; /* Dark Teal on hover */
 }
 
 .feature-card h3 {
-    font-size: 1.6rem; /* Larger, bolder heading */
-    margin-bottom: 18px;
-    color: #2c3e50; /* Primary dark blue */
+    font-size: 1.7rem; /* Larger, bolder heading */
+    margin-bottom: 20px;
+    color: #263238; /* Dark Blue Gray */
     font-weight: 700;
     transition: color 0.3s ease;
 }
 
 .feature-card:hover h3 {
-    color: #3498db; /* Vibrant blue on hover */
+    color: #3f51b5; /* Deeper blue on hover */
 }
 
 .feature-card p {
-    color: #607d8b; /* Muted text color */
+    color: #546E7A;
     line-height: 1.7;
+    font-size: 1.05rem; /* Slightly larger text */
 }
 
 /* --- Stats Section --- */
@@ -319,160 +322,216 @@ html {
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Slightly wider min-width */
-    gap: 30px; /* More spacing */
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Slightly wider min-width */
+    gap: 35px; /* More spacing */
 }
 
 .stat-card {
-    background: rgba(255, 255, 255, 0.98);
-    padding: 35px;
+    background: #ffffff;
+    padding: 40px; /* More padding */
     border-radius: 20px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Standard shadow */
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1); /* Prominent shadow */
     transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border: 1px solid #e0e6f0;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::after { /* Subtle wave effect on hover */
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background-color: rgba(0, 121, 107, 0.1);
+    transform: skewX(-20deg) scale(0);
+    transition: all 0.4s ease;
+    border-radius: 50%;
+}
+
+.stat-card:hover::after {
+    transform: skewX(-20deg) scale(3);
+    opacity: 0.8;
 }
 
 .stat-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
-    border-color: #2ecc71; /* Accent green border on hover */
+    transform: translateY(-10px);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+    border-color: #4CAF50; /* Accent green border on hover */
 }
 
 .stat-card i {
-    font-size: 3rem; /* Larger icon */
-    color: #3498db;
-    margin-bottom: 20px;
+    font-size: 3.2rem; /* Larger icon */
+    color: #3f51b5;
+    margin-bottom: 25px;
     transition: all 0.3s ease;
+    position: relative;
+    z-index: 1; /* Ensure icon is above ::after */
 }
 .stat-card:hover i {
-    color: #2ecc71; /* Accent green icon on hover */
-    transform: rotate(5deg) scale(1.1); /* Subtle rotate/scale */
+    color: #00796B; /* Dark Teal icon on hover */
+    transform: scale(1.1); /* Subtle scale */
 }
 
 .stat-card h3 {
-    font-size: 2.5rem; /* Larger, impactful number */
-    color: #2c3e50;
+    font-size: 2.8rem; /* Very large, impactful number */
+    color: #263238;
     margin-bottom: 15px;
-    font-weight: 800; /* Extra bold */
+    font-weight: 800;
 }
 
 .stat-card p {
-    color: #607d8b;
-    font-size: 1.05rem; /* Slightly larger text */
+    color: #546E7A;
+    font-size: 1.1rem;
+    position: relative;
+    z-index: 1;
 }
 
 /* --- Page Header (for other pages) --- */
 .page-header {
     text-align: center;
-    margin-bottom: 50px;
-    padding: 50px 30px;
-    background: rgba(255, 255, 255, 0.9); /* More opaque */
+    margin-bottom: 60px;
+    padding: 60px 40px;
+    background: #ffffff;
     border-radius: 25px;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e6f0;
+    position: relative;
+    overflow: hidden;
 }
 
+.page-header::before { /* Subtle background wave */
+    content: '';
+    position: absolute;
+    bottom: -50px;
+    right: -50px;
+    width: 150px;
+    height: 150px;
+    background-color: rgba(0, 121, 107, 0.05);
+    border-radius: 50%;
+    transform: rotate(45deg);
+}
+.page-header::after { /* Another subtle element */
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    width: 80px;
+    height: 80px;
+    background-color: rgba(63, 81, 181, 0.03);
+    border-radius: 50%;
+}
+
+
 .page-header h1 {
-    font-size: 3.2rem; /* Larger heading */
-    color: #2c3e50;
+    font-size: 3.5rem;
+    color: #263238;
     margin-bottom: 20px;
-    text-shadow: 2px 3px 8px rgba(0, 0, 0, 0.2);
+    text-shadow: 2px 3px 8px rgba(0, 0, 0, 0.1);
     font-weight: 800;
+    position: relative;
+    z-index: 1;
 }
 
 .page-header p {
-    font-size: 1.3rem;
-    color: #5a6b8c;
+    font-size: 1.4rem;
+    color: #546E7A;
     line-height: 1.8;
+    position: relative;
+    z-index: 1;
 }
 
 /* --- General Card Style --- */
 .card {
-    background: rgba(255, 255, 255, 0.98);
+    background: #ffffff;
     border-radius: 20px;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    margin-bottom: 40px; /* Added general margin for cards */
+    border: 1px solid #e0e6f0;
+    margin-bottom: 40px;
 }
 
 .card:hover {
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 20px 55px rgba(0, 0, 0, 0.15);
 }
 
 .card-header {
-    background: #3498db; /* Vibrant blue header */
+    background: #3f51b5; /* Deeper blue header */
     color: white;
-    padding: 25px 35px; /* Generous padding */
+    padding: 25px 35px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-weight: 600;
-    font-size: 1.4rem; /* Larger header text */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* Subtle separator */
+    font-size: 1.5rem; /* Larger header text */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Subtle separator */
 }
 
 .card-header h2 {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
 .card-body {
-    padding: 35px; /* Generous body padding */
+    padding: 35px;
 }
 
 /* --- Form Elements --- */
 .form-group {
     margin-bottom: 25px;
+    position: relative; /* For floating labels */
 }
 
 .form-group label {
     display: block;
     margin-bottom: 10px;
     font-weight: 600;
-    color: #4a6c8e; /* Darker blue-gray for labels */
-    font-size: 1.05rem; /* Slightly larger label font */
+    color: #546E7A; /* Muted label color */
+    font-size: 1.05rem;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
     width: 100%;
-    padding: 14px 20px; /* More padding */
-    border: 2px solid #e0e6f0; /* Soft border */
+    padding: 14px 20px;
+    border: 2px solid #cfd8dc; /* Soft border */
     border-radius: 12px; /* Softer corners */
     font-size: 1.05rem;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease-in-out;
     background: white;
-    color: #34495e; /* Ensure input text color is readable */
+    color: #263238; /* Dark text */
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #2ecc71; /* Accent green on focus */
-    box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.3); /* Softer focus shadow */
+    border-color: #4CAF50; /* Accent green on focus */
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2); /* Softer focus shadow */
 }
 
 /* Validation error style */
 .form-group .input-error {
-    border-color: #e76f51; /* Softer red for error fields */
+    border-color: #ef5350; /* Red for error fields */
 }
 
 .field-error {
-    color: #e76f51;
+    color: #ef5350;
     font-size: 0.875rem;
-    margin-top: 8px; /* More space below input */
+    margin-top: 8px;
     text-align: right;
-    display: block; /* Ensure it takes full line */
+    display: block;
+    font-weight: 500;
 }
 
 
+/* Custom Checkbox */
 .checkbox-group {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -487,29 +546,32 @@ html {
     font-weight: normal;
     cursor: pointer;
     transition: all 0.2s ease;
-    color: #607d8b; /* Muted text */
+    color: #546E7A;
+    font-size: 0.95rem;
 }
 .checkbox-item:hover {
-    color: #3498db; /* Vibrant blue on hover */
+    color: #3f51b5;
 }
 
 .checkbox-item input[type="checkbox"] {
-    width: 20px; /* Specific size for custom appearance */
+    width: 20px;
     height: 20px;
     margin: 0;
-    flex-shrink: 0; /* Prevent shrinking */
-    appearance: none; /* Hide default checkbox */
-    border: 2px solid #bdc3c7; /* Custom border */
-    border-radius: 4px;
+    flex-shrink: 0;
+    appearance: none;
+    border: 2px solid #90A4AE; /* Muted gray border */
+    border-radius: 6px; /* Softer square */
     background-color: white;
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); /* Inner shadow */
 }
 
 .checkbox-item input[type="checkbox"]:checked {
-    background-color: #2ecc71; /* Accent green when checked */
-    border-color: #2ecc71;
+    background-color: #4CAF50; /* Accent green when checked */
+    border-color: #4CAF50;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 0 4px rgba(76, 175, 80, 0.2); /* Soft outer shadow */
 }
 
 /* Checkmark for custom checkbox */
@@ -522,106 +584,124 @@ html {
     color: white;
     font-size: 14px;
     line-height: 1;
+    font-weight: bold;
 }
 
 
 /* --- Buttons --- */
 .btn {
-    padding: 15px 30px; /* Generous padding */
+    padding: 16px 32px; /* More generous padding */
     border: none;
-    border-radius: 12px; /* Softer corners */
+    border-radius: 12px;
     font-size: 1.05rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother animation */
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     display: inline-flex;
     align-items: center;
     gap: 10px;
     text-decoration: none;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Stronger default shadow */
+    text-transform: capitalize; /* Ensure consistent text case */
+    letter-spacing: 0.5px; /* Slightly spaced out text */
 }
 
 .btn:hover {
-    transform: translateY(-5px); /* Stronger lift */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25); /* Enhanced hover shadow */
+    transform: translateY(-6px); /* More pronounced lift */
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2); /* Enhanced hover shadow */
 }
 
 .btn-primary {
-    background: #3498db; /* Vibrant blue */
+    background: #3f51b5; /* Deeper blue primary */
     color: white;
 }
 
 .btn-primary:hover {
-    background: #2980b9; /* Darker blue on hover */
+    background: #303f9f; /* Darker blue on hover */
 }
 
 .btn-danger {
-    background: #e74c3c; /* Strong red */
+    background: #ef5350; /* Soft red danger */
     color: white;
 }
 
 .btn-danger:hover {
-    background: #c0392b; /* Darker red on hover */
+    background: #e53935; /* Darker red on hover */
 }
 
 .btn-success {
-    background: #2ecc71; /* Emerald green */
+    background: #4CAF50; /* Standard green success */
     color: white;
 }
 
 .btn-success:hover {
-    background: #27ae60; /* Darker green on hover */
+    background: #388E3C; /* Darker green on hover */
 }
 
 .btn-warning {
-    background: #f1c40f; /* Strong yellow */
+    background: #FFC107; /* Standard amber warning */
     color: white;
 }
 
 .btn-warning:hover {
-    background: #f39c12; /* Darker yellow on hover */
+    background: #FFA000; /* Darker amber on hover */
 }
 
 .btn-info {
-    background: #3498db; /* Same as primary for info/neutral actions */
+    background: #2196F3; /* Standard blue info */
     color: white;
 }
 
 .btn-info:hover {
-    background: #2980b9;
+    background: #1976D2; /* Darker blue on hover */
 }
+
+/* Small button variant */
+.btn-sm {
+    padding: 10px 20px; /* Smaller padding */
+    font-size: 0.9rem;
+    gap: 8px;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+.btn-sm:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
 
 /* --- Items List (for displaying lists of data) --- */
 .items-list-container h3 {
-    font-size: 1.4rem;
-    color: #2c3e50;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #e0e6f0;
+    font-size: 1.5rem;
+    color: #263238;
+    margin-bottom: 25px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eceff1; /* Subtle separator */
+    font-weight: 600;
 }
 
 .items-list {
     max-height: 550px;
     overflow-y: auto;
-    padding-left: 10px; /* Adjust for scrollbar */
-    padding-right: 10px; /* Adjust for scrollbar */
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .item-card {
     background: #ffffff;
     border: 1px solid #e0e6f0;
     border-radius: 15px;
-    padding: 25px; /* Generous padding */
-    margin-bottom: 20px; /* More margin */
+    padding: 25px;
+    margin-bottom: 20px;
     position: relative;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); /* Clear shadow */
-    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08); /* Clearer shadow */
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .item-card:hover {
     transform: translateX(10px); /* More pronounced slide effect */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    border-color: #3498db; /* Highlight border */
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+    border-color: #3f51b5; /* Deeper blue border on hover */
 }
 
 .item-header {
@@ -633,29 +713,23 @@ html {
 
 .item-title {
     font-weight: 700;
-    color: #3498db; /* Vibrant blue for title */
-    font-size: 1.3rem; /* Larger title */
+    color: #3f51b5; /* Deeper blue for title */
+    font-size: 1.3rem;
 }
 
 .item-actions {
     display: flex;
-    gap: 10px; /* More gap */
-}
-
-.btn-sm {
-    padding: 8px 16px;
-    font-size: 0.9rem;
-    border-radius: 8px; /* Softer corners */
+    gap: 10px;
 }
 
 .item-details {
-    color: #607d8b;
+    color: #546E7A;
     line-height: 1.7;
-    font-size: 0.95rem; /* Standard text size */
+    font-size: 1rem;
 }
 
 .item-detail {
-    margin-bottom: 8px; /* More margin */
+    margin-bottom: 8px;
 }
 
 /* --- Schedule specific styles --- */
@@ -679,7 +753,8 @@ html {
     display: flex;
     align-items: center;
     gap: 15px;
-    font-size: 1.05rem; /* Slightly larger text */
+    font-size: 1.05rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow for status messages */
 }
 
 .status-message i {
@@ -695,19 +770,19 @@ html {
 .status-message.error {
     background: #fdeded;
     color: #c0392b;
-    border: 1px solid #e74c3c;
+    border: 1px solid #ef5350;
 }
 
 .status-message.info {
-    background: #e0f8ff;
-    color: #3498db;
-    border: 1px solid #85c1e9;
+    background: #e3f2fd;
+    color: #2196F3;
+    border: 1px solid #90caf9;
 }
 
 .status-message.warning {
     background: #fff8e1;
     color: #f39c12;
-    border: 1px solid #f1c40f;
+    border: 1px solid #ffcc80;
 }
 
 .table-container {
@@ -728,102 +803,112 @@ html {
 
 .schedule-table th,
 .schedule-table td {
-    padding: 15px; /* Generous padding */
+    padding: 15px;
     text-align: center;
-    border: 1px solid #e0e6f0;
+    border: 1px solid #eceff1; /* Very light border */
 }
 
 .schedule-table th {
-    background: #3498db;
+    background: #3f51b5; /* Deeper blue header */
     color: white;
     font-weight: 600;
     font-size: 1rem;
 }
 
 .schedule-table-time-header {
-    background: #e0f8ff;
+    background: #e3f2fd; /* Light blue background for time column */
     font-weight: 700;
-    color: #2c3e50;
+    color: #263238;
     font-size: 0.95rem;
 }
 
 .schedule-table-cell {
     background: white;
-    min-height: 80px; /* Taller cells */
+    min-height: 80px;
     vertical-align: top;
     position: relative;
-    padding: 10px; /* More padding */
+    padding: 10px;
 }
 
-/* Hover effect for empty cells */
+/* Hover effect for empty cells in edit mode */
 .schedule-table-cell.edit-mode-active:not(.has-lecture):hover {
-    background-color: #f5fafd;
+    background-color: #f5fafd; /* Very light blue on hover */
     cursor: pointer;
-    box-shadow: inset 0 0 0 2px #3498db; /* Highlight border on hover in edit mode */
+    box-shadow: inset 0 0 0 2px #3f51b5; /* Highlight border on hover in edit mode */
 }
 
 /* Styles for cells selected for move destination */
 .schedule-table-cell.selected-move-target {
-    background-color: #d1e2f7; /* Lighter blue to indicate target */
-    box-shadow: inset 0 0 0 3px #3498db;
+    background-color: #e3f2fd; /* Lighter blue to indicate target */
+    box-shadow: inset 0 0 0 3px #3f51b5;
 }
 
 
 .schedule-slot {
-    background: #f8fafc;
-    border: 2px solid #e0e6f0;
-    border-radius: 10px; /* Softer corners */
-    padding: 12px; /* More padding */
-    margin: 5px; /* More margin */
+    background: #f8f9fa; /* Default light background for lecture slot */
+    border: 2px solid #e0e6f0; /* Default subtle border */
+    border-radius: 10px;
+    padding: 12px;
+    margin: 5px;
     font-size: 0.9rem;
     line-height: 1.4;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     cursor: pointer; /* Change cursor for clickable lectures */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08); /* Subtle shadow */
     position: relative;
-    z-index: 1; /* Ensure it's above cell hover */
+    z-index: 1;
 }
 
 .schedule-slot:hover {
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* Styles for the lecture currently selected for move */
+.schedule-slot.selected-for-move {
+    box-shadow: 0 0 0 3px #00796B, 0 8px 25px rgba(0, 0, 0, 0.25); /* Strong accent outline */
+    transform: scale(1.02); /* Slightly bigger */
+    opacity: 0.95;
+    cursor: grabbing; /* Indicates it's ready to be moved */
 }
 
 /* Specific colors for lectures based on course ID (applied by JS) */
 .schedule-slot.colored-lecture {
     background: var(--lecture-bg-color);
     border-color: var(--lecture-border-color);
-    color: #34495e; /* Ensure main text is readable */
+    color: #263238; /* Ensure main text is readable on colored backgrounds */
 }
 
 .schedule-slot.colored-lecture .schedule-slot-subject {
-    color: #2c3e50; /* Darker subject for better contrast */
+    color: #1a2734; /* Even darker subject for better contrast */
 }
 .schedule-slot.colored-lecture .schedule-slot-info {
-    color: #5a6b8c; /* Slightly darker info text */
+    color: #546E7A; /* Muted info text, slightly darker on colored backgrounds */
 }
 
-/* Color Palette for Lectures */
-.lecture-color-0 { --lecture-bg-color: #e0f8ff; --lecture-border-color: #4dc2f5; } /* Light Sky Blue */
-.lecture-color-1 { --lecture-bg-color: #fff9e0; --lecture-border-color: #ffc107; } /* Light Amber */
-.lecture-color-2 { --lecture-bg-color: #e3f6e9; --lecture-border-color: #2ecc71; } /* Light Emerald */
-.lecture-color-3 { --lecture-bg-color: #ffe0e0; --lecture-border-color: #e74c3c; } /* Light Red */
-.lecture-color-4 { --lecture-bg-color: #e8e6f1; --lecture-border-color: #9b59b6; } /* Light Amethyst */
-.lecture-color-5 { --lecture-bg-color: #d9f7f7; --lecture-border-color: #1abc9c; } /* Light Turquoise */
-.lecture-color-6 { --lecture-bg-color: #ffeedd; --lecture-border-color: #ff8c00; } /* Light DarkOrange */
+/* Color Palette for Lectures (more refined) */
+.lecture-color-0 { --lecture-bg-color: #e0f8ff; --lecture-border-color: #4fc3f7; } /* Light Blue, similar to info */
+.lecture-color-1 { --lecture-bg-color: #fff9e0; --lecture-border-color: #ffb300; } /* Light Amber, similar to warning */
+.lecture-color-2 { --lecture-bg-color: #e8f5e9; --lecture-border-color: #66bb6a; } /* Light Green, similar to success */
+.lecture-color-3 { --lecture-bg-color: #ffe0e0; --lecture-border-color: #ef5350; } /* Light Red, similar to error */
+.lecture-color-4 { --lecture-bg-color: #ede7f6; --lecture-border-color: #9575cd; } /* Light Purple */
+.lecture-color-5 { --lecture-bg-color: #e0f2f7; --lecture-border-color: #4db6ac; } /* Light Teal */
+.lecture-color-6 { --lecture-bg-color: #fff3e0; --lecture-border-color: #ff9800; } /* Light Orange */
 /* Add more lecture-color-N classes if you have more distinct course types */
 
 
 .schedule-slot-subject {
-    font-weight: 700; /* Bolder subject */
-    color: #2c3e50;
+    font-weight: 700;
+    color: #263238;
     margin-bottom: 5px;
-    font-size: 1rem; /* Slightly larger subject */
+    font-size: 1rem;
+    line-height: 1.3; /* Better line height */
 }
 
 .schedule-slot-info {
-    color: #607d8b;
-    font-size: 0.85rem; /* Slightly larger info font */
+    color: #546E7A;
+    font-size: 0.85rem;
+    line-height: 1.4;
 }
 
 /* Styles for contenteditable elements */
@@ -831,35 +916,27 @@ html {
     outline: none;
     padding: 3px 6px;
     border-radius: 4px;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     min-width: 60px;
     cursor: text;
-    border: 1px dashed rgba(0,0,0,0); /* Transparent border by default */
+    border: 1px dashed transparent; /* Transparent border by default */
 }
 
 .schedule-slot [contenteditable="true"]:focus {
     background-color: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.5); /* Accent green shadow */
-    border: 1px dashed #2ecc71; /* Dashed accent border on focus */
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.4); /* Accent green shadow */
+    border-color: #4CAF50; /* Solid accent border on focus */
 }
 
 /* Dim non-editable content when edit mode is active */
-.edit-mode-active .schedule-slot-subject:not([contenteditable="true"]),
-.edit-mode-active .schedule-slot-info:not([contenteditable="true"]) {
+.editable-lecture .schedule-slot-subject:not([contenteditable="true"]),
+.editable-lecture .schedule-slot-info:not([contenteditable="true"]) {
     opacity: 0.6; /* Dim non-editable text */
     pointer-events: none; /* Prevent interaction */
 }
 
-/* Highlight selected lecture for move */
-.schedule-slot.selected-for-move {
-    box-shadow: 0 0 0 3px #3498db, 0 5px 20px rgba(0, 0, 0, 0.25); /* Strong blue outline */
-    transform: scale(1.02); /* Slightly bigger */
-    opacity: 0.9;
-    cursor: grabbing;
-}
-
-
-/* --- Custom Context Menu for Right-Click Editing --- */
+/* --- Custom Context Menu (no longer used for right-click move, but structure remains for future if needed) --- */
+/* (These styles can be removed if the feature is completely unused) */
 .custom-context-menu {
     position: fixed;
     background: white;
@@ -867,7 +944,7 @@ html {
     border-radius: 10px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     padding: 10px 0;
-    z-index: 2000; /* Above everything else */
+    z-index: 2000;
     min-width: 180px;
     overflow: hidden;
 }
@@ -884,8 +961,8 @@ html {
 }
 
 .context-menu-item:hover {
-    background-color: #f0f8ff; /* Light blue background */
-    color: #3498db; /* Blue text */
+    background-color: #f0f4f7;
+    color: #3f51b5;
 }
 
 .context-menu-item.disabled {
@@ -900,15 +977,15 @@ html {
     margin-bottom: 30px;
 }
 .admin-stats .stat-card.pending {
-    border-left: 4px solid #f7b267;
+    border-left: 4px solid #FFC107; /* Warning color */
 }
 
 .admin-stats .stat-card.resolved {
-    border-left: 4px solid #81b214;
+    border-left: 4px solid #4CAF50; /* Success color */
 }
 
 .admin-stats .stat-card.total {
-    border-left: 4px solid #3498db;
+    border-left: 4px solid #3f51b5; /* Primary color */
 }
 
 .filter-controls {
@@ -921,7 +998,7 @@ html {
 .filter-controls select,
 .filter-controls input[type="text"] {
     padding: 10px 15px;
-    border: 1px solid #dbe2ed;
+    border: 1px solid #cfd8dc;
     border-radius: 10px;
     background: white;
     transition: all 0.3s ease;
@@ -929,8 +1006,8 @@ html {
 .filter-controls select:focus,
 .filter-controls input[type="text"]:focus {
     outline: none;
-    border-color: #2ecc71;
-    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.3);
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
 }
 
 
@@ -958,11 +1035,11 @@ html {
 }
 
 .report-card.pending {
-    border-left: 5px solid #f7b267;
+    border-left: 5px solid #FFC107;
 }
 
 .report-card.resolved {
-    border-left: 5px solid #81b214;
+    border-left: 5px solid #4CAF50;
 }
 
 .report-header {
@@ -974,7 +1051,7 @@ html {
 
 .report-title {
     font-weight: 700;
-    color: #2c3e50;
+    color: #263238;
     font-size: 1.3rem;
 }
 
@@ -997,14 +1074,14 @@ html {
 }
 
 .report-details {
-    color: #607d8b;
+    color: #546E7A;
     line-height: 1.7;
-    font-size: 0.95rem;
+    font-size: 1rem;
 }
 
 .report-meta {
     font-size: 0.95rem;
-    color: #607d8b;
+    color: #90A4AE;
     margin-top: 12px;
     display: block;
 }
@@ -1028,17 +1105,18 @@ html {
 
 /* --- Footer --- */
 .footer {
-    background: #2c3e50; /* Dark slate gray from palette */
+    background: #263238; /* Dark Blue Gray for footer */
     color: white;
     text-align: center;
-    padding: 30px; /* More padding */
-    margin-top: 60px; /* More margin */
+    padding: 30px;
+    margin-top: 60px;
     font-size: 0.95rem;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1); /* Top shadow */
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.1); /* Top shadow */
+    letter-spacing: 0.2px;
 }
 
 /* --- Responsive Design --- */
-@media (max-width: 992px) {
+@media (max-width: 992px) { /* Tablets and larger phones (landscape) */
     .nav-container {
         flex-direction: column;
         height: auto;
@@ -1055,138 +1133,185 @@ html {
         font-size: 0.9rem;
     }
     .hero-content h1 {
-        font-size: 3rem;
+        font-size: 3.2rem;
     }
     .hero-content p {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
     .page-header h1 {
-        font-size: 2.8rem;
+        font-size: 3rem;
     }
     .features-grid, .stats-grid, .content-grid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 30px;
     }
     .card-header {
         padding: 20px 25px;
+        font-size: 1.3rem;
     }
     .card-body {
         padding: 25px;
     }
+    .item-card {
+        padding: 20px;
+    }
+    .item-title {
+        font-size: 1.2rem;
+    }
+    .schedule-table th, .schedule-table td {
+        padding: 12px;
+        font-size: 0.85rem;
+    }
+    .schedule-slot {
+        padding: 10px;
+        font-size: 0.8rem;
+    }
+    .schedule-slot-subject {
+        font-size: 0.9rem;
+    }
+    .schedule-slot-info {
+        font-size: 0.75rem;
+    }
+    .report-card {
+        padding: 20px;
+    }
+    .report-title {
+        font-size: 1.2rem;
+    }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px) { /* Smaller tablets and large phones (portrait) */
     .main-content {
         padding: 30px 15px;
     }
     .hero-section {
-        padding: 50px 15px;
+        padding: 60px 15px;
     }
     .hero-content h1 {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
     }
     .hero-content p {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
     .page-header {
-        padding: 40px 15px;
+        padding: 50px 15px;
     }
     .page-header h1 {
-        font-size: 2.2rem;
+        font-size: 2.5rem;
     }
-    .features-grid, .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    .content-grid {
-        grid-template-columns: 1fr;
+    .features-grid, .stats-grid, .content-grid {
+        grid-template-columns: 1fr; /* Single column layout for most content */
+        gap: 25px;
     }
     .control-buttons {
         justify-content: center;
-        gap: 10px;
+        gap: 15px;
     }
     .checkbox-group {
         grid-template-columns: 1fr;
     }
     .schedule-table th, .schedule-table td {
         padding: 10px;
-        font-size: 0.8rem;
+        font-size: 0.75rem;
     }
     .schedule-slot {
         padding: 8px;
-        font-size: 0.75rem;
+        font-size: 0.7rem;
     }
     .schedule-slot-info {
         font-size: 0.65rem;
     }
     .schedule-table-time-header {
-        min-width: 70px;
+        min-width: 60px; /* Adjust time column width */
     }
     .btn {
         padding: 12px 25px;
         font-size: 0.95rem;
     }
     .item-card {
-        padding: 20px;
+        padding: 18px;
     }
     .report-card {
-        padding: 20px;
+        padding: 18px;
     }
     .report-title {
         font-size: 1.1rem;
     }
+    /* Tabs specific adjustments */
+    .tab-buttons {
+        flex-direction: column; /* Stack tabs vertically */
+        align-items: stretch;
+    }
+    .tab-button {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+    .tabs-container {
+        padding: 15px;
+    }
+    .tab-content {
+        padding: 5px;
+    }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 480px) { /* Small phones */
     .nav-brand {
-        font-size: 1.3rem;
-    }
-    .nav-brand i {
         font-size: 1.5rem;
     }
-    .nav-link {
-        font-size: 0.8rem;
-        padding: 5px 10px;
-    }
-    .hero-content h1 {
-        font-size: 2rem;
-    }
-    .hero-content p {
-        font-size: 0.9rem;
-    }
-    .page-header h1 {
-        font-size: 2rem;
-    }
-    .stats-grid {
-        grid-template-columns: 1fr;
+    .nav-brand i {
+        font-size: 1.8rem;
     }
     .nav-menu {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
+        gap: 8px;
     }
     .nav-link {
-        width: 100%;
+        font-size: 0.85rem;
+        padding: 8px 10px;
         text-align: center;
+        justify-content: center;
     }
-    .nav-link::after {
-        right: 0;
-        left: 0;
+    .nav-link::after { /* Full width underline for stacked links */
         width: 100%;
+        left: 0;
+        right: 0;
         transform: translateX(0);
     }
-    .nav-link:hover::after {
-         width: 100%;
-         right: 0;
+    .hero-content h1 {
+        font-size: 2.2rem;
+        letter-spacing: -0.5px;
+    }
+    .hero-content p {
+        font-size: 1rem;
+    }
+    .page-header h1 {
+        font-size: 2.2rem;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
     }
     .schedule-table th, .schedule-table td {
         padding: 8px;
     }
     .schedule-slot {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
+    }
+    .add-time-range-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .add-time-range-controls .form-group {
+        width: 100%;
+        min-width: unset;
+    }
+    .add-time-range-controls .btn {
+        width: 100%;
     }
 }
 
-
-/* --- Animation Classes --- */
+/* --- Animation Classes (Standard) --- */
 .fade-in {
     animation: fadeIn 0.5s ease-in;
 }
@@ -1205,7 +1330,7 @@ html {
     to { transform: translateX(0); opacity: 1; }
 }
 
-/* Loading Spinner */
+/* Loading Spinner (Standard) */
 .loading {
     display: inline-block;
     width: 20px;
@@ -1220,126 +1345,157 @@ html {
     to { transform: rotate(360deg); }
 }
 
-/* Additional styles for schedule details that were previously in JS */
-.day-schedule {
-    margin-bottom: 30px;
+/* Utility Classes for content display in dynamic inputs */
+.dynamic-time-ranges-container {
+    border: 1px dashed #cfd8dc; /* Light dashed border */
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    background-color: #f8faff; /* Very light blue background */
+    min-height: 80px; /* Ensure visibility even if empty */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: flex-start; /* Align items to the start in RTL */
 }
 
-.day-title {
-    color: #2563eb;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #e0e6f0;
-}
-
-.class-item {
+.dynamic-time-range-item {
     display: flex;
     align-items: center;
-    padding: 15px;
-    margin-bottom: 10px;
-    background: #f8fafc;
+    justify-content: space-between;
+    background-color: #e3f2fd; /* Lighter blue for items */
+    border: 1px solid #bbdefb; /* Soft border */
     border-radius: 8px;
-    border-left: 4px solid #2563eb;
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    color: #34495e;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    transition: all 0.2s ease;
 }
 
-.class-time {
-    font-weight: bold;
-    color: #2563eb;
+.dynamic-time-range-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.dynamic-time-range-item .delete-btn {
+    background: none;
+    border: none;
+    color: #ef5350; /* Red color for delete icon */
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.dynamic-time-range-item .delete-btn:hover {
+    color: #e53935; /* Darker red on hover */
+    transform: scale(1.1);
+}
+
+.add-time-range-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-end;
+    margin-top: 20px; /* More space */
+    padding-top: 15px;
+    border-top: 1px solid #eceff1; /* Subtle separator */
+}
+
+.add-time-range-controls .form-group {
+    margin-bottom: 0;
+    flex: 1 1 auto;
     min-width: 120px;
 }
 
-.class-subject {
-    font-weight: bold;
-    color: #333;
+.add-time-range-controls .form-group label {
     margin-bottom: 5px;
+    font-size: 0.85rem;
+    font-weight: 500;
 }
 
-.class-info {
-    color: #666;
+.add-time-range-controls .form-control {
+    padding: 10px 15px; /* Slightly more padding */
     font-size: 0.9rem;
+    border-radius: 8px;
 }
 
-.report-actions {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid #e0e6f0;
+.add-time-range-controls .btn {
+    padding: 10px 20px; /* Smaller padding for the button */
+    font-size: 0.95rem;
+    align-self: flex-end;
+    box-shadow: none;
+    letter-spacing: normal; /* Reset letter spacing */
 }
 
-.empty-state {
-    text-align: center;
-    padding: 40px;
+.add-time-range-controls .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Tabs specific styling (already in previous CSS) */
+.tabs-container {
+    background: #ffffff; /* Pure white for tab container */
+    border-radius: 20px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1); /* Consistent shadow */
+    margin-bottom: 50px;
+    padding: 30px; /* More padding inside container */
+}
+
+.tab-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px; /* More space */
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e0e6f0;
+    padding-bottom: 15px;
+}
+
+.tab-button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    background: #f0f4f7; /* Lighter background for inactive */
     color: #607d8b;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 15px;
-    margin-top: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-}
-
-.empty-state i {
-    font-size: 2.5rem;
-    margin-bottom: 15px;
-    color: #94a3b8;
-}
-
-.message-toast-container {
-    position: fixed;
-    top: 25px; /* Slightly lower */
-    left: 25px; /* Slightly inward */
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    gap: 12px; /* More space between toasts */
-}
-
-.message-toast {
-    padding: 18px 25px; /* More padding */
-    border-radius: 10px; /* Softer corners */
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); /* Stronger shadow */
-    animation: slideInLeft 0.4s ease-out; /* Smoother animation */
-    display: flex;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
     align-items: center;
-    gap: 12px;
-    min-width: 280px; /* Slightly wider */
-    max-width: 450px; /* Wider max */
-    font-size: 1rem; /* Clearer font size */
+    gap: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.message-toast.success {
-    background: #2ecc71; /* Emerald green */
+.tab-button:hover {
+    background: #cfd8dc; /* Darker on hover */
+    color: #546E7A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.tab-button.active {
+    background: #00796B; /* Dark Teal for active tab */
     color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
 }
 
-.message-toast.error {
-    background: #e74c3c; /* Strong red */
-    color: white;
+.tab-button.active:hover {
+    background: #00695C; /* Darker active on hover */
+    transform: translateY(-3px);
 }
 
-.message-toast.warning {
-    background: #f1c40f; /* Strong yellow */
-    color: white;
+.tab-content {
+    display: none;
+    padding: 10px;
+    animation: fadeIn 0.5s ease-in;
 }
 
-.message-toast.info {
-    background: #3498db; /* Vibrant blue */
-    color: white;
-}
-
-.message-toast i {
-    font-size: 1.4rem; /* Larger icon */
-}
-
-.message-content {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-@keyframes slideInLeft {
-    from { transform: translateX(-120%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes slideOutLeft {
-    from { transform: translateX(0); opacity: 1; }
-    to { transform: translateX(-120%); opacity: 0; }
+.tab-content.active {
+    display: block;
 }
