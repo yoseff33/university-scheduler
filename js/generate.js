@@ -81,17 +81,19 @@ const initializeScheduleStructures = () => {
 const hasEnoughBreakTime = (doctorId, day, currentStartTimeMinutes, currentDoctorSchedulesState) => {
     // نجد أقرب وقت بداية سابق للمحاضرة الحالية
     let prevLectureEndTimeMinutes = -1;
-    for (let i = timeSlots.indexOf(timeSlots.find(slot => timeToMinutes(slot) === currentStartTimeMinutes)) - 1; i >= 0; i--) {
+    // Iterate backwards from currentStartTimeMinutes index in timeSlots
+    const currentSlotIndex = timeSlots.indexOf(timeSlots.find(slot => timeToMinutes(slot) === currentStartTimeMinutes));
+
+    for (let i = currentSlotIndex - 1; i >= 0; i--) {
         const prevSlotToCheck = timeSlots[i];
         const lectureAtPrevSlot = currentDoctorSchedulesState[doctorId][day][prevSlotToCheck];
-        if (lectureAtPrevSlot && lectureAtPrevSlot.startTime === prevSlotToCheck) { // لو كانت بداية محاضرة جديدة
-            prevLectureEndTimeMinutes = timeToMinutes(lectureAtPrevSlot.startTime) + (lectureAtPrevSlot.type === 'long' ? LECTURE_DURATION_LONG : LECTURE_DURATION_SHORT);
-            break;
-        } else if (lectureAtPrevSlot && lectureAtPrevSlot.startTime !== prevSlotToCheck) { // لو كانت جزء من محاضرة طويلة
-            // نجد بداية المحاضرة الطويلة التي تنتمي إليها
-            let actualLongLectureStartSlot = lectureAtPrevSlot.startTime;
-            prevLectureEndTimeMinutes = timeToMinutes(actualLongLectureStartSlot) + (lectureAtPrevSlot.type === 'long' ? LECTURE_DURATION_LONG : LECTURE_DURATION_SHORT);
-            break;
+
+        if (lectureAtPrevSlot) {
+            // Found a lecture in a previous slot. Now determine its actual end time.
+            const lectureStartInPrevSlot = lectureAtPrevSlot.startTime;
+            const lectureDurationInPrevSlot = (lectureAtPrevSlot.type === 'long' ? LECTURE_DURATION_LONG : LECTURE_DURATION_SHORT);
+            prevLectureEndTimeMinutes = timeToMinutes(lectureStartInPrevSlot) + lectureDurationInPrevSlot;
+            break; // Found the previous lecture that matters, break the loop
         }
     }
 
@@ -513,25 +515,12 @@ const displayGeneratedSchedules = () => {
 
         for (let i = 0; i < timeSlots.length; i++) {
             const timeSlot = timeSlots[i];
-            // Display full hours only if it's an even index (00:00, 01:00, etc.)
-            // Or only if it's exactly :00
             const displayTime = timeSlot.endsWith(':00') ? convertTo12HourFormat(timeSlot) : '';
 
-            // Skip drawing row for :30 slots if the previous :00 slot is being rowspaned
-            if (displayTime === '') { // This means it's a :30 slot
-                const prevHourSlot = timeSlots[i-1]; // Get the previous :00 slot
-                let shouldSkipRow = false;
-                for (const day of days) {
-                    const lecture = doctorSchedules[doctorId][day][prevHourSlot];
-                    if (lecture && lecture.startTime === prevHourSlot && lecture.slotsOccupied > 1) { // If previous slot has a lecture spanning more than 30 min
-                        shouldSkipRow = true;
-                        break;
-                    }
-                }
-                if (shouldSkipRow) continue; // Skip this 30-min row as it's covered by rowspan
-            }
-
-
+            // This logic is for displaying only hourly labels. If a 30-min slot is the start of a lecture spanning multiple slots,
+            // we will draw its row. If it's just an internal 30-min interval that is rowspaned, we skip the row.
+            // Simplified: only show time label for XX:00 slots. All rows are drawn.
+            
             const tr = document.createElement('tr');
             tr.innerHTML = `<td class="schedule-table-time-header">${displayTime}</td>`; // Display full hours only
 
@@ -546,11 +535,11 @@ const displayGeneratedSchedules = () => {
                 const td = document.createElement('td');
                 td.className = `schedule-table-cell`;
                 td.setAttribute('data-day', day);
-                td.setAttribute('data-timeslot', timeSlot);
+                td.setAttribute('data-timeslot', timeSlot); // Keep 24h for internal logic
                 td.setAttribute('data-doctorid', doctor.id);
 
                 const lecture = doctorSchedules[doctorId][day][timeSlot];
-                if (lecture && lecture.startTime === timeSlot) { // Check if it's the start of a lecture block
+                if (lecture && lecture.startTime === timeSlot) { // تأكد أنه بداية المحاضرة وليس جزء منها
                     const slotsOccupied = lecture.slotsOccupied; // This is the number of 30-min slots
 
                     if (slotsOccupied > 1) {
@@ -575,7 +564,7 @@ const displayGeneratedSchedules = () => {
                     lectureCard.setAttribute('data-original-day', day);
                     lectureCard.setAttribute('data-original-timeslot', timeSlot);
                     lectureCard.setAttribute('data-doctor-id', lecture.doctorId);
-                    lectureCard.setAttribute('data-duration-slots', slotsOccupied);
+                    lectureCard.setAttribute('data-duration-slots', slotsOccupied); // This is now 30-min slots
                     lectureCard.setAttribute('data-lecture-index', lecture.lectureIndex);
 
                     // Display new details
@@ -585,7 +574,7 @@ const displayGeneratedSchedules = () => {
                         <div class="schedule-slot-info" ${editMode ? 'contenteditable="true"' : ''} data-field="sectionName">${lecture.sectionName}</div>
                         <div class="schedule-slot-info" ${editMode ? 'contenteditable="true"' : ''} data-field="roomName">${lecture.roomName}</div>
                         <div class="schedule-slot-details">
-                            <span>${lecture.courseCode}</span> | <span>${labOrTheory}</span> | <span>(${lecture.type === 'short' ? '50 دقيقة' : '100 دقيقة'})</span>
+                            <span>${lecture.courseCode}</span> | <span>${labOrTheory}</span> | <span>(${lecture.durationMinutes} دقيقة)</span>
                         </div>
                     `;
                     td.appendChild(lectureCard);
@@ -604,14 +593,14 @@ const displayGeneratedSchedules = () => {
     attachClickAnywhereElseListener();
 };
 
-// --- وظائف التحرير بالضغط بزر الفأرة الأيمن (الآن النقر المزدوج) ---
+// --- وظائف التحرير بالنقر المزدوج (Double-Click Editing Functions) ---
 const enableEditMode = () => {
     editMode = true;
     document.getElementById('edit-schedule-btn').classList.add('btn-warning');
     document.getElementById('edit-schedule-btn').innerHTML = '<i class="fas fa-save"></i> حفظ التغييرات';
     document.getElementById('cancel-edit-btn').classList.remove('hidden');
 
-    displayGeneratedSchedules(); // إعادة عرض لتطبيق كلاسات وضع التحرير و contenteditable="true"
+    displayGeneratedSchedules(); // Re-render to apply edit mode styles and contenteditable
 
     showMessage('وضع التحرير مفعل. انقر مرتين على محاضرة لتحديدها، ثم انقر مرتين على خلية فارغة لنقلها.', 'info', 7000);
 };
@@ -625,11 +614,14 @@ const disableEditMode = (saveChanges = true) => {
     document.querySelectorAll('.selected-for-move').forEach(el => el.classList.remove('selected-for-move'));
     document.querySelectorAll('.selected-move-target').forEach(el => el.classList.remove('selected-move-target'));
 
-    displayGeneratedSchedules(); // إعادة عرض لإزالة كلاسات وضع التحرير و contenteditable="true"
+    displayGeneratedSchedules(); // Re-render to remove edit mode styles and contenteditable
 
     if (saveChanges) {
         showMessage('تم الخروج من وضع التحرير.', 'info');
     } else {
+        // If changes are to be discarded, reload from localStorage
+        // This current setup saves changes immediately upon edit/move, so "discard"
+        // would require reloading *all* state before rendering. For now, it just exits edit mode.
         showMessage('تم إلغاء وضع التحرير.', 'info');
     }
     selectedLectureForMove = null;
@@ -656,7 +648,7 @@ const attachClickAnywhereElseListener = () => {
 };
 
 const handleClickAnywhereElse = (e) => {
-    // Check if the click was *not* on a cell or lecture (to avoid interfering with dblclick)
+    // If a lecture is selected and the click was not on a lecture card or a table cell
     if (selectedLectureForMove && !e.target.closest('.schedule-slot') && !e.target.closest('.schedule-table-cell')) {
         showMessage('تم إلغاء تحديد المحاضرة.', 'info');
         selectedLectureForMove = null;
@@ -725,12 +717,11 @@ const moveSelectedLectureTo = (targetCell) => {
 
     const { lectureData, originalDoctorId, originalDay, originalTimeSlot } = selectedLectureForMove;
     const lectureType = lectureData.type;
-    const durationMinutes = lectureData.durationMinutes; // Use durationMinutes directly
-    const slotsOccupied = lectureData.slotsOccupied;
+    const durationMinutes = lectureData.durationMinutes;
+    const slotsOccupied = lectureData.slotsOccupied; // Slots occupied by the lecture itself
 
-    // Retrieve original course/room data for checks
     const course = courses.find(c => c.id === lectureData.courseId);
-    const room = rooms.find(r => r.id === lectureData.roomId); // Room does not change during move
+    const room = rooms.find(r => r.id === lectureData.roomId);
 
     if (!course || !room) {
         showMessage('خطأ: بيانات المقرر أو القاعة غير مكتملة للمحاضرة.', 'error');
@@ -740,10 +731,10 @@ const moveSelectedLectureTo = (targetCell) => {
     }
 
     // --- Validity checks for the move (using temporary states) ---
-    // Make deep copies of relevant parts of the schedule/availability for temporary checks
     const tempDoctorSchedules = JSON.parse(JSON.stringify(doctorSchedules));
     const tempRoomAvailability = JSON.parse(JSON.stringify(roomAvailability));
     const tempDoctors = JSON.parse(JSON.stringify(doctors));
+    const originalLectureRoomId = lectureData.roomId;
 
     // Temporarily "remove" the lecture from its original spot in the temporary copies
     const tempOldDoctor = tempDoctors.find(d => d.id === originalDoctorId);
@@ -757,7 +748,6 @@ const moveSelectedLectureTo = (targetCell) => {
             }
         }
     }
-    const originalLectureRoomId = lectureData.roomId; // Room ID of the lecture being moved
     for (let i = 0; i < slotsOccupied; i++) {
         const currentOriginalSlot = timeSlots[timeSlots.indexOf(originalTimeSlot) + i];
         if (currentOriginalSlot && tempRoomAvailability[originalLectureRoomId] && tempRoomAvailability[originalLectureRoomId][originalDay]) {
@@ -767,7 +757,7 @@ const moveSelectedLectureTo = (targetCell) => {
 
     // Now, check availability at the target using these temporary states
     const newDoctorTemp = tempDoctors.find(d => d.id === targetDoctorId);
-    if (!newDoctorTemp) { // Should not happen
+    if (!newDoctorTemp) {
         showMessage('خطأ داخلي: الدكتور الهدف غير موجود.', 'error');
         selectedLectureForMove = null;
         displayGeneratedSchedules();
@@ -791,7 +781,7 @@ const moveSelectedLectureTo = (targetCell) => {
         return;
     }
 
-    // Check if target has enough consecutive slots for a long lecture
+    // Final check for consecutive slots at target (should cover doctor and room availability within the new block)
     const targetTimeSlotIndex = timeSlots.indexOf(targetTimeSlot);
     for (let i = 0; i < slotsOccupied; i++) {
         const checkSlot = timeSlots[targetTimeSlotIndex + i];
@@ -801,20 +791,20 @@ const moveSelectedLectureTo = (targetCell) => {
             displayGeneratedSchedules();
             return;
         }
-        // Ensure the cells are actually available in the temporary schedule
-        const currentCellHasLecture = (tempDoctorSchedules[targetDoctorId] && tempDoctorSchedules[targetDoctorId][targetDay] && tempDoctorSchedules[targetDoctorId][targetDay][checkSlot]);
-        const currentRoomHasLecture = (tempRoomAvailability[room.id] && tempRoomAvailability[room.id][targetDay] && !tempRoomAvailability[room.id][targetDay][checkSlot]);
-        
-        if (currentCellHasLecture || !currentRoomHasLecture) { // If doctor's slot or room's slot is still occupied by something else in temp
-             showMessage('تداخل في الموقع الجديد خلال التحقق الأخير. لا يمكن النقل.', 'warning');
+        // Check if the current slot in the temporary schedule is null for the new doctor and room
+        const doctorSlotOccupied = (tempDoctorSchedules[targetDoctorId] && tempDoctorSchedules[targetDoctorId][targetDay] && tempDoctorSchedules[targetDoctorId][targetDay][checkSlot]);
+        const roomSlotOccupied = (tempRoomAvailability[room.id] && tempRoomAvailability[room.id][targetDay] && !tempRoomAvailability[room.id][targetDay][checkSlot]); // If room is not available
+
+        if (doctorSlotOccupied || !roomSlotOccupied) {
+             showMessage('تعارض في الموقع الجديد خلال التحقق الأخير (قد يكون الوقت محجوزاً أو القاعة غير متاحة). لا يمكن النقل.', 'warning');
              selectedLectureForMove = null;
              displayGeneratedSchedules();
              return;
         }
     }
-    // --- End of Validity checks ---
+    // --- نهاية تحقق الصلاحية ---
 
-    // Now, perform the actual permanent move
+    // الآن، قم بتنفيذ النقل الفعلي والدائم
     const newLectureData = {
         ...lectureData,
         doctorId: targetDoctorId,
@@ -822,7 +812,7 @@ const moveSelectedLectureTo = (targetCell) => {
         startTime: targetTimeSlot,
     };
 
-    // Remove from original spot permanently
+    // إزالة دائمة من المكان الأصلي
     const oldDoctorGlobal = doctors.find(d => d.id === originalDoctorId);
     if (oldDoctorGlobal) {
         oldDoctorGlobal.assignedHours -= durationMinutes;
@@ -843,7 +833,7 @@ const moveSelectedLectureTo = (targetCell) => {
         }
     }
 
-    // Add to new spot permanently
+    // إضافة دائمة إلى المكان الجديد
     const newDoctorGlobal = doctors.find(d => d.id === targetDoctorId);
     if (newDoctorGlobal) {
         newDoctorGlobal.assignedHours += durationMinutes;
