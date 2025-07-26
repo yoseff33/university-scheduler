@@ -818,7 +818,7 @@ html {
     font-weight: 700;
     color: #263238;
     font-size: 0.95rem;
-    min-width: 100px; /* Ensure time column is wide enough */
+    min-width: 100px;
 }
 
 .schedule-table-cell {
@@ -910,13 +910,13 @@ html {
 }
 /* New style for detailed info in schedule slots */
 .schedule-slot-details {
-    font-size: 0.75rem; /* Smaller font for these details */
-    color: #78909c; /* Muted color */
-    margin-top: 5px; /* Small margin from other info */
+    font-size: 0.75rem;
+    color: #78909c;
+    margin-top: 5px;
     line-height: 1.3;
 }
 .schedule-slot-details span {
-    display: inline-block; /* Allow spans to have spacing */
+    display: inline-block;
     margin: 0 2px;
 }
 
@@ -941,7 +941,7 @@ html {
 /* Dim non-editable content when edit mode is active */
 .editable-lecture .schedule-slot-subject:not([contenteditable="true"]),
 .editable-lecture .schedule-slot-info:not([contenteditable="true"]),
-.editable-lecture .schedule-slot-details { /* Dim details too */
+.editable-lecture .schedule-slot-details {
     opacity: 0.6;
     pointer-events: none;
 }
@@ -1319,4 +1319,163 @@ html {
 
 @keyframes spin {
     to { transform: rotate(360deg); }
+}
+
+/* Utility Classes for content display in dynamic inputs */
+.dynamic-time-ranges-container {
+    border: 1px dashed #cfd8dc;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    background-color: #f8faff;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.dynamic-time-range-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #e3f2fd;
+    border: 1px solid #bbdefb;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    color: #34495e;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.dynamic-time-range-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.dynamic-time-range-item .delete-btn {
+    background: none;
+    border: none;
+    color: #ef5350;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.dynamic-time-range-item .delete-btn:hover {
+    color: #e53935;
+    transform: scale(1.1);
+}
+
+.add-time-range-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-end;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eceff1;
+}
+
+.add-time-range-controls .form-group {
+    margin-bottom: 0;
+    flex: 1 1 auto;
+    min-width: 120px;
+}
+
+.add-time-range-controls .form-group label {
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.add-time-range-controls .form-control {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+}
+
+.add-time-range-controls .btn {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    align-self: flex-end;
+    box-shadow: none;
+    letter-spacing: normal;
+}
+
+.add-time-range-controls .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Tabs specific styling (already in previous CSS) */
+.tabs-container {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
+    margin-bottom: 50px;
+    padding: 30px;
+}
+
+.tab-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e0e6f0;
+    padding-bottom: 15px;
+}
+
+.tab-button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    background: #f0f4f7;
+    color: #607d8b;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex; /* Changed to flex for icon alignment */
+    align-items: center; /* Center items vertically */
+    gap: 10px; /* Space between icon and text */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.tab-button i { /* Style for icons inside tab buttons */
+    font-size: 1.2rem;
+}
+
+.tab-button:hover {
+    background: #cfd8dc;
+    color: #546E7A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.tab-button.active {
+    background: #00796B;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
+}
+
+.tab-button.active:hover {
+    background: #00695C;
+    transform: translateY(-3px);
+}
+
+.tab-content {
+    display: none;
+    padding: 10px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.tab-content.active {
+    display: block;
 }
