@@ -1176,6 +1176,22 @@ html {
     .report-title {
         font-size: 1.2rem;
     }
+    /* Tabs specific adjustments */
+    .tabs-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .tab-button {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+    .tabs-container {
+        padding: 15px;
+    }
+    .tab-content {
+        padding: 5px;
+    }
 }
 
 @media (max-width: 768px) {
