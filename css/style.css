@@ -1,7 +1,6 @@
 /* css/style.css */
 
 /* Google Fonts Import */
-/* Noto Sans Arabic for Arabic text, Roboto for Latin text (numbers, fallback) */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap');
 
 /* Global Reset */
@@ -13,15 +12,14 @@
 
 /* Base Body Styles */
 body {
-    font-family: 'Noto Sans Arabic', 'Roboto', sans-serif; /* Primary for Arabic, Roboto for Latin fallback */
-    /* Soft, professional background gradient */
-    background: linear-gradient(135deg, #f7f9fc 0%, #eef2f5 100%); /* Very light, subtle grey-blue gradient */
+    font-family: 'Noto Sans Arabic', 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #f7f9fc 0%, #eef2f5 100%);
     min-height: 100vh;
-    color: #263238; /* Dark Blue Gray 900 for main text */
-    direction: rtl; /* Right-to-left support */
-    text-align: right; /* Default text alignment for RTL */
-    overflow-x: hidden; /* Prevent horizontal scroll */
-    line-height: 1.6; /* Better readability */
+    color: #263238;
+    direction: rtl;
+    text-align: right;
+    overflow-x: hidden;
+    line-height: 1.6;
 }
 
 /* Custom Scrollbar for Webkit (Chrome, Safari, Edge) */
@@ -31,18 +29,18 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: #f0f4f7; /* Lighter track */
+    background: #f0f4f7;
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #90a4ae; /* Muted thumb color */
+    background: #90a4ae;
     border-radius: 10px;
     transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #78909c; /* Darker thumb on hover */
+    background: #78909c;
 }
 
 /* Custom Scrollbar for Firefox */
@@ -54,48 +52,48 @@ html {
 
 /* --- Navbar (Sleek and Professional) --- */
 .navbar {
-    background: rgba(255, 255, 255, 0.99); /* Almost opaque white */
-    backdrop-filter: blur(20px); /* Stronger frosted glass effect */
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1); /* Soft, prominent shadow */
+    background: rgba(255, 255, 255, 0.99);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
     z-index: 1000;
-    height: 75px; /* Elegant height */
-    transition: all 0.3s ease-in-out; /* Smooth transition for shrink */
-    border-bottom: 1px solid #eceff1; /* Subtle bottom border */
+    height: 75px;
+    transition: all 0.3s ease-in-out;
+    border-bottom: 1px solid #eceff1;
 }
 
 /* Navbar shrinking effect on scroll */
 .navbar.shrink {
-    height: 60px; /* Smaller height on scroll */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Lighter shadow on shrink */
+    height: 60px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 35px; /* Generous horizontal padding */
+    padding: 0 35px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 100%; /* Occupy full navbar height */
+    height: 100%;
 }
 
 .nav-brand {
     display: flex;
     align-items: center;
-    gap: 12px; /* Good spacing */
-    font-size: 1.8rem; /* Impactful size */
-    font-weight: 700; /* Bold */
-    color: #3f51b5; /* Deeper blue for brand */
+    gap: 12px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #3f51b5;
     text-decoration: none;
     transition: all 0.3s ease;
-    letter-spacing: -0.5px; /* Slightly tighter letter spacing */
+    letter-spacing: -0.5px;
 }
 
 .nav-brand:hover {
-    color: #283593; /* Darker blue on hover */
-    transform: translateY(-2px); /* Gentle lift */
+    color: #283593;
+    transform: translateY(-2px);
 }
 
 /* Adjust brand size on shrink */
@@ -104,8 +102,8 @@ html {
 }
 
 .nav-brand i {
-    font-size: 2.2rem; /* Larger icon */
-    color: #00796B; /* Dark Teal for icon */
+    font-size: 2.2rem;
+    color: #00796B;
     transition: all 0.3s ease;
 }
 
@@ -118,15 +116,15 @@ html {
 .nav-menu {
     display: flex;
     list-style: none;
-    gap: 20px; /* Generous spacing between links */
+    gap: 20px;
 }
 
 .nav-link {
     text-decoration: none;
-    color: #546E7A; /* Muted Blue Gray for links */
+    color: #546E7A;
     padding: 10px 18px;
-    border-radius: 10px; /* Soft corners */
-    transition: all 0.3s ease-in-out; /* Smooth transition */
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -134,31 +132,31 @@ html {
     position: relative;
     font-weight: 500;
     font-size: 1rem;
-    letter-spacing: 0.2px; /* Slightly spaced out letters */
+    letter-spacing: 0.2px;
 }
 
 .nav-link:hover {
-    background: #00796B; /* Dark Teal background on hover */
+    background: #00796B;
     color: white;
-    transform: translateY(-3px); /* Pronounced lift */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* Soft shadow */
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 /* Underline effect on hover */
 .nav-link::after {
     content: '';
     position: absolute;
-    bottom: -6px; /* Slightly lower position */
+    bottom: -6px;
     right: 50%;
     width: 0;
-    height: 3px; /* Thicker underline */
-    background-color: #4CAF50; /* Accent Green underline */
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother animation */
+    height: 3px;
+    background-color: #4CAF50;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transform: translateX(50%);
 }
 
 .nav-link:hover::after {
-    width: calc(100% - 24px); /* Fills most of the link width */
+    width: calc(100% - 24px);
     right: 12px;
     transform: translateX(0);
 }
@@ -168,20 +166,20 @@ html {
 .main-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 50px 30px; /* Generous top padding */
-    min-height: calc(100vh - 150px); /* Adjust based on navbar and footer height */
+    padding: 50px 30px;
+    min-height: calc(100vh - 150px);
 }
 
 /* --- Hero Section (Homepage banner) --- */
 .hero-section {
     text-align: center;
-    padding: 90px 40px; /* More generous padding */
-    background: #ffffff; /* Pure white background */
-    border-radius: 30px; /* More rounded corners */
-    margin-bottom: 70px; /* More margin */
-    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.1); /* Prominent, soft shadow */
-    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); /* Elegant transition */
-    border: 1px solid #e0e6f0; /* Subtle border */
+    padding: 90px 40px;
+    background: #ffffff;
+    border-radius: 30px;
+    margin-bottom: 70px;
+    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.1);
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    border: 1px solid #e0e6f0;
     position: relative;
     overflow: hidden;
 }
@@ -198,7 +196,7 @@ html {
     animation: rotateGradient 20s linear infinite;
     opacity: 0.6;
     z-index: 0;
-    border-radius: inherit; /* Inherit border-radius */
+    border-radius: inherit;
 }
 
 @keyframes rotateGradient {
@@ -207,8 +205,8 @@ html {
 }
 
 .hero-section:hover {
-    transform: translateY(-8px); /* More pronounced lift */
-    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15); /* Stronger hover shadow */
+    transform: translateY(-8px);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
 }
 
 .hero-content {
@@ -217,18 +215,18 @@ html {
 }
 
 .hero-content h1 {
-    font-size: 4.2rem; /* Very large, impactful heading */
-    color: #263238; /* Dark Blue Gray */
+    font-size: 4.2rem;
+    color: #263238;
     margin-bottom: 30px;
-    text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1); /* Soft, subtle shadow */
-    font-weight: 800; /* Extra bold */
+    text-shadow: 2px 3px 10px rgba(0, 0, 0, 0.1);
+    font-weight: 800;
     line-height: 1.2;
-    letter-spacing: -1px; /* Tighter letter spacing for impact */
+    letter-spacing: -0.5px;
 }
 
 .hero-content p {
-    font-size: 1.5rem; /* Larger, readable body text */
-    color: #546E7A; /* Muted text color */
+    font-size: 1.5rem;
+    color: #546E7A;
     max-width: 800px;
     margin: 0 auto;
     line-height: 1.8;
@@ -237,8 +235,8 @@ html {
 /* --- Features Grid --- */
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Wider min-width for cards */
-    gap: 45px; /* More spacing */
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 45px;
     margin-bottom: 70px;
 }
 
@@ -246,23 +244,23 @@ html {
     background: #ffffff;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1); /* Prominent shadow */
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    border: 1px solid #e0e6f0; /* Subtle border */
+    border: 1px solid #e0e6f0;
     position: relative;
 }
 
-.feature-card::before { /* Subtle overlay on hover */
+.feature-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 121, 107, 0.05); /* Very light teal overlay */
+    background-color: rgba(0, 121, 107, 0.05);
     opacity: 0;
     transition: opacity 0.3s ease;
-    pointer-events: none; /* Ensure clicks pass through */
+    pointer-events: none;
 }
 
 .feature-card:hover::before {
@@ -270,49 +268,49 @@ html {
 }
 
 .feature-card:hover {
-    transform: translateY(-18px); /* More pronounced lift */
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2); /* Stronger hover shadow */
-    border-color: #00796B; /* Dark Teal border on hover */
+    transform: translateY(-18px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+    border-color: #00796B;
 }
 
 .feature-card a {
     text-decoration: none;
     color: inherit;
-    padding: 45px; /* More padding */
+    padding: 45px;
     display: block;
     text-align: center;
-    position: relative; /* Ensure content is above ::before */
+    position: relative;
     z-index: 1;
 }
 
 .feature-card i {
-    font-size: 4rem; /* Larger, impactful icon */
-    color: #3f51b5; /* Deeper blue */
+    font-size: 4rem;
+    color: #3f51b5;
     margin-bottom: 30px;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .feature-card:hover i {
-    transform: scale(1.2) rotate(15deg); /* Dynamic effect */
-    color: #00796B; /* Dark Teal on hover */
+    transform: scale(1.2) rotate(15deg);
+    color: #00796B;
 }
 
 .feature-card h3 {
-    font-size: 1.7rem; /* Larger, bolder heading */
+    font-size: 1.7rem;
     margin-bottom: 20px;
-    color: #263238; /* Dark Blue Gray */
+    color: #263238;
     font-weight: 700;
     transition: color 0.3s ease;
 }
 
 .feature-card:hover h3 {
-    color: #3f51b5; /* Deeper blue on hover */
+    color: #3f51b5;
 }
 
 .feature-card p {
     color: #546E7A;
     line-height: 1.7;
-    font-size: 1.05rem; /* Slightly larger text */
+    font-size: 1.05rem;
 }
 
 /* --- Stats Section --- */
@@ -322,23 +320,23 @@ html {
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Slightly wider min-width */
-    gap: 35px; /* More spacing */
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 35px;
 }
 
 .stat-card {
     background: #ffffff;
-    padding: 40px; /* More padding */
+    padding: 40px;
     border-radius: 20px;
     text-align: center;
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1); /* Prominent shadow */
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     border: 1px solid #e0e6f0;
     position: relative;
     overflow: hidden;
 }
 
-.stat-card::after { /* Subtle wave effect on hover */
+.stat-card::after {
     content: '';
     position: absolute;
     bottom: -20px;
@@ -359,24 +357,24 @@ html {
 .stat-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
-    border-color: #4CAF50; /* Accent green border on hover */
+    border-color: #4CAF50;
 }
 
 .stat-card i {
-    font-size: 3.2rem; /* Larger icon */
+    font-size: 3.2rem;
     color: #3f51b5;
     margin-bottom: 25px;
     transition: all 0.3s ease;
     position: relative;
-    z-index: 1; /* Ensure icon is above ::after */
+    z-index: 1;
 }
 .stat-card:hover i {
-    color: #00796B; /* Dark Teal icon on hover */
-    transform: scale(1.1); /* Subtle scale */
+    color: #00796B;
+    transform: rotate(5deg) scale(1.1);
 }
 
 .stat-card h3 {
-    font-size: 2.8rem; /* Very large, impactful number */
+    font-size: 2.8rem;
     color: #263238;
     margin-bottom: 15px;
     font-weight: 800;
@@ -402,7 +400,7 @@ html {
     overflow: hidden;
 }
 
-.page-header::before { /* Subtle background wave */
+.page-header::before {
     content: '';
     position: absolute;
     bottom: -50px;
@@ -413,7 +411,7 @@ html {
     border-radius: 50%;
     transform: rotate(45deg);
 }
-.page-header::after { /* Another subtle element */
+.page-header::after {
     content: '';
     position: absolute;
     top: -30px;
@@ -459,15 +457,15 @@ html {
 }
 
 .card-header {
-    background: #3f51b5; /* Deeper blue header */
+    background: #3f51b5;
     color: white;
     padding: 25px 35px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-weight: 600;
-    font-size: 1.5rem; /* Larger header text */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Subtle separator */
+    font-size: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .card-header h2 {
@@ -484,14 +482,14 @@ html {
 /* --- Form Elements --- */
 .form-group {
     margin-bottom: 25px;
-    position: relative; /* For floating labels */
+    position: relative;
 }
 
 .form-group label {
     display: block;
     margin-bottom: 10px;
     font-weight: 600;
-    color: #546E7A; /* Muted label color */
+    color: #546E7A;
     font-size: 1.05rem;
 }
 
@@ -500,25 +498,25 @@ html {
 .form-group textarea {
     width: 100%;
     padding: 14px 20px;
-    border: 2px solid #cfd8dc; /* Soft border */
-    border-radius: 12px; /* Softer corners */
+    border: 2px solid #cfd8dc;
+    border-radius: 12px;
     font-size: 1.05rem;
     transition: all 0.3s ease-in-out;
     background: white;
-    color: #263238; /* Dark text */
+    color: #263238;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #4CAF50; /* Accent green on focus */
-    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2); /* Softer focus shadow */
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
 }
 
 /* Validation error style */
 .form-group .input-error {
-    border-color: #ef5350; /* Red for error fields */
+    border-color: #ef5350;
 }
 
 .field-error {
@@ -559,24 +557,24 @@ html {
     margin: 0;
     flex-shrink: 0;
     appearance: none;
-    border: 2px solid #90A4AE; /* Muted gray border */
-    border-radius: 6px; /* Softer square */
+    border: 2px solid #90A4AE;
+    border-radius: 6px;
     background-color: white;
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); /* Inner shadow */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .checkbox-item input[type="checkbox"]:checked {
-    background-color: #4CAF50; /* Accent green when checked */
+    background-color: #4CAF50;
     border-color: #4CAF50;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 0 4px rgba(76, 175, 80, 0.2); /* Soft outer shadow */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 0 4px rgba(76, 175, 80, 0.2);
 }
 
 /* Checkmark for custom checkbox */
 .checkbox-item input[type="checkbox"]:checked::after {
-    content: '\2713'; /* Unicode checkmark character */
+    content: '\2713';
     position: absolute;
     top: 50%;
     left: 50%;
@@ -590,7 +588,7 @@ html {
 
 /* --- Buttons --- */
 .btn {
-    padding: 16px 32px; /* More generous padding */
+    padding: 16px 32px;
     border: none;
     border-radius: 12px;
     font-size: 1.05rem;
@@ -601,64 +599,64 @@ html {
     align-items: center;
     gap: 10px;
     text-decoration: none;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Stronger default shadow */
-    text-transform: capitalize; /* Ensure consistent text case */
-    letter-spacing: 0.5px; /* Slightly spaced out text */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    text-transform: capitalize;
+    letter-spacing: 0.5px;
 }
 
 .btn:hover {
-    transform: translateY(-6px); /* More pronounced lift */
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2); /* Enhanced hover shadow */
+    transform: translateY(-6px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
 }
 
 .btn-primary {
-    background: #3f51b5; /* Deeper blue primary */
+    background: #3f51b5;
     color: white;
 }
 
 .btn-primary:hover {
-    background: #303f9f; /* Darker blue on hover */
+    background: #303f9f;
 }
 
 .btn-danger {
-    background: #ef5350; /* Soft red danger */
+    background: #ef5350;
     color: white;
 }
 
 .btn-danger:hover {
-    background: #e53935; /* Darker red on hover */
+    background: #e53935;
 }
 
 .btn-success {
-    background: #4CAF50; /* Standard green success */
+    background: #4CAF50;
     color: white;
 }
 
 .btn-success:hover {
-    background: #388E3C; /* Darker green on hover */
+    background: #388E3C;
 }
 
 .btn-warning {
-    background: #FFC107; /* Standard amber warning */
+    background: #FFC107;
     color: white;
 }
 
 .btn-warning:hover {
-    background: #FFA000; /* Darker amber on hover */
+    background: #FFA000;
 }
 
 .btn-info {
-    background: #2196F3; /* Standard blue info */
+    background: #2196F3;
     color: white;
 }
 
 .btn-info:hover {
-    background: #1976D2; /* Darker blue on hover */
+    background: #1976D2;
 }
 
 /* Small button variant */
 .btn-sm {
-    padding: 10px 20px; /* Smaller padding */
+    padding: 10px 20px;
     font-size: 0.9rem;
     gap: 8px;
     border-radius: 8px;
@@ -676,7 +674,7 @@ html {
     color: #263238;
     margin-bottom: 25px;
     padding-bottom: 12px;
-    border-bottom: 1px solid #eceff1; /* Subtle separator */
+    border-bottom: 1px solid #eceff1;
     font-weight: 600;
 }
 
@@ -694,14 +692,14 @@ html {
     padding: 25px;
     margin-bottom: 20px;
     position: relative;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08); /* Clearer shadow */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .item-card:hover {
-    transform: translateX(10px); /* More pronounced slide effect */
+    transform: translateX(10px);
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
-    border-color: #3f51b5; /* Deeper blue border on hover */
+    border-color: #3f51b5;
 }
 
 .item-header {
@@ -713,7 +711,7 @@ html {
 
 .item-title {
     font-weight: 700;
-    color: #3f51b5; /* Deeper blue for title */
+    color: #3f51b5;
     font-size: 1.3rem;
 }
 
@@ -754,7 +752,7 @@ html {
     align-items: center;
     gap: 15px;
     font-size: 1.05rem;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow for status messages */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
 
 .status-message i {
@@ -798,28 +796,29 @@ html {
     background: white;
     border-radius: 15px;
     overflow: hidden;
-    min-width: 800px; /* Ensure table is wide enough for readability */
+    min-width: 800px;
 }
 
 .schedule-table th,
 .schedule-table td {
     padding: 15px;
     text-align: center;
-    border: 1px solid #eceff1; /* Very light border */
+    border: 1px solid #eceff1;
 }
 
 .schedule-table th {
-    background: #3f51b5; /* Deeper blue header */
+    background: #3f51b5;
     color: white;
     font-weight: 600;
     font-size: 1rem;
 }
 
 .schedule-table-time-header {
-    background: #e3f2fd; /* Light blue background for time column */
+    background: #e3f2fd;
     font-weight: 700;
     color: #263238;
     font-size: 0.95rem;
+    min-width: 100px; /* Ensure time column is wide enough */
 }
 
 .schedule-table-cell {
@@ -832,29 +831,29 @@ html {
 
 /* Hover effect for empty cells in edit mode */
 .schedule-table-cell.edit-mode-active:not(.has-lecture):hover {
-    background-color: #f5fafd; /* Very light blue on hover */
+    background-color: #f5fafd;
     cursor: pointer;
-    box-shadow: inset 0 0 0 2px #3f51b5; /* Highlight border on hover in edit mode */
+    box-shadow: inset 0 0 0 2px #3f51b5;
 }
 
 /* Styles for cells selected for move destination */
 .schedule-table-cell.selected-move-target {
-    background-color: #e3f2fd; /* Lighter blue to indicate target */
+    background-color: #e3f2fd;
     box-shadow: inset 0 0 0 3px #3f51b5;
 }
 
 
 .schedule-slot {
-    background: #f8f9fa; /* Default light background for lecture slot */
-    border: 2px solid #e0e6f0; /* Default subtle border */
+    background: #f8f9fa;
+    border: 2px solid #e0e6f0;
     border-radius: 10px;
     padding: 12px;
     margin: 5px;
     font-size: 0.9rem;
     line-height: 1.4;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    cursor: pointer; /* Change cursor for clickable lectures */
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+    cursor: pointer;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
     position: relative;
     z-index: 1;
 }
@@ -866,35 +865,34 @@ html {
 
 /* Styles for the lecture currently selected for move */
 .schedule-slot.selected-for-move {
-    box-shadow: 0 0 0 3px #00796B, 0 8px 25px rgba(0, 0, 0, 0.25); /* Strong accent outline */
-    transform: scale(1.02); /* Slightly bigger */
+    box-shadow: 0 0 0 3px #00796B, 0 8px 25px rgba(0, 0, 0, 0.25);
+    transform: scale(1.02);
     opacity: 0.95;
-    cursor: grabbing; /* Indicates it's ready to be moved */
+    cursor: grabbing;
 }
 
 /* Specific colors for lectures based on course ID (applied by JS) */
 .schedule-slot.colored-lecture {
     background: var(--lecture-bg-color);
     border-color: var(--lecture-border-color);
-    color: #263238; /* Ensure main text is readable on colored backgrounds */
+    color: #263238;
 }
 
 .schedule-slot.colored-lecture .schedule-slot-subject {
-    color: #1a2734; /* Even darker subject for better contrast */
+    color: #1a2734;
 }
 .schedule-slot.colored-lecture .schedule-slot-info {
-    color: #546E7A; /* Muted info text, slightly darker on colored backgrounds */
+    color: #546E7A;
 }
 
 /* Color Palette for Lectures (more refined) */
-.lecture-color-0 { --lecture-bg-color: #e0f8ff; --lecture-border-color: #4fc3f7; } /* Light Blue, similar to info */
-.lecture-color-1 { --lecture-bg-color: #fff9e0; --lecture-border-color: #ffb300; } /* Light Amber, similar to warning */
-.lecture-color-2 { --lecture-bg-color: #e8f5e9; --lecture-border-color: #66bb6a; } /* Light Green, similar to success */
-.lecture-color-3 { --lecture-bg-color: #ffe0e0; --lecture-border-color: #ef5350; } /* Light Red, similar to error */
-.lecture-color-4 { --lecture-bg-color: #ede7f6; --lecture-border-color: #9575cd; } /* Light Purple */
-.lecture-color-5 { --lecture-bg-color: #e0f2f7; --lecture-border-color: #4db6ac; } /* Light Teal */
-.lecture-color-6 { --lecture-bg-color: #fff3e0; --lecture-border-color: #ff9800; } /* Light Orange */
-/* Add more lecture-color-N classes if you have more distinct course types */
+.lecture-color-0 { --lecture-bg-color: #e0f8ff; --lecture-border-color: #4fc3f7; }
+.lecture-color-1 { --lecture-bg-color: #fff9e0; --lecture-border-color: #ffb300; }
+.lecture-color-2 { --lecture-bg-color: #e8f5e9; --lecture-border-color: #66bb6a; }
+.lecture-color-3 { --lecture-bg-color: #ffe0e0; --lecture-border-color: #ef5350; }
+.lecture-color-4 { --lecture-bg-color: #ede7f6; --lecture-border-color: #9575cd; }
+.lecture-color-5 { --lecture-bg-color: #e0f2f7; --lecture-border-color: #4db6ac; }
+.lecture-color-6 { --lecture-bg-color: #fff3e0; --lecture-border-color: #ff9800; }
 
 
 .schedule-slot-subject {
@@ -902,7 +900,7 @@ html {
     color: #263238;
     margin-bottom: 5px;
     font-size: 1rem;
-    line-height: 1.3; /* Better line height */
+    line-height: 1.3;
 }
 
 .schedule-slot-info {
@@ -910,6 +908,18 @@ html {
     font-size: 0.85rem;
     line-height: 1.4;
 }
+/* New style for detailed info in schedule slots */
+.schedule-slot-details {
+    font-size: 0.75rem; /* Smaller font for these details */
+    color: #78909c; /* Muted color */
+    margin-top: 5px; /* Small margin from other info */
+    line-height: 1.3;
+}
+.schedule-slot-details span {
+    display: inline-block; /* Allow spans to have spacing */
+    margin: 0 2px;
+}
+
 
 /* Styles for contenteditable elements */
 .schedule-slot [contenteditable="true"] {
@@ -919,56 +929,21 @@ html {
     transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     min-width: 60px;
     cursor: text;
-    border: 1px dashed transparent; /* Transparent border by default */
+    border: 1px dashed transparent;
 }
 
 .schedule-slot [contenteditable="true"]:focus {
     background-color: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.4); /* Accent green shadow */
-    border-color: #4CAF50; /* Solid accent border on focus */
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.4);
+    border-color: #4CAF50;
 }
 
 /* Dim non-editable content when edit mode is active */
 .editable-lecture .schedule-slot-subject:not([contenteditable="true"]),
-.editable-lecture .schedule-slot-info:not([contenteditable="true"]) {
-    opacity: 0.6; /* Dim non-editable text */
-    pointer-events: none; /* Prevent interaction */
-}
-
-/* --- Custom Context Menu (no longer used for right-click move, but structure remains for future if needed) --- */
-/* (These styles can be removed if the feature is completely unused) */
-.custom-context-menu {
-    position: fixed;
-    background: white;
-    border: 1px solid #e0e6f0;
-    border-radius: 10px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    padding: 10px 0;
-    z-index: 2000;
-    min-width: 180px;
-    overflow: hidden;
-}
-
-.context-menu-item {
-    padding: 12px 20px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    color: #34495e;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.context-menu-item:hover {
-    background-color: #f0f4f7;
-    color: #3f51b5;
-}
-
-.context-menu-item.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background-color: #f8f9fa;
+.editable-lecture .schedule-slot-info:not([contenteditable="true"]),
+.editable-lecture .schedule-slot-details { /* Dim details too */
+    opacity: 0.6;
+    pointer-events: none;
 }
 
 
@@ -977,15 +952,15 @@ html {
     margin-bottom: 30px;
 }
 .admin-stats .stat-card.pending {
-    border-left: 4px solid #FFC107; /* Warning color */
+    border-left: 4px solid #FFC107;
 }
 
 .admin-stats .stat-card.resolved {
-    border-left: 4px solid #4CAF50; /* Success color */
+    border-left: 4px solid #4CAF50;
 }
 
 .admin-stats .stat-card.total {
-    border-left: 4px solid #3f51b5; /* Primary color */
+    border-left: 4px solid #3f51b5;
 }
 
 .filter-controls {
@@ -1105,18 +1080,18 @@ html {
 
 /* --- Footer --- */
 .footer {
-    background: #263238; /* Dark Blue Gray for footer */
+    background: #263238;
     color: white;
     text-align: center;
     padding: 30px;
     margin-top: 60px;
     font-size: 0.95rem;
-    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.1); /* Top shadow */
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.1);
     letter-spacing: 0.2px;
 }
 
 /* --- Responsive Design --- */
-@media (max-width: 992px) { /* Tablets and larger phones (landscape) */
+@media (max-width: 992px) {
     .nav-container {
         flex-direction: column;
         height: auto;
@@ -1180,7 +1155,7 @@ html {
     }
 }
 
-@media (max-width: 768px) { /* Smaller tablets and large phones (portrait) */
+@media (max-width: 768px) {
     .main-content {
         padding: 30px 15px;
     }
@@ -1200,7 +1175,7 @@ html {
         font-size: 2.5rem;
     }
     .features-grid, .stats-grid, .content-grid {
-        grid-template-columns: 1fr; /* Single column layout for most content */
+        grid-template-columns: 1fr;
         gap: 25px;
     }
     .control-buttons {
@@ -1222,7 +1197,7 @@ html {
         font-size: 0.65rem;
     }
     .schedule-table-time-header {
-        min-width: 60px; /* Adjust time column width */
+        min-width: 60px;
     }
     .btn {
         padding: 12px 25px;
@@ -1239,7 +1214,7 @@ html {
     }
     /* Tabs specific adjustments */
     .tab-buttons {
-        flex-direction: column; /* Stack tabs vertically */
+        flex-direction: column;
         align-items: stretch;
     }
     .tab-button {
@@ -1255,7 +1230,7 @@ html {
     }
 }
 
-@media (max-width: 480px) { /* Small phones */
+@media (max-width: 480px) {
     .nav-brand {
         font-size: 1.5rem;
     }
@@ -1273,7 +1248,7 @@ html {
         text-align: center;
         justify-content: center;
     }
-    .nav-link::after { /* Full width underline for stacked links */
+    .nav-link::after {
         width: 100%;
         left: 0;
         right: 0;
@@ -1311,6 +1286,7 @@ html {
     }
 }
 
+
 /* --- Animation Classes (Standard) --- */
 .fade-in {
     animation: fadeIn 0.5s ease-in;
@@ -1343,159 +1319,4 @@ html {
 
 @keyframes spin {
     to { transform: rotate(360deg); }
-}
-
-/* Utility Classes for content display in dynamic inputs */
-.dynamic-time-ranges-container {
-    border: 1px dashed #cfd8dc; /* Light dashed border */
-    border-radius: 10px;
-    padding: 15px;
-    margin-top: 15px;
-    background-color: #f8faff; /* Very light blue background */
-    min-height: 80px; /* Ensure visibility even if empty */
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: center;
-    align-items: flex-start; /* Align items to the start in RTL */
-}
-
-.dynamic-time-range-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #e3f2fd; /* Lighter blue for items */
-    border: 1px solid #bbdefb; /* Soft border */
-    border-radius: 8px;
-    padding: 10px 15px;
-    font-size: 0.95rem;
-    color: #34495e;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
-    width: 100%;
-    transition: all 0.2s ease;
-}
-
-.dynamic-time-range-item:hover {
-    transform: translateX(5px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-
-.dynamic-time-range-item .delete-btn {
-    background: none;
-    border: none;
-    color: #ef5350; /* Red color for delete icon */
-    cursor: pointer;
-    font-size: 1.1rem;
-    transition: color 0.2s ease, transform 0.2s ease;
-}
-
-.dynamic-time-range-item .delete-btn:hover {
-    color: #e53935; /* Darker red on hover */
-    transform: scale(1.1);
-}
-
-.add-time-range-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: flex-end;
-    margin-top: 20px; /* More space */
-    padding-top: 15px;
-    border-top: 1px solid #eceff1; /* Subtle separator */
-}
-
-.add-time-range-controls .form-group {
-    margin-bottom: 0;
-    flex: 1 1 auto;
-    min-width: 120px;
-}
-
-.add-time-range-controls .form-group label {
-    margin-bottom: 5px;
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-.add-time-range-controls .form-control {
-    padding: 10px 15px; /* Slightly more padding */
-    font-size: 0.9rem;
-    border-radius: 8px;
-}
-
-.add-time-range-controls .btn {
-    padding: 10px 20px; /* Smaller padding for the button */
-    font-size: 0.95rem;
-    align-self: flex-end;
-    box-shadow: none;
-    letter-spacing: normal; /* Reset letter spacing */
-}
-
-.add-time-range-controls .btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-}
-
-/* Tabs specific styling (already in previous CSS) */
-.tabs-container {
-    background: #ffffff; /* Pure white for tab container */
-    border-radius: 20px;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1); /* Consistent shadow */
-    margin-bottom: 50px;
-    padding: 30px; /* More padding inside container */
-}
-
-.tab-buttons {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px; /* More space */
-    margin-bottom: 30px;
-    border-bottom: 2px solid #e0e6f0;
-    padding-bottom: 15px;
-}
-
-.tab-button {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 10px;
-    background: #f0f4f7; /* Lighter background for inactive */
-    color: #607d8b;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.tab-button:hover {
-    background: #cfd8dc; /* Darker on hover */
-    color: #546E7A;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-
-.tab-button.active {
-    background: #00796B; /* Dark Teal for active tab */
-    color: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    transform: translateY(-3px);
-}
-
-.tab-button.active:hover {
-    background: #00695C; /* Darker active on hover */
-    transform: translateY(-3px);
-}
-
-.tab-content {
-    display: none;
-    padding: 10px;
-    animation: fadeIn 0.5s ease-in;
-}
-
-.tab-content.active {
-    display: block;
 }
