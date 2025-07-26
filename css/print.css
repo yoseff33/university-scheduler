@@ -1,0 +1,133 @@
+/* css/print.css */
+
+/* Hide elements not needed for print */
+@media print {
+    body {
+        background: none !important; /* Remove gradient background */
+        color: black !important;
+        print-color-adjust: exact; /* Ensures background colors are printed */
+    }
+
+    .navbar,
+    .footer,
+    .page-header,
+    .schedule-controls,
+    .btn,
+    .empty-state,
+    .message-toast-container,
+    .card-header .fa-cogs, /* Hide icons in card headers if not needed */
+    .card-header .fa-user-md,
+    .card-header .fa-chart-line,
+    .card-header .fa-building,
+    .card-header .fa-search,
+    .filter-controls,
+    .report-actions,
+    .item-actions /* Hide edit/delete buttons in lists */
+    {
+        display: none !important;
+    }
+
+    /* Adjust main content padding for print */
+    .main-content {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+    }
+
+    /* Adjust cards for print */
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        border-radius: 0 !important;
+        margin-bottom: 10px !important;
+        page-break-inside: avoid; /* Avoid breaking cards across pages */
+        overflow: visible !important; /* Ensure content is not hidden */
+    }
+
+    .card-header {
+        background-color: #e0e0e0 !important; /* Lighter background for headers */
+        color: black !important;
+        box-shadow: none !important;
+        border-bottom: 1px solid #ccc !important;
+    }
+
+    .card-body {
+        padding: 10px !important;
+    }
+
+    /* Tables for print */
+    .table-container {
+        overflow-x: visible !important; /* Allow table to expand */
+    }
+    .schedule-table {
+        width: 100% !important;
+        border: 1px solid #ccc !important;
+        page-break-inside: auto; /* Allow tables to break */
+    }
+    .schedule-table th,
+    .schedule-table td {
+        border: 1px solid #ccc !important;
+        padding: 5px !important;
+        font-size: 0.8rem !important;
+        text-align: right !important; /* Ensure RTL alignment */
+    }
+
+    .schedule-table th {
+        background-color: #f0f0f0 !important; /* Lighter header background */
+        color: black !important;
+    }
+
+    .schedule-table-time-header {
+        background-color: #f8f8f8 !important;
+    }
+
+    .schedule-slot {
+        background-color: #f5f5f5 !important;
+        border: 1px solid #a0a0a0 !important;
+        padding: 3px !important;
+        margin: 1px !important;
+        font-size: 0.75rem !important;
+        box-shadow: none !important;
+        cursor: default !important;
+    }
+    .draggable-lecture { /* Disable drag/drop styling for print */
+        cursor: default !important;
+    }
+
+    /* Hide any interactive elements or form controls */
+    input, select, textarea, button, a.btn {
+        display: none !important;
+    }
+    label {
+        font-weight: normal !important;
+    }
+
+    /* Ensure text colors are readable */
+    h1, h2, h3, p, div, span {
+        color: black !important;
+    }
+
+    /* Adjust page breaking for reports list */
+    .admin-reports-list {
+        max-height: none !important;
+        overflow-y: visible !important;
+    }
+    .report-card {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        border-left: 4px solid #ccc !important; /* Keep status bar */
+        border-radius: 0 !important;
+        page-break-inside: avoid;
+    }
+    .report-card.pending {
+        border-left-color: #f59e0b !important;
+    }
+    .report-card.resolved {
+        border-left-color: #10b981 !important;
+    }
+    .report-status {
+        background-color: #e0e0e0 !important;
+        color: black !important;
+        border: 1px solid #ccc !important;
+    }
+}
