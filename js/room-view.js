@@ -68,19 +68,6 @@ const displayRoomSchedule = (roomId) => {
         const timeSlot = timeSlots[i];
         const displayTime = timeSlot.endsWith(':00') ? convertTo12HourFormat(timeSlot) : '';
 
-        if (displayTime === '') {
-            const prevHourSlot = timeSlots[i-1];
-            let shouldSkipRow = false;
-            for (const day of days) {
-                const lecture = schedule[day] && schedule[day][prevHourSlot] ? schedule[day][prevHourSlot][roomId] : null;
-                if (lecture && lecture.startTime === prevHourSlot && lecture.slotsOccupied > 1) {
-                    shouldSkipRow = true;
-                    break;
-                }
-            }
-            if (shouldSkipRow) continue;
-        }
-
         const tr = document.createElement('tr');
         tr.innerHTML = `<td class="schedule-table-time-header">${displayTime}</td>`;
 
@@ -120,7 +107,7 @@ const displayRoomSchedule = (roomId) => {
                         <div class="schedule-slot-info">${lecture.sectionName}</div>
                         <div class="schedule-slot-info">د. ${lecture.doctorName}</div>
                         <div class="schedule-slot-details">
-                            <span>${lecture.courseCode}</span> | <span>${labOrTheory}</span> | <span>(${lecture.type === 'short' ? '50 دقيقة' : '100 دقيقة'})</span>
+                            <span>${lecture.courseCode}</span> | <span>${labOrTheory}</span> | <span>(${lecture.durationMinutes} دقيقة)</span>
                         </div>
                     </div>
                 `;
@@ -131,7 +118,7 @@ const displayRoomSchedule = (roomId) => {
             tr.appendChild(td);
         });
         roomScheduleBody.appendChild(tr);
-    });
+    }
 };
 
 document.getElementById('room-select').addEventListener('change', (e) => {
