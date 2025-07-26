@@ -1,608 +1,1041 @@
-/* css/style.css */
-
-/* Basic Reset & RTL Support */
+/* Global Reset */
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
+/* Body Styles */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f3f4f6; /* Equivalent to bg-gray-100 */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Purple-blue gradient */
+    min-height: 100vh;
     color: #333;
-    line-height: 1.6;
-    direction: rtl; /* Right-to-left support for Arabic */
-    text-align: right; /* Default text alignment for RTL */
-}
-
-.container {
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1.5rem; /* Equivalent to p-6 */
-    padding-right: 1.5rem; /* Equivalent to p-6 */
+    direction: rtl; /* Right-to-left for Arabic */
 }
 
 /* Navigation Bar */
 .navbar {
-    background-color: #2563eb; /* Equivalent to bg-blue-600 */
-    padding: 1rem 0; /* Equivalent to p-4 */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Equivalent to shadow-md */
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-.navbar .container {
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 70px;
 }
 
-.navbar-brand {
-    color: #fff;
-    font-size: 2rem; /* Equivalent to text-2xl */
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
     font-weight: bold;
-    text-decoration: none;
+    color: #2563eb;
+    transition: color 0.3s ease; /* Added transition */
 }
 
-.nav-links a {
-    color: #fff;
+.nav-brand:hover {
+    color: #1d4ed8; /* Darker blue on hover */
+}
+
+.nav-brand i {
+    font-size: 1.8rem;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 10px;
+}
+
+.nav-link {
     text-decoration: none;
-    font-size: 1rem;
-    margin-right: 1rem; /* Equivalent to space-x-4 and space-x-reverse */
+    color: #555;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    position: relative; /* For underline effect */
+}
+
+.nav-link:hover {
+    background: #2563eb;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Underline effect on hover */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    right: 50%; /* Start from center */
+    width: 0;
+    height: 2px;
+    background-color: white;
+    transition: all 0.3s ease-out;
+    transform: translateX(50%); /* Adjust to stay centered */
+}
+
+.nav-link:hover::after {
+    width: calc(100% - 20px); /* Adjust width to leave some padding */
+    right: 10px; /* Position correctly with padding */
+    transform: translateX(0);
+}
+
+
+/* Main Content Area */
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: calc(100vh - 140px); /* Adjust based on navbar and footer height */
+}
+
+/* Hero Section (Homepage banner) */
+.hero-section {
+    text-align: center;
+    padding: 60px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    margin-bottom: 40px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+    transition: all 0.5s ease;
+}
+
+.hero-section:hover {
+    transform: scale(1.01);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    color: white;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4); /* Stronger text shadow */
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Features Grid */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.5); /* Subtle border */
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border-color: #2563eb; /* Highlight border on hover */
+}
+
+.feature-card a {
+    text-decoration: none;
+    color: inherit;
+    padding: 30px;
+    display: block;
+    text-align: center;
+}
+
+.feature-card i {
+    font-size: 3rem;
+    color: #2563eb;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.feature-card:hover i {
+    transform: scale(1.1) rotate(5deg);
+    color: #1d4ed8; /* Darker icon on hover */
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #333;
     transition: color 0.3s ease;
 }
 
-.nav-links a:hover {
-    color: #bfdbfe; /* Equivalent to hover:text-blue-200 */
+.feature-card:hover h3 {
+    color: #2563eb; /* Highlight heading on hover */
 }
 
-/* Main Content Section */
-.main-section {
-    background-color: #fff;
-    padding: 2rem; /* Equivalent to p-8 */
-    border-radius: 0.5rem; /* Equivalent to rounded-lg */
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* Equivalent to shadow-lg */
-    margin-top: 2rem; /* Equivalent to mt-8 */
-    margin-bottom: 2rem;
+.feature-card p {
+    color: #666;
+    line-height: 1.6;
 }
 
-.main-section h1 {
-    font-size: 2.5rem; /* Equivalent to text-4xl */
-    font-weight: 800; /* Equivalent to font-extrabold */
-    color: #1e40af; /* Equivalent to text-blue-800 */
-    margin-bottom: 1.5rem; /* Equivalent to mb-6 */
-    text-align: center;
+/* Stats Section */
+.stats-section {
+    margin-top: 60px;
 }
 
-.main-section p {
-    font-size: 1.125rem; /* Equivalent to text-lg */
-    color: #4b5563; /* Equivalent to text-gray-700 */
-    line-height: 1.75; /* Equivalent to leading-relaxed */
-    margin-bottom: 1.5rem; /* Equivalent to mb-6 or mb-8 */
-}
-
-.main-section ul {
-    list-style-type: disc;
-    padding-right: 1.5rem; /* Equivalent to pr-6 or list-inside */
-    color: #4b5563;
-    font-size: 1.125rem;
-    margin-bottom: 2rem;
-    max-width: 42rem; /* Equivalent to max-w-2xl */
-    margin-left: auto;
-    margin-right: auto;
-    text-align: right;
-}
-
-.main-section ul li {
-    margin-bottom: 0.5rem; /* Equivalent to space-y-2 */
-}
-
-.main-section ul li strong {
-    color: #1d4ed8; /* Equivalent to text-blue-700 */
-}
-
-/* Call to Action Buttons */
-.cta-buttons {
-    margin-top: 2.5rem; /* Equivalent to mt-10 */
-    display: flex;
-    flex-direction: column; /* Equivalent to flex-col */
-    justify-content: center;
-    align-items: center;
-    gap: 1rem; /* Equivalent to gap-4 */
-}
-
-.cta-button {
-    background-color: #1d4ed8; /* Equivalent to bg-blue-700 */
-    color: #fff;
-    font-weight: bold;
-    padding: 0.75rem 2rem; /* Equivalent to py-3 px-8 */
-    border-radius: 9999px; /* Equivalent to rounded-full */
-    text-decoration: none;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Equivalent to shadow-lg */
-}
-
-.cta-button:hover {
-    background-color: #1e40af; /* Equivalent to hover:bg-blue-800 */
-    transform: scale(1.05); /* Equivalent to hover:scale-105 */
-}
-
-.cta-button.secondary {
-    background-color: #e5e7eb; /* Equivalent to bg-gray-200 */
-    color: #1d4ed8; /* Equivalent to text-blue-700 */
-}
-
-.cta-button.secondary:hover {
-    background-color: #d1d5db; /* Equivalent to hover:bg-gray-300 */
-}
-
-/* Footer */
-.footer {
-    background-color: #2563eb; /* Equivalent to bg-blue-600 */
-    color: #fff;
-    padding: 1rem; /* Equivalent to p-4 */
-    text-align: center;
-    margin-top: 3rem; /* Equivalent to mt-12 */
-}
-
-/* Form Sections */
-.form-section {
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
-}
-
-.form-section h2 {
-    font-size: 1.5rem; /* Equivalent to text-2xl */
-    font-weight: 600; /* Equivalent to font-semibold */
-    color: #1d4ed8; /* Equivalent to text-blue-700 */
-    margin-bottom: 1rem; /* Equivalent to mb-4 */
-    padding-bottom: 0.5rem; /* Equivalent to pb-2 */
-    border-bottom: 1px solid #d1d5db; /* Equivalent to border-b */
-}
-
-.form-grid {
+.stats-grid {
     display: grid;
-    grid-template-columns: 1fr; /* Equivalent to grid-cols-1 */
-    gap: 1.5rem; /* Equivalent to gap-6 */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
 }
 
-@media (min-width: 768px) { /* Equivalent to md breakpoint */
-    .form-grid {
-        grid-template-columns: 1fr 1fr; /* Equivalent to md:grid-cols-2 */
-    }
-    .col-span-1-md-2 { /* Equivalent to col-span-1 md:col-span-2 */
-        grid-column: span 1 / span 1;
-    }
-    .col-span-1-md-2.full-width {
-        grid-column: span 2 / span 2;
-    }
-}
-@media (min-width: 1024px) { /* Equivalent to lg breakpoint */
-    .time-slots-grid {
-        grid-template-columns: repeat(7, minmax(0, 1fr)); /* Equivalent to lg:grid-cols-7 */
-    }
+.stat-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border-color: #764ba2; /* Highlight with purple border */
+}
+
+.stat-card i {
+    font-size: 2.5rem;
+    color: #2563eb;
+    margin-bottom: 15px;
+    transition: color 0.3s ease;
+}
+.stat-card:hover i {
+    color: #764ba2; /* Change icon color on hover */
+}
+
+.stat-card h3 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.stat-card p {
+    color: #666;
+}
+
+/* Page Header (for other pages) */
+.page-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    color: white;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Content Grid (for general layout) */
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Example: two columns */
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+/* General Card Style */
+.card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease; /* Added transition for general card hover */
+}
+
+.card:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); /* Slight shadow increase on hover */
+}
+
+.card-header {
+    background: #2563eb;
+    color: white;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-header h2 {
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-body {
+    padding: 30px;
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 20px;
+}
 
 .form-group label {
     display: block;
-    color: #374151; /* Equivalent to text-gray-700 */
-    font-size: 0.875rem; /* Equivalent to text-sm */
-    font-weight: bold;
-    margin-bottom: 0.5rem; /* Equivalent to mb-2 */
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
 }
 
-.form-control {
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Equivalent to shadow */
-    appearance: none;
-    border: 1px solid #d1d5db; /* Equivalent to border */
-    border-radius: 0.25rem; /* Equivalent to rounded */
+.form-group input,
+.form-group select,
+.form-group textarea {
     width: 100%;
-    padding: 0.5rem 0.75rem; /* Equivalent to py-2 px-3 */
-    color: #374151; /* Equivalent to text-gray-700 */
-    line-height: 1.25; /* Equivalent to leading-tight */
+    padding: 12px 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
     outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-.form-control:focus {
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* Equivalent to focus:shadow-outline */
-    border-color: #2563eb; /* Equivalent to focus:border-blue-600 */
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
 }
 
-textarea.form-control {
-    min-height: 5rem; /* Example height for textarea */
-}
-
-input[type="checkbox"] {
-    margin-left: 0.5rem; /* Equivalent to ml-2 */
-    line-height: normal; /* Equivalent to leading-tight */
-}
-
-.form-submit-button {
-    background-color: #2563eb; /* Equivalent to bg-blue-600 */
-    color: #fff;
-    font-weight: bold;
-    padding: 0.5rem 1rem; /* Equivalent to py-2 px-4 */
-    border-radius: 0.25rem; /* Equivalent to rounded */
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    outline: none;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Equivalent to focus:shadow-outline */
-}
-
-.form-submit-button:hover {
-    background-color: #1e40af; /* Equivalent to hover:bg-blue-700 */
-}
-
-.flex-end {
+.checkbox-item {
     display: flex;
-    justify-content: flex-end; /* Equivalent to justify-end */
-}
-
-.list-container {
-    margin-top: 2rem; /* Equivalent to mt-8 */
-    border-top: 1px solid #d1d5db; /* Equivalent to border-t */
-    padding-top: 1.5rem; /* Equivalent to pt-6 */
-}
-
-.list-container h3 {
-    font-size: 1.25rem; /* Equivalent to text-xl */
-    font-weight: 600; /* Equivalent to font-semibold */
-    margin-bottom: 1rem; /* Equivalent to mb-4 */
-}
-
-.item-list {
-    list-style-type: disc;
-    padding-right: 1.5rem; /* Equivalent to pr-6 */
-    color: #374151; /* Equivalent to text-gray-800 */
-    line-height: 1.5;
-}
-
-.item-list li {
-    margin-bottom: 0.5rem; /* Equivalent to space-y-2 */
-}
-
-.item-list button {
-    margin-right: 0.5rem; /* Equivalent to mr-2 */
-    color: #ef4444; /* Equivalent to text-red-500 */
-    font-size: 0.875rem; /* Equivalent to text-sm */
-    background: none;
-    border: none;
+    align-items: center;
+    gap: 8px;
+    font-weight: normal;
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: all 0.2s ease;
+}
+.checkbox-item:hover {
+    color: #2563eb;
 }
 
-.item-list button:hover {
-    color: #dc2626; /* Equivalent to hover:text-red-700 */
+.checkbox-item input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    transform: scale(1.2); /* Slightly larger checkbox */
+    transition: transform 0.2s ease;
+}
+.checkbox-item input[type="checkbox"]:checked {
+    accent-color: #2563eb; /* Color of checked checkbox */
 }
 
-/* Specific styles for time slots in data entry */
-.time-slot-day-header {
-    font-weight: 500; /* Equivalent to font-medium */
-    color: #1f2937; /* Equivalent to text-gray-800 */
-    margin-bottom: 0.5rem; /* Equivalent to mb-2 */
-}
 
-.time-input {
-    display: block;
-    margin-bottom: 0.5rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    border: 1px solid #d1d5db;
-    border-radius: 0.25rem;
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    color: #374151;
-}
-
-.time-slots-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr)); /* Equivalent to grid-cols-2 */
-    gap: 1rem; /* Equivalent to gap-4 */
-}
-@media (min-width: 768px) { /* Equivalent to md breakpoint */
-    .time-slots-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr)); /* Equivalent to md:grid-cols-4 */
-    }
-}
-
-/* Schedule Generation Page */
-.generation-status {
-    margin-top: 1rem; /* Equivalent to mt-4 */
-    color: #4b5563; /* Equivalent to text-gray-600 */
-    text-align: center;
-}
-
-.generate-button {
-    background-color: #10b981; /* Equivalent to bg-green-600 */
-    color: #fff;
-    font-weight: bold;
-    padding: 0.75rem 1.5rem; /* Equivalent to py-3 px-6 */
-    border-radius: 9999px; /* Equivalent to rounded-full */
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* Buttons */
+.btn {
+    padding: 12px 24px;
     border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Added button shadow */
 }
 
-.generate-button:hover {
-    background-color: #059669; /* Equivalent to hover:bg-green-700 */
-    transform: scale(1.05);
+.btn:hover {
+    transform: translateY(-3px); /* Slightly more pronounced lift */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
 }
 
-.schedule-grid-output {
-    display: grid;
-    grid-template-columns: 1fr; /* Equivalent to grid-cols-1 */
-    gap: 2rem; /* Equivalent to gap-8 */
-}
-@media (min-width: 1024px) { /* Equivalent to lg breakpoint */
-    .schedule-grid-output {
-        grid-template-columns: 1fr 1fr; /* Equivalent to lg:grid-cols-2 */
-    }
+.btn-primary {
+    background: #2563eb;
+    color: white;
 }
 
-.doctor-schedule-card {
-    background-color: #fff;
-    padding: 1.5rem; /* Equivalent to p-6 */
-    border-radius: 0.5rem;
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 2rem;
+.btn-primary:hover {
+    background: #1d4ed8;
 }
 
-.doctor-schedule-card h2 {
-    font-size: 1.5rem;
+.btn-danger {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+.btn-success {
+    background: #059669;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #047857;
+}
+
+.btn-warning {
+    background: #d97706;
+    color: white;
+}
+
+.btn-warning:hover {
+    background: #b45309;
+}
+
+/* Items List (for displaying lists of data) */
+.items-list {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-left: 5px; /* Adjust for scrollbar */
+    padding-right: 5px; /* Adjust for scrollbar */
+}
+
+.item-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    transition: all 0.2s ease; /* Added transition */
+}
+
+.item-card:hover {
+    transform: translateX(5px); /* Slight slide effect */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.item-title {
     font-weight: bold;
-    color: #1d4ed8;
-    margin-bottom: 1rem;
-    text-align: center;
+    color: #2563eb;
+    font-size: 1.1rem;
 }
 
-.doctor-schedule-card p {
-    color: #4b5563;
-    text-align: center;
-    margin-bottom: 1rem;
+.item-actions {
+    display: flex;
+    gap: 5px;
 }
 
-.schedule-table-container {
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+}
+
+.item-details {
+    color: #666;
+    line-height: 1.6;
+}
+
+.item-detail {
+    margin-bottom: 5px;
+}
+
+/* Schedule specific styles */
+.schedule-controls {
+    margin-bottom: 30px;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.status-message {
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    display: none; /* Hidden by default, shown with JS */
+    font-weight: 600;
+    display: flex; /* Ensure flex for icon alignment */
+    align-items: center;
+    gap: 10px;
+}
+
+.status-message i {
+    font-size: 1.2rem;
+}
+
+.status-message.success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.status-message.error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.status-message.info {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+.status-message.warning {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.table-container {
     overflow-x: auto;
+    margin-bottom: 20px;
 }
 
 .schedule-table {
-    min-width: 100%;
-    background-color: #fff;
-    border: 1px solid #d1d5db;
-    border-radius: 0.5rem;
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-collapse: collapse; /* Ensure borders collapse correctly */
 }
 
-.schedule-table thead tr {
-    background-color: #3b82f6; /* Equivalent to bg-blue-500 */
-    color: #fff;
-}
-
-.schedule-table th, .schedule-table td {
-    padding: 0.75rem 1rem; /* Equivalent to py-3 px-4 */
-    text-align: right;
-    border-bottom: 1px solid #d1d5db; /* Equivalent to border-b border-gray-300 */
-    border-left: 1px solid #d1d5db; /* Add left border for separation */
-}
-
-.schedule-table th:last-child, .schedule-table td:last-child {
-    border-left: none; /* No left border on the last column */
-}
-
-.schedule-table tbody tr:hover {
-    background-color: #f9fafb; /* Equivalent to hover:bg-gray-50 */
-}
-
-.time-slot-cell {
-    position: relative; /* For positioning draggable content */
-    border-left: 1px solid #d1d5db; /* Separator for columns */
-}
-
-.time-slot-cell.has-lecture {
-    background-color: #eff6ff; /* Light blue background for cells with lectures */
-}
-
-.draggable-lecture {
-    background-color: #bfdbfe; /* Equivalent to bg-blue-100 */
-    padding: 0.5rem; /* Equivalent to p-2 */
-    border-radius: 0.25rem; /* Equivalent to rounded */
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Equivalent to shadow-sm */
-    font-size: 0.875rem; /* Equivalent to text-sm */
-    cursor: grab;
-    text-align: right;
-    white-space: normal; /* Allow text to wrap */
-    word-break: break-word;
-    min-height: 3rem; /* Minimum height for better drag/drop experience */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end; /* Align text to the right in RTL */
-}
-
-.draggable-lecture p {
-    margin: 0;
-    padding: 0;
-    line-height: 1.2;
-}
-
-.draggable-lecture .font-semibold {
-    font-weight: 600;
-}
-
-.draggable-lecture .text-xs {
-    font-size: 0.75rem;
-}
-
-.draggable-lecture.gu-mirror { /* Dragula mirror styling */
-    opacity: 0.8;
-    background-color: #dbeafe;
-    border: 1px dashed #60a5fa;
-    z-index: 9999;
-}
-
-/* Export Button */
-.export-options-section {
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    margin-top: 2rem;
+.schedule-table th,
+.schedule-table td {
+    padding: 12px;
     text-align: center;
+    border: 1px solid #e2e8f0;
 }
 
-.export-options-section h2 {
-    font-size: 1.5rem;
+.schedule-table th {
+    background: #2563eb;
+    color: white;
     font-weight: 600;
-    color: #1d4ed8;
-    margin-bottom: 1rem;
 }
 
-.export-button {
-    background-color: #9333ea; /* Equivalent to bg-purple-600 */
-    color: #fff;
+.schedule-table-time-header { /* Specific for time column header */
+    background: #f0f9ff; /* Lighter background for time column */
     font-weight: bold;
-    padding: 0.5rem 1.25rem; /* Equivalent to py-2 px-5 */
-    border-radius: 9999px; /* Equivalent to rounded-full */
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: none;
-    cursor: pointer;
-}
-
-.export-button:hover {
-    background-color: #7e22ce; /* Equivalent to hover:bg-purple-700 */
-    transform: scale(1.05);
-}
-
-.export-options-section p {
-    font-size: 0.875rem; /* Equivalent to text-sm */
-    color: #6b7280; /* Equivalent to text-gray-500 */
-    margin-top: 0.5rem; /* Equivalent to mt-2 */
-}
-
-/* Doctor View Page */
-.select-wrapper {
-    margin-bottom: 1.5rem; /* Equivalent to mb-6 */
-}
-
-.select-wrapper label {
-    display: block;
-    color: #374151;
-    font-size: 0.875rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-
-.doctor-schedule-display {
-    margin-top: 1.5rem; /* Equivalent to mt-6 */
-    border-top: 1px solid #d1d5db; /* Equivalent to border-t */
-    padding-top: 1.5rem; /* Equivalent to pt-6 */
-}
-
-.doctor-schedule-display h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1d4ed8;
-    margin-bottom: 1rem;
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* Room Issue Report Form */
-.issue-report-button {
-    background-color: #dc2626; /* Equivalent to bg-red-600 */
-    color: #fff;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    outline: none;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.issue-report-button:hover {
-    background-color: #b91c1c; /* Equivalent to hover:bg-red-700 */
-}
-
-.issue-report-status {
-    margin-top: 1rem;
-    text-align: center;
-    color: #16a34a; /* Equivalent to text-green-700 */
-    font-weight: 600;
-}
-
-/* Help Page */
-.help-section h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1d4ed8;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #d1d5db;
-}
-
-.help-section h3 {
-    font-size: 1.25rem;
-    font-weight: 500;
     color: #2563eb;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
 }
 
-.help-section p {
-    color: #4b5563;
-    margin-bottom: 1rem;
+.schedule-table-cell { /* Specific for content cells */
+    background: white;
+    min-height: 60px; /* Ensure minimum height */
+    vertical-align: top;
+    position: relative; /* For draggable content */
+    padding: 5px; /* Reduced padding for lecture slot */
 }
 
-.help-section ul {
-    list-style-type: disc;
-    padding-right: 1.5rem;
-    color: #4b5563;
-    line-height: 1.5;
-    margin-bottom: 1rem;
+/* Hover effect for empty cells */
+.schedule-table-cell:not(.has-lecture):hover {
+    background-color: #e0f2fe; /* Light blue on hover for empty cells */
+    cursor: pointer; /* Indicate it's a drop target */
 }
 
-.help-section ul li {
-    margin-bottom: 0.5rem;
+.schedule-slot {
+    background: #f0f9ff; /* Light blue background for lectures */
+    border: 2px solid #2563eb;
+    border-radius: 6px;
+    padding: 8px;
+    margin: 2px;
+    font-size: 0.85rem;
+    line-height: 1.3;
+    transition: all 0.2s ease; /* Added transition */
+    cursor: grab;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.help-section ul li strong {
-    color: #1d4ed8;
+.schedule-slot:hover {
+    transform: translateY(-2px); /* Lift effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.help-section strong.text-red {
-    color: #dc2626;
+.schedule-slot-subject {
+    font-weight: bold;
+    color: #1e40af;
+    margin-bottom: 4px;
 }
 
-.font-mono {
-    font-family: monospace;
-}
-.bg-light-gray {
-    background-color: #e5e7eb; /* Equivalent to bg-gray-200 */
-}
-.p-small {
-    padding: 0.25rem; /* Equivalent to p-1 */
-}
-.rounded-small {
-    border-radius: 0.25rem; /* Equivalent to rounded */
+.schedule-slot-info {
+    color: #64748b;
+    font-size: 0.75rem;
 }
 
 /* Dragula specific styles */
 .gu-transit {
-    opacity: 0.5;
+    opacity: 0.7; /* Make ghost element slightly transparent */
     background-color: #c7d2fe; /* light blue */
+    border: 1px dashed #60a5fa;
+    transform: rotate(2deg); /* Slight rotation while dragging */
+}
+
+.gu-mirror { /* The actual element being dragged */
+    background-color: #a5b4fc; /* Darker blue for the mirror */
+    opacity: 0.9;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .gu-hide {
     display: none;
+}
+
+
+/* Admin Reports */
+.admin-stats {
+    margin-bottom: 30px;
+}
+
+.stat-card.pending {
+    border-left: 4px solid #f59e0b;
+}
+
+.stat-card.resolved {
+    border-left: 4px solid #10b981;
+}
+
+.stat-card.total {
+    border-left: 4px solid #6366f1;
+}
+
+.filter-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px; /* Added margin */
+    flex-wrap: wrap;
+}
+
+.filter-controls select {
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    transition: all 0.3s ease;
+}
+.filter-controls select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+
+.admin-reports-list {
+    max-height: 600px;
+    overflow-y: auto;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.report-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.report-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.report-card.pending {
+    border-left: 4px solid #f59e0b;
+}
+
+.report-card.resolved {
+    border-left: 4px solid #10b981;
+}
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.report-title {
+    font-weight: bold;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.report-status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+.report-status.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.report-status.resolved {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.report-details {
+    color: #666;
+    line-height: 1.6;
+}
+
+.report-meta {
+    font-size: 0.9rem;
+    color: #8b5cf6;
+    margin-top: 10px;
+    display: block; /* Ensure it takes full width */
+}
+
+.report-actions {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end; /* Align buttons to the right */
+}
+.report-actions .btn {
+    box-shadow: none; /* No extra shadow on these small buttons */
+}
+.report-actions .btn:hover {
+    transform: translateY(-1px); /* Less lift for small buttons */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Footer */
+.footer {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-menu {
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: center; /* Center nav links */
+        margin-top: 10px;
+    }
+    
+    .nav-link {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+    
+    .nav-container {
+        flex-direction: column; /* Stack brand and menu */
+        height: auto;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .control-buttons {
+        justify-content: center;
+    }
+    
+    .checkbox-group {
+        grid-template-columns: 1fr;
+    }
+
+    .schedule-table th, .schedule-table td {
+        padding: 8px; /* Reduce padding for smaller screens */
+        font-size: 0.85rem;
+    }
+    .schedule-slot {
+        padding: 5px;
+        font-size: 0.75rem;
+    }
+    .schedule-slot-info {
+        font-size: 0.65rem;
+    }
+    .schedule-table-time-header {
+        min-width: 80px; /* Ensure time column isn't too narrow */
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 15px;
+    }
+    
+    .card-body {
+        padding: 20px;
+    }
+    
+    .hero-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .page-header h1 {
+        font-size: 2rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .nav-menu {
+        flex-direction: column; /* Stack nav items vertically */
+        align-items: center;
+    }
+    .nav-link {
+        width: 100%; /* Full width for stacked links */
+        text-align: center;
+    }
+    .nav-link::after {
+        right: 0;
+        left: 0;
+        width: 100%;
+        transform: translateX(0); /* Ensure underline extends full width */
+    }
+    .nav-link:hover::after {
+         width: 100%;
+         right: 0;
+    }
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Loading Spinner */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Additional styles for schedule details that were previously in JS */
+/* These classes are now handled more granularly by schedule-slot, schedule-slot-subject, etc. */
+/* Keeping them here for reference if specific elements need these styles directly */
+.day-schedule {
+    margin-bottom: 30px;
+}
+
+.day-title {
+    color: #2563eb;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.class-item { /* This class might be replaced by schedule-slot in HTML */
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 4px solid #2563eb;
+}
+
+.class-time { /* This class might be replaced by schedule-table-time-header or within schedule-slot */
+    font-weight: bold;
+    color: #2563eb;
+    min-width: 120px;
+}
+
+.class-subject { /* Replaced by schedule-slot-subject */
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.class-info { /* Replaced by schedule-slot-info */
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Additional styles for report status that were previously in JS */
+/* These are integrated into .status-message and .report-status directly */
+
+/* Additional styles for admin reports that were previously in JS */
+.report-actions {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #64748b;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.empty-state i {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #94a3b8; /* Grayish blue for icons */
+}
+
+
+/* Form field error style */
+.field-error {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 5px;
+    text-align: right; /* Ensure it aligns right in RTL */
+}
+
+/* Message toast styles */
+.message-toast-container { /* Container for all toasts */
+    position: fixed;
+    top: 20px;
+    left: 20px; /* Changed to left for RTL pop-up from left */
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message-toast {
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: slideInLeft 0.3s ease-out; /* Adjusted for RTL slide */
+    display: flex; /* Ensure flex for icon alignment */
+    align-items: center;
+    gap: 10px;
+    min-width: 250px;
+    max-width: 400px;
+}
+
+.message-toast.success {
+    background: #10b981;
+    color: white;
+}
+
+.message-toast.error {
+    background: #ef4444;
+    color: white;
+}
+
+.message-toast.warning {
+    background: #f59e0b;
+    color: white;
+}
+
+.message-toast.info {
+    background: #3b82f6;
+    color: white;
+}
+
+.message-toast i {
+    font-size: 1.3rem; /* Larger icon in toast */
+}
+
+.message-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Keyframe animations for messages */
+@keyframes slideInLeft { /* Adjusted for RTL */
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOutLeft { /* Adjusted for RTL */
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(-100%); opacity: 0; }
 }
