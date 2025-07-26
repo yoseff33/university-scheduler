@@ -1,9 +1,9 @@
 // js/doctor-view.js
 
 let doctors = getData('doctors');
-let rooms = getData('rooms');
+let rooms = getData('rooms'); // لا تزال مطلوبة لـ populateRoomIssueSelect في admin-reports.html
 let doctorSchedules = getData('doctorSchedules');
-let issueReports = getData('issueReports') || [];
+// issueReports لم تعد هنا، تم نقلها إلى admin-reports.js
 
 const daysArabic = {
     sunday: "الأحد",
@@ -116,48 +116,6 @@ document.getElementById('doctor-select').addEventListener('change', (e) => {
     }
 });
 
-const populateRoomIssueSelect = () => {
-    const issueRoomSelect = document.getElementById('issue-room');
-    issueRoomSelect.innerHTML = '<option value="">اختر قاعة</option>';
-
-    rooms.forEach(room => {
-        const option = document.createElement('option');
-        option.value = room.id;
-        option.textContent = room.name;
-        issueRoomSelect.appendChild(option);
-    });
-};
-
-document.getElementById('room-issue-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const roomId = parseInt(document.getElementById('issue-room').value);
-    const issueType = document.getElementById('issue-type').value;
-    const issueDescription = document.getElementById('issue-description').value;
-
-    if (isNaN(roomId) || !rooms.some(r => r.id === roomId)) {
-        showMessage('الرجاء اختيار قاعة صالحة.', 'error');
-        return;
-    }
-
-    const room = rooms.find(r => r.id === roomId);
-    
-    issueReports.push({
-        id: Date.now(),
-        roomId: roomId,
-        roomName: room.name,
-        issueType: issueType,
-        description: issueDescription,
-        timestamp: new Date().toLocaleString(),
-        status: 'pending'
-    });
-    saveData('issueReports', issueReports);
-
-    showMessage(`تم استلام بلاغك عن مشكلة "${issueType}" في القاعة "${room.name}" بنجاح!`, 'success');
-
-    e.target.reset();
-});
-
 // زر الطباعة
 document.getElementById('print-doctor-schedule-btn').addEventListener('click', () => {
     const doctorId = document.getElementById('doctor-select').value;
@@ -182,10 +140,8 @@ document.getElementById('print-doctor-schedule-btn').addEventListener('click', (
     }
 });
 
-
 document.addEventListener('DOMContentLoaded', () => {
     populateDoctorSelect();
-    populateRoomIssueSelect();
 
     if (doctors.length > 0 && Object.keys(doctorSchedules).length > 0) {
         const firstDoctorId = doctors[0].id;
