@@ -8,7 +8,8 @@
 /* Body Styles */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Purple-blue gradient */
+    /* Updated professional gradient */
+    background: linear-gradient(135deg, #e0f2f7 0%, #c5e1a5 100%); /* Softer, professional gradient */
     min-height: 100vh;
     color: #333;
     direction: rtl; /* Right-to-left for Arabic */
@@ -16,9 +17,9 @@ body {
 
 /* Navigation Bar */
 .navbar {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.98); /* Slightly less transparent */
+    backdrop-filter: blur(15px); /* Stronger blur */
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15); /* More prominent shadow */
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -27,65 +28,69 @@ body {
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 25px; /* Increased padding */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 70px;
+    height: 80px; /* Taller navbar */
 }
 
 .nav-brand {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 1.5rem;
+    gap: 12px; /* Increased gap */
+    font-size: 1.6rem; /* Slightly larger */
     font-weight: bold;
-    color: #2563eb;
+    color: #3a537d; /* Professional dark blue */
     transition: color 0.3s ease;
+    text-decoration: none; /* Ensure no underline */
 }
 
 .nav-brand:hover {
-    color: #1d4ed8;
+    color: #1f375c; /* Darker on hover */
 }
 
 .nav-brand i {
-    font-size: 1.8rem;
+    font-size: 2rem; /* Larger icon */
+    color: #5b7dae; /* Muted blue for icon */
 }
 
 .nav-menu {
     display: flex;
     list-style: none;
-    gap: 10px;
+    gap: 15px; /* Increased gap between links */
 }
 
 .nav-link {
     text-decoration: none;
-    color: #555;
-    padding: 10px 15px;
-    border-radius: 8px;
+    color: #6a7f9b; /* Muted gray-blue */
+    padding: 10px 18px; /* More padding */
+    border-radius: 10px; /* Softer corners */
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     gap: 8px;
     white-space: nowrap;
     position: relative;
+    font-weight: 500; /* Slightly bolder */
 }
 
 .nav-link:hover {
-    background: #2563eb;
+    background: #5b7dae; /* Muted blue background */
     color: white;
-    transform: translateY(-2px);
+    transform: translateY(-3px); /* More pronounced lift */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
 }
 
 /* Underline effect on hover */
 .nav-link::after {
     content: '';
     position: absolute;
-    bottom: -5px;
+    bottom: -8px; /* Lower position */
     right: 50%;
     width: 0;
-    height: 2px;
-    background-color: white;
+    height: 3px; /* Thicker underline */
+    background-color: #a7d08c; /* Greenish yellow underline */
     transition: all 0.3s ease-out;
     transform: translateX(50%);
 }
@@ -101,205 +106,210 @@ body {
 .main-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
-    min-height: calc(100vh - 140px); /* Adjust based on navbar and footer height */
+    padding: 30px 20px; /* Increased top padding */
+    min-height: calc(100vh - 160px); /* Adjust based on new navbar and footer height */
 }
 
 /* Hero Section (Homepage banner) */
 .hero-section {
     text-align: center;
-    padding: 60px 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    margin-bottom: 40px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+    padding: 80px 20px; /* More padding */
+    background: rgba(255, 255, 255, 0.2); /* More transparent */
+    border-radius: 25px; /* Softer corners */
+    margin-bottom: 50px; /* More margin */
+    backdrop-filter: blur(15px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.18); /* Stronger shadow */
     transition: all 0.5s ease;
+    border: 1px solid rgba(255, 255, 255, 0.4); /* Subtle white border */
 }
 
 .hero-section:hover {
-    transform: scale(1.01);
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+    transform: scale(1.005); /* Less aggressive scale */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
 }
 
 .hero-content h1 {
-    font-size: 3rem;
-    color: white;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4); /* Stronger text shadow */
+    font-size: 3.5rem; /* Larger heading */
+    color: #3a537d; /* Dark blue from palette */
+    margin-bottom: 25px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); /* Softer shadow */
 }
 
 .hero-content p {
-    font-size: 1.2rem;
-    color: rgba(255, 255, 255, 0.9);
-    max-width: 600px;
+    font-size: 1.3rem; /* Larger text */
+    color: #5a6b8c; /* Slightly darker than nav link color */
+    max-width: 700px; /* Wider text */
     margin: 0 auto;
+    line-height: 1.8; /* Better readability */
 }
 
 /* Features Grid */
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    margin-bottom: 40px;
+    gap: 35px; /* Increased gap */
+    margin-bottom: 50px;
 }
 
 .feature-card {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.98); /* Less transparent */
+    border-radius: 20px; /* Softer corners */
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12); /* Slightly larger shadow */
     transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.5); /* Subtle border */
+    border: 1px solid rgba(255, 255, 255, 0.6); /* Clearer border */
 }
 
 .feature-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    border-color: #2563eb; /* Highlight border on hover */
+    transform: translateY(-12px); /* More lift */
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.25); /* Stronger hover shadow */
+    border-color: #a7d08c; /* Highlight border with accent color */
 }
 
 .feature-card a {
     text-decoration: none;
     color: inherit;
-    padding: 30px;
+    padding: 35px; /* More padding */
     display: block;
     text-align: center;
 }
 
 .feature-card i {
-    font-size: 3rem;
-    color: #2563eb;
-    margin-bottom: 20px;
+    font-size: 3.5rem; /* Larger icon */
+    color: #5b7dae; /* Muted blue icon */
+    margin-bottom: 25px;
     transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .feature-card:hover i {
-    transform: scale(1.1) rotate(5deg);
-    color: #1d4ed8; /* Darker icon on hover */
+    transform: scale(1.15) rotate(7deg); /* More pronounced effect */
+    color: #a7d08c; /* Accent color on hover */
 }
 
 .feature-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    color: #333;
+    font-size: 1.6rem; /* Slightly larger */
+    margin-bottom: 18px;
+    color: #3a537d; /* Dark blue heading */
     transition: color 0.3s ease;
 }
 
 .feature-card:hover h3 {
-    color: #2563eb; /* Highlight heading on hover */
+    color: #5b7dae; /* Muted blue on hover */
 }
 
 .feature-card p {
-    color: #666;
-    line-height: 1.6;
+    color: #6a7f9b; /* Muted gray-blue text */
+    line-height: 1.7; /* Better readability */
 }
 
 /* Stats Section */
 .stats-section {
-    margin-top: 60px;
+    margin-top: 70px; /* More margin */
 }
 
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    gap: 25px; /* Increased gap */
 }
 
 .stat-card {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 30px;
-    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.98);
+    padding: 35px; /* More padding */
+    border-radius: 20px; /* Softer corners */
     text-align: center;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Stronger shadow */
     transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    border-color: #764ba2; /* Highlight with purple border */
+    transform: translateY(-8px); /* More lift */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+    border-color: #a7d08c; /* Highlight with accent color */
 }
 
 .stat-card i {
-    font-size: 2.5rem;
-    color: #2563eb;
-    margin-bottom: 15px;
+    font-size: 3rem; /* Larger icon */
+    color: #5b7dae; /* Muted blue */
+    margin-bottom: 20px;
     transition: color 0.3s ease;
 }
 .stat-card:hover i {
-    color: #764ba2; /* Change icon color on hover */
+    color: #a7d08c; /* Accent color on hover */
 }
 
 .stat-card h3 {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 10px;
+    font-size: 2.2rem; /* Larger number */
+    color: #3a537d; /* Dark blue */
+    margin-bottom: 12px;
 }
 
 .stat-card p {
-    color: #666;
+    color: #6a7f9b;
 }
 
 /* Page Header (for other pages) */
 .page-header {
     text-align: center;
-    margin-bottom: 40px;
-    padding: 40px 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    margin-bottom: 50px; /* More margin */
+    padding: 50px 20px; /* More padding */
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .page-header h1 {
-    font-size: 2.5rem;
-    color: white;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 3rem; /* Larger heading */
+    color: #3a537d;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .page-header p {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.2rem;
+    color: #5a6b8c;
 }
 
 /* Content Grid (for general layout) */
 .content-grid {
     display: grid;
     grid-template-columns: 1fr 1fr; /* Example: two columns */
-    gap: 30px;
-    margin-bottom: 40px;
+    gap: 35px;
+    margin-bottom: 50px;
 }
 
 /* General Card Style */
 .card {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
     overflow: hidden;
     transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .card:hover {
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18); /* More pronounced shadow */
 }
 
 .card-header {
-    background: #2563eb;
+    background: #5b7dae; /* Muted blue header */
     color: white;
-    padding: 20px;
+    padding: 22px 30px; /* More padding */
     display: flex;
     align-items: center;
     justify-content: space-between;
+    font-weight: 600; /* Bolder header text */
 }
 
 .card-header h2 {
-    font-size: 1.3rem;
+    font-size: 1.4rem; /* Larger heading */
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .card-body {
@@ -308,24 +318,24 @@ body {
 
 /* Form Elements */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 25px; /* More spacing */
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-weight: 600;
-    color: #333;
+    color: #4a5d7c; /* Darker label color */
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
     width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 1rem;
+    padding: 14px 18px; /* More padding */
+    border: 2px solid #dbe2ed; /* Softer border */
+    border-radius: 10px; /* Softer corners */
+    font-size: 1.05rem; /* Slightly larger font */
     transition: all 0.3s ease;
     background: white;
 }
@@ -334,8 +344,8 @@ body {
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    border-color: #a7d08c; /* Accent color on focus */
+    box-shadow: 0 0 0 4px rgba(167, 208, 140, 0.4); /* Softer focus shadow */
 }
 
 /* Validation error style */
@@ -347,180 +357,180 @@ body {
 .checkbox-group {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
-    margin-top: 10px;
+    gap: 15px; /* More gap */
+    margin-top: 15px;
 }
 
 .checkbox-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     font-weight: normal;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 .checkbox-item:hover {
-    color: #2563eb;
+    color: #5b7dae; /* Muted blue on hover */
 }
 
 .checkbox-item input[type="checkbox"] {
     width: auto;
     margin: 0;
-    transform: scale(1.2); /* Slightly larger checkbox */
+    transform: scale(1.3); /* Larger checkbox */
     transition: transform 0.2s ease;
 }
 .checkbox-item input[type="checkbox"]:checked {
-    accent-color: #2563eb; /* Color of checked checkbox */
+    accent-color: #a7d08c; /* Accent color for checked checkbox */
 }
 
 
 /* Buttons */
 .btn {
-    padding: 12px 24px;
+    padding: 14px 28px; /* More padding */
     border: none;
-    border-radius: 8px;
-    font-size: 1rem;
+    border-radius: 10px; /* Softer corners */
+    font-size: 1.05rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     text-decoration: none;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Added button shadow */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12); /* More subtle shadow */
 }
 
 .btn:hover {
-    transform: translateY(-3px); /* Slightly more pronounced lift */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+    transform: translateY(-4px); /* More pronounced lift */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
 }
 
 .btn-primary {
-    background: #2563eb;
+    background: #5b7dae; /* Muted blue */
     color: white;
 }
 
 .btn-primary:hover {
-    background: #1d4ed8;
+    background: #4a6c8e; /* Darker blue on hover */
 }
 
 .btn-danger {
-    background: #dc2626;
+    background: #e76f51; /* Softer red */
     color: white;
 }
 
 .btn-danger:hover {
-    background: #b91c1c;
+    background: #d15637; /* Darker red on hover */
 }
 
 .btn-success {
-    background: #059669;
+    background: #81b214; /* Greenish yellow */
     color: white;
 }
 
 .btn-success:hover {
-    background: #047857;
+    background: #6a950f; /* Darker green on hover */
 }
 
 .btn-warning {
-    background: #d97706;
+    background: #f7b267; /* Softer orange */
     color: white;
 }
 
 .btn-warning:hover {
-    background: #b45309;
+    background: #e09f51; /* Darker orange on hover */
 }
 
 .btn-info { /* New button color */
-    background: #3b82f6;
+    background: #5b7dae; /* Same as primary for info/neutral actions */
     color: white;
 }
 
 .btn-info:hover {
-    background: #2563eb;
+    background: #4a6c8e;
 }
 
 /* Items List (for displaying lists of data) */
 .items-list {
-    max-height: 500px;
+    max-height: 550px; /* Slightly taller */
     overflow-y: auto;
-    padding-left: 5px; /* Adjust for scrollbar */
-    padding-right: 5px; /* Adjust for scrollbar */
+    padding-left: 8px; /* Adjust for scrollbar */
+    padding-right: 8px; /* Adjust for scrollbar */
 }
 
 .item-card {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 15px;
+    background: #ffffff; /* Pure white for items */
+    border: 1px solid #e0e6f0; /* Softer border */
+    border-radius: 12px; /* Softer corners */
+    padding: 22px; /* More padding */
+    margin-bottom: 18px; /* More margin */
     position: relative;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
-    transition: all 0.2s ease; /* Added transition */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* More noticeable shadow */
+    transition: all 0.2s ease;
 }
 
 .item-card:hover {
-    transform: translateX(5px); /* Slight slide effect */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateX(8px); /* More pronounced slide effect */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
 
 .item-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .item-title {
     font-weight: bold;
-    color: #2563eb;
-    font-size: 1.1rem;
+    color: #3a537d; /* Dark blue */
+    font-size: 1.2rem; /* Larger title */
 }
 
 .item-actions {
     display: flex;
-    gap: 5px;
+    gap: 8px; /* More gap */
 }
 
 .btn-sm {
-    padding: 6px 12px;
-    font-size: 0.875rem;
+    padding: 8px 14px; /* More padding */
+    font-size: 0.9rem; /* Slightly larger */
 }
 
 .item-details {
-    color: #666;
-    line-height: 1.6;
+    color: #6a7f9b; /* Muted text color */
+    line-height: 1.7;
 }
 
 .item-detail {
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 }
 
 /* Schedule specific styles */
 .schedule-controls {
-    margin-bottom: 30px;
+    margin-bottom: 40px; /* More margin */
 }
 
 .control-buttons {
     display: flex;
-    gap: 15px;
+    gap: 20px; /* More gap */
     flex-wrap: wrap;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .status-message {
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 15px;
-    display: none; /* Hidden by default, shown with JS */
+    padding: 18px; /* More padding */
+    border-radius: 10px; /* Softer corners */
+    margin-top: 20px;
+    display: none;
     font-weight: 600;
-    display: flex; /* Ensure flex for icon alignment */
+    display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .status-message i {
-    font-size: 1.2rem;
+    font-size: 1.3rem; /* Larger icon */
 }
 
 .status-message.success {
@@ -549,148 +559,155 @@ body {
 
 .table-container {
     overflow-x: auto;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    border-radius: 12px; /* For overall table container */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08); /* Shadow for entire table block */
 }
 
 .schedule-table {
     width: 100%;
     border-collapse: collapse;
     background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px; /* Softer corners */
+    overflow: hidden; /* Ensures border-radius applies */
 }
 
 .schedule-table th,
 .schedule-table td {
-    padding: 12px;
+    padding: 14px; /* More padding */
     text-align: center;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #e0e6f0; /* Softer border */
 }
 
 .schedule-table th {
-    background: #2563eb;
+    background: #5b7dae; /* Muted blue header */
     color: white;
     font-weight: 600;
 }
 
-.schedule-table-time-header { /* Specific for time column header */
-    background: #f0f9ff; /* Lighter background for time column */
+.schedule-table-time-header {
+    background: #e0f2f7; /* Lighter background for time column */
     font-weight: bold;
-    color: #2563eb;
+    color: #3a537d; /* Dark blue */
 }
 
-.schedule-table-cell { /* Specific for content cells */
+.schedule-table-cell {
     background: white;
-    min-height: 60px; /* Ensure minimum height */
+    min-height: 70px; /* Taller cells */
     vertical-align: top;
-    position: relative; /* For draggable content */
-    padding: 5px; /* Reduced padding for lecture slot */
+    position: relative;
+    padding: 8px; /* Slightly more padding */
 }
 
 /* Hover effect for empty cells */
 .schedule-table-cell:not(.has-lecture):hover {
-    background-color: #e0f2fe; /* Light blue on hover for empty cells */
-    cursor: pointer; /* Indicate it's a drop target */
+    background-color: #f0f8ff; /* Lighter blue on hover */
+    cursor: pointer;
 }
 
 .schedule-slot {
-    background: #f0f9ff; /* Default light blue background for lectures */
-    border: 2px solid #2563eb; /* Default blue border */
-    border-radius: 6px;
-    padding: 8px;
-    margin: 2px;
-    font-size: 0.85rem;
-    line-height: 1.3;
-    transition: all 0.2s ease; /* Added transition */
+    background: #f8fafc; /* Default light background for lecture slot */
+    border: 2px solid #e0e6f0; /* Default subtle border */
+    border-radius: 8px; /* Softer corners */
+    padding: 10px; /* More padding */
+    margin: 4px; /* More margin */
+    font-size: 0.9rem; /* Slightly larger font */
+    line-height: 1.4;
+    transition: all 0.2s ease;
     cursor: grab;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Subtle shadow */
 }
 
 .schedule-slot:hover {
-    transform: translateY(-2px); /* Lift effect */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px); /* More lift */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Specific colors for lectures based on course ID (applied by JS) */
 .schedule-slot.colored-lecture {
-    /* These properties will be set via JS using --lecture-bg-color and --lecture-border-color */
-    /* They are defined in the CSS section below as lecture-color-X */
     background: var(--lecture-bg-color);
     border-color: var(--lecture-border-color);
+    color: #3a537d; /* Ensure main text is readable */
+}
+
+.schedule-slot.colored-lecture .schedule-slot-subject {
+    color: #1f375c; /* Darker subject for better contrast */
+}
+.schedule-slot.colored-lecture .schedule-slot-info {
+    color: #5a6b8c; /* Slightly darker info text */
 }
 
 /* Color Palette for Lectures */
-/* These are the base colors used by JS to set custom properties */
-.lecture-color-0 { /* Default if no specific color is applied by JS vars */
-    --lecture-bg-color: #f0f9ff; /* Light blue */
-    --lecture-border-color: #2563eb; /* Blue */
+.lecture-color-0 {
+    --lecture-bg-color: #e0f2f7; /* Light Cyan */
+    --lecture-border-color: #4db6ac; /* Darker Teal */
 }
 .lecture-color-1 {
-    --lecture-bg-color: #fffbeb; /* Light orange */
-    --lecture-border-color: #d97706; /* Orange */
+    --lecture-bg-color: #fffde7; /* Light Yellow */
+    --lecture-border-color: #ffb300; /* Darker Amber */
 }
 .lecture-color-2 {
-    --lecture-bg-color: #ecfdf5; /* Light green */
-    --lecture-border-color: #059669; /* Green */
+    --lecture-bg-color: #e8f5e9; /* Light Green */
+    --lecture-border-color: #81c784; /* Darker Green */
 }
 .lecture-color-3 {
-    --lecture-bg-color: #fef2f2; /* Light red */
-    --lecture-border-color: #dc2626; /* Red */
+    --lecture-bg-color: #fce4ec; /* Light Pink */
+    --lecture-border-color: #f06292; /* Darker Pink */
 }
 .lecture-color-4 {
-    --lecture-bg-color: #f5f3ff; /* Light purple */
-    --lecture-border-color: #7c3aed; /* Purple */
+    --lecture-bg-color: #e1f5fe; /* Lighter Blue */
+    --lecture-border-color: #42a5f5; /* Darker Blue */
 }
 .lecture-color-5 {
-    --lecture-bg-color: #e0f2f7; /* Light teal */
-    --lecture-border-color: #0d9488; /* Teal */
+    --lecture-bg-color: #f3e5f5; /* Light Purple */
+    --lecture-border-color: #ab47bc; /* Darker Purple */
 }
 .lecture-color-6 {
-    --lecture-bg-color: #fff7ed; /* Light amber */
-    --lecture-border-color: #ea580c; /* Amber */
+    --lecture-bg-color: #ffe0b2; /* Light Orange */
+    --lecture-border-color: #fb8c00; /* Darker Orange */
 }
-/* Add more lecture-color-N classes if you have more distinct course types */
+/* Add more lecture-color-N classes as needed for more distinct course types */
 
 
 .schedule-slot-subject {
     font-weight: bold;
-    color: #1e40af;
-    margin-bottom: 4px;
+    color: #3a537d; /* Dark blue subject */
+    margin-bottom: 5px;
 }
 
 .schedule-slot-info {
-    color: #64748b;
-    font-size: 0.75rem;
+    color: #6a7f9b; /* Muted info text */
+    font-size: 0.8rem; /* Slightly smaller info font */
 }
 
 /* Styles for contenteditable elements */
 .schedule-slot [contenteditable="true"] {
-    outline: none; /* Remove default focus outline */
-    padding: 2px 4px;
-    border-radius: 3px;
-    transition: background-color 0.2s ease;
-    min-width: 50px; /* Ensure contenteditable is visible */
+    outline: none;
+    padding: 3px 6px; /* More padding */
+    border-radius: 4px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    min-width: 60px;
+    cursor: text; /* Change cursor on editable text */
 }
 
 .schedule-slot [contenteditable="true"]:focus {
-    background-color: rgba(255, 255, 255, 0.8); /* Light background on focus */
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3); /* Blue shadow */
+    background-color: rgba(255, 255, 255, 0.9); /* Brighter background on focus */
+    box-shadow: 0 0 0 3px rgba(167, 208, 140, 0.5); /* Accent color shadow */
 }
 
 
 /* Dragula specific styles */
 .gu-transit {
-    opacity: 0.7; /* Make ghost element slightly transparent */
-    background-color: #c7d2fe; /* light blue */
-    border: 1px dashed #60a5fa;
-    transform: rotate(2deg); /* Slight rotation while dragging */
+    opacity: 0.7;
+    background-color: #e0f2f7; /* Light background for ghost */
+    border: 1px dashed #5b7dae; /* Muted border */
+    transform: rotate(2deg);
 }
 
-.gu-mirror { /* The actual element being dragged */
-    background-color: #a5b4fc; /* Darker blue for the mirror */
-    opacity: 0.9;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+.gu-mirror {
+    background-color: #c5e1a5; /* Accent color for mirror */
+    opacity: 0.95; /* Less transparent */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35); /* Stronger shadow */
 }
 
 .gu-hide {
@@ -700,243 +717,286 @@ body {
 
 /* Admin Reports */
 .admin-reports-section .stats-grid {
-    margin-bottom: 20px; /* Adjust spacing for admin stats */
+    margin-bottom: 25px; /* Adjust spacing for admin stats */
 }
 .admin-stats .stat-card.pending {
-    border-left: 4px solid #f59e0b;
+    border-left: 4px solid #f7b267; /* Warning color */
 }
 
 .admin-stats .stat-card.resolved {
-    border-left: 4px solid #10b981;
+    border-left: 4px solid #81b214; /* Success color */
 }
 
 .admin-stats .stat-card.total {
-    border-left: 4px solid #6366f1;
+    border-left: 4px solid #5b7dae; /* Primary color */
 }
 
 .filter-controls {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px; /* Added margin */
+    gap: 15px;
+    margin-bottom: 25px;
     flex-wrap: wrap;
 }
 
 .filter-controls select,
 .filter-controls input[type="text"] {
-    padding: 8px 12px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
+    padding: 10px 15px; /* More padding */
+    border: 1px solid #dbe2ed;
+    border-radius: 8px;
     background: white;
     transition: all 0.3s ease;
 }
 .filter-controls select:focus,
 .filter-controls input[type="text"]:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    border-color: #a7d08c;
+    box-shadow: 0 0 0 3px rgba(167, 208, 140, 0.4);
 }
 
 
 .admin-reports-list {
-    max-height: 600px;
+    max-height: 650px; /* Taller */
     overflow-y: auto;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .report-card {
     background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 15px;
+    border: 1px solid #e0e6f0;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 18px;
     position: relative;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     transition: all 0.2s ease;
 }
 
 .report-card:hover {
-    transform: translateX(5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateX(8px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
 
 .report-card.pending {
-    border-left: 4px solid #f59e0b;
+    border-left: 5px solid #f7b267; /* Thicker border, warning color */
 }
 
 .report-card.resolved {
-    border-left: 4px solid #10b981;
+    border-left: 5px solid #81b214; /* Thicker border, success color */
 }
 
 .report-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 15px;
+    margin-bottom: 18px;
 }
 
 .report-title {
     font-weight: bold;
-    color: #333;
-    font-size: 1.1rem;
+    color: #3a537d;
+    font-size: 1.2rem;
 }
 
 .report-status {
-    padding: 4px 12px;
+    padding: 6px 14px; /* More padding */
     border-radius: 20px;
-    font-size: 0.85rem;
+    font-size: 0.9rem; /* Slightly larger */
     font-weight: 600;
-    white-space: nowrap; /* Prevent wrapping */
+    white-space: nowrap;
 }
 
 .report-status.pending {
-    background: #fef3c7;
-    color: #92400e;
+    background: #fff3e0; /* Lighter warning */
+    color: #e09f51; /* Darker warning */
 }
 
 .report-status.resolved {
-    background: #d1fae5;
-    color: #065f46;
+    background: #e8f5e9; /* Lighter success */
+    color: #6a950f; /* Darker success */
 }
 
 .report-details {
-    color: #666;
-    line-height: 1.6;
+    color: #6a7f9b;
+    line-height: 1.7;
 }
 
 .report-meta {
-    font-size: 0.9rem;
-    color: #8b5cf6;
-    margin-top: 10px;
-    display: block; /* Ensure it takes full width */
+    font-size: 0.95rem; /* Slightly larger */
+    color: #5b7dae; /* Muted blue */
+    margin-top: 12px;
+    display: block;
 }
 
 .report-actions {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid #e2e8f0;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e6f0;
     display: flex;
-    gap: 10px;
-    justify-content: flex-end; /* Align buttons to the right */
+    gap: 12px;
+    justify-content: flex-end;
 }
 .report-actions .btn {
-    box-shadow: none; /* No extra shadow on these small buttons */
+    box-shadow: none;
 }
 .report-actions .btn:hover {
-    transform: translateY(-1px); /* Less lift for small buttons */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px); /* Less lift */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 
 /* Footer */
 .footer {
-    background: rgba(0, 0, 0, 0.8);
+    background: #3a537d; /* Dark blue from palette */
     color: white;
     text-align: center;
-    padding: 20px;
-    margin-top: 40px;
+    padding: 25px; /* More padding */
+    margin-top: 50px; /* More margin */
+    font-size: 0.95rem;
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-    .nav-menu {
-        flex-wrap: wrap;
-        gap: 5px;
-        justify-content: center; /* Center nav links */
-        margin-top: 10px;
-    }
-    
-    .nav-link {
-        padding: 8px 10px;
-        font-size: 0.9rem;
-    }
-    
+@media (max-width: 992px) { /* Adjust for medium screens */
     .nav-container {
-        flex-direction: column; /* Stack brand and menu */
+        flex-direction: column;
         height: auto;
         padding-top: 15px;
         padding-bottom: 15px;
     }
-
+    .nav-menu {
+        margin-top: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .nav-link {
+        padding: 8px 12px;
+        font-size: 0.95rem;
+    }
     .hero-content h1 {
+        font-size: 2.8rem;
+    }
+    .hero-content p {
+        font-size: 1.15rem;
+    }
+    .page-header h1 {
+        font-size: 2.5rem;
+    }
+    .features-grid, .stats-grid, .content-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 25px 15px;
+    }
+    .hero-section {
+        padding: 60px 15px;
+    }
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+    .hero-content p {
+        font-size: 1rem;
+    }
+    .page-header {
+        padding: 40px 15px;
+    }
+    .page-header h1 {
         font-size: 2rem;
     }
-    
+    .features-grid, .stats-grid {
+        grid-template-columns: 1fr; /* Single column on small tablets/phones */
+    }
     .content-grid {
         grid-template-columns: 1fr;
     }
-    
-    .features-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
     .control-buttons {
         justify-content: center;
+        gap: 10px;
     }
-    
     .checkbox-group {
         grid-template-columns: 1fr;
     }
-
     .schedule-table th, .schedule-table td {
-        padding: 8px; /* Reduce padding for smaller screens */
-        font-size: 0.85rem;
+        padding: 10px;
+        font-size: 0.8rem;
     }
     .schedule-slot {
-        padding: 5px;
-        font-size: 0.75rem;
+        padding: 6px;
+        font-size: 0.7rem;
     }
     .schedule-slot-info {
-        font-size: 0.65rem;
+        font-size: 0.6rem;
     }
     .schedule-table-time-header {
-        min-width: 80px; /* Ensure time column isn't too narrow */
+        min-width: 70px;
+    }
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+    }
+    .item-card {
+        padding: 18px;
+    }
+    .report-card {
+        padding: 18px;
+    }
+    .report-title {
+        font-size: 1.1rem;
     }
 }
 
 @media (max-width: 480px) {
-    .main-content {
-        padding: 15px;
+    .nav-brand {
+        font-size: 1.4rem;
     }
-    
-    .card-body {
-        padding: 20px;
+    .nav-brand i {
+        font-size: 1.6rem;
     }
-    
+    .nav-link {
+        font-size: 0.85rem;
+        padding: 6px 8px;
+    }
     .hero-content h1 {
         font-size: 1.8rem;
     }
-    
-    .page-header h1 {
-        font-size: 2rem;
+    .hero-content p {
+        font-size: 0.9rem;
     }
-    
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
     .stats-grid {
         grid-template-columns: 1fr;
     }
     .nav-menu {
-        flex-direction: column; /* Stack nav items vertically */
+        flex-direction: column;
         align-items: center;
     }
     .nav-link {
-        width: 100%; /* Full width for stacked links */
+        width: 100%;
         text-align: center;
     }
     .nav-link::after {
         right: 0;
         left: 0;
         width: 100%;
-        transform: translateX(0); /* Ensure underline extends full width */
+        transform: translateX(0);
     }
     .nav-link:hover::after {
          width: 100%;
          right: 0;
     }
+    .schedule-table th, .schedule-table td {
+        padding: 6px;
+    }
+    .schedule-slot {
+        font-size: 0.65rem;
+    }
 }
+
 
 /* Animation Classes */
 .fade-in {
@@ -973,8 +1033,6 @@ body {
 }
 
 /* Additional styles for schedule details that were previously in JS */
-/* These classes are now handled more granularly by schedule-slot, schedule-slot-subject, etc. */
-/* Keeping them here for reference if specific elements need these styles directly */
 .day-schedule {
     margin-bottom: 30px;
 }
@@ -1014,7 +1072,6 @@ body {
 }
 
 /* Additional styles for report status that were previously in JS */
-/* These are integrated into .status-message and .report-status directly */
 
 /* Additional styles for admin reports that were previously in JS */
 .report-actions {
@@ -1072,22 +1129,22 @@ body {
 }
 
 .message-toast.success {
-    background: #10b981;
+    background: #81b214; /* Success color */
     color: white;
 }
 
 .message-toast.error {
-    background: #ef4444;
+    background: #e76f51; /* Error color */
     color: white;
 }
 
 .message-toast.warning {
-    background: #f59e0b;
+    background: #f7b267; /* Warning color */
     color: white;
 }
 
 .message-toast.info {
-    background: #3b82f6;
+    background: #5b7dae; /* Info color */
     color: white;
 }
 
