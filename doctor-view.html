@@ -4,86 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>جداول الدكاترة - نظام جدولة المحاضرات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <nav class="navbar">
-        <div class="container">
-            <a href="index.html" class="navbar-brand">نظام جدولة المحاضرات</a>
-            <div class="nav-links">
-                <a href="index.html">الرئيسية</a>
-                <a href="data-entry.html">إدخال البيانات</a>
-                <a href="generate.html">توليد الجداول</a>
-                <a href="doctor-view.html">جداول الدكاترة</a>
-                <a href="help.html">المساعدة</a>
-            </div>
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-calendar-alt"></i> نظام جدولة المحاضرات
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="data-entry.html" class="nav-link"><i class="fas fa-plus-circle"></i> إدخال البيانات</a></li>
+                <li><a href="generate.html" class="nav-link"><i class="fas fa-cogs"></i> توليد الجداول</a></li>
+                <li><a href="doctor-view.html" class="nav-link"><i class="fas fa-user-md"></i> جداول الدكاترة</a></li>
+                <li><a href="help.html" class="nav-link"><i class="fas fa-question-circle"></i> المساعدة</a></li>
+            </ul>
         </div>
     </nav>
 
-    <main class="container">
-        <h1 class="main-section-title" style="text-align: center; font-size: 2.25rem; font-weight: bold; color: #1e40af; margin-bottom: 1.5rem;">عرض جداول الدكاترة</h1>
-
-        <div class="main-section">
-            <div class="select-wrapper">
-                <label for="doctor-select">اختر دكتورًا لعرض جدوله:</label>
-                <select id="doctor-select" class="form-control">
-                    <option value="">-- اختر دكتور --</option>
-                    </select>
-            </div>
-
-            <div id="doctor-schedule-display" class="doctor-schedule-display hidden">
-                <h2 id="selected-doctor-name" style="font-size: 1.5rem; font-weight: 600; color: #1d4ed8; margin-bottom: 1rem;"></h2>
-                <div class="schedule-table-container">
-                    <table class="schedule-table">
-                        <thead>
-                            <tr>
-                                <th>الوقت</th>
-                                <th>الأحد</th>
-                                <th>الإثنين</th>
-                                <th>الثلاثاء</th>
-                                <th>الأربعاء</th>
-                                <th>الخميس</th>
-                            </tr>
-                        </thead>
-                        <tbody id="doctor-schedule-body">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
+    <main class="main-content">
+        <div class="page-header">
+            <h1>عرض جداول الدكاترة</h1>
+            <p>استعرض الجداول الفردية للدكاترة وقدم بلاغات عن مشاكل القاعات.</p>
         </div>
 
-        <section class="form-section">
-            <h2>نموذج الإبلاغ عن مشاكل القاعات</h2>
-            <form id="room-issue-form" class="form-grid">
+        <section class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-search"></i> عرض جدول دكتور</h2>
+            </div>
+            <div class="card-body">
                 <div class="form-group">
-                    <label for="issue-room">القاعة المتضررة:</label>
-                    <select id="issue-room" class="form-control" required>
-                        <option value="">اختر قاعة</option>
+                    <label for="doctor-select"><i class="fas fa-user-circle"></i> اختر دكتورًا لعرض جدوله:</label>
+                    <select id="doctor-select" class="form-control">
+                        <option value="">-- اختر دكتور --</option>
                         </select>
                 </div>
-                <div class="form-group">
-                    <label for="issue-type">نوع المشكلة:</label>
-                    <select id="issue-type" class="form-control" required>
-                        <option value="AC">عطل تكييف</option>
-                        <option value="projector">عطل بروجيكتور</option>
-                        <option value="lights">إضاءة</option>
-                        <option value="chairs-tables">كراسي/طاولات</option>
-                        <option value="other">أخرى</option>
-                    </select>
+
+                <div id="doctor-schedule-display" class="schedule-output hidden">
+                    <h2 id="selected-doctor-name" style="text-align: center; margin-bottom: 20px;"></h2>
+                    <div class="table-container">
+                        <table class="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th>الوقت</th>
+                                    <th>الأحد</th>
+                                    <th>الإثنين</th>
+                                    <th>الثلاثاء</th>
+                                    <th>الأربعاء</th>
+                                    <th>الخميس</th>
+                                </tr>
+                            </thead>
+                            <tbody id="doctor-schedule-body">
+                                </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="form-group col-span-1-md-2 full-width">
-                    <label for="issue-description">وصف تفصيلي للمشكلة:</label>
-                    <textarea id="issue-description" rows="4" class="form-control" required></textarea>
+                <div id="no-doctor-selected-message" class="empty-state">
+                    <p><i class="fas fa-info-circle"></i> الرجاء اختيار دكتور لعرض جدوله.</p>
                 </div>
-                <div class="col-span-1-md-2 flex-end">
-                    <button type="submit" class="issue-report-button">إبلاغ عن مشكلة</button>
-                </div>
-            </form>
-            <div id="issue-report-status" class="issue-report-status hidden">
-                تم استلام بلاغك بنجاح!
             </div>
         </section>
 
+        <section class="card" style="margin-top: 30px;">
+            <div class="card-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> نموذج الإبلاغ عن مشاكل القاعات</h2>
+            </div>
+            <div class="card-body">
+                <form id="room-issue-form">
+                    <div class="form-group">
+                        <label for="issue-room">القاعة المتضررة:</label>
+                        <select id="issue-room" class="form-control" required>
+                            <option value="">اختر قاعة</option>
+                            </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="issue-type">نوع المشكلة:</label>
+                        <select id="issue-type" class="form-control" required>
+                            <option value="AC">عطل تكييف</option>
+                            <option value="projector">عطل بروجيكتور</option>
+                            <option value="lights">إضاءة</option>
+                            <option value="chairs-tables">كراسي/طاولات</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="issue-description">وصف تفصيلي للمشكلة:</label>
+                        <textarea id="issue-description" rows="4" class="form-control" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger"><i class="fas fa-paper-plane"></i> إبلاغ عن مشكلة</button>
+                </form>
+                <div id="issue-report-status" class="status-message success hidden">
+                    تم استلام بلاغك بنجاح!
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="footer">
@@ -92,5 +107,5 @@
 
     <script src="js/utils.js"></script>
     <script src="js/doctor-view.js"></script>
-</body>
+    <script src="js/main.js"></script> </body>
 </html>
