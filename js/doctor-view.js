@@ -161,26 +161,24 @@ document.getElementById('room-issue-form').addEventListener('submit', (e) => {
 // زر الطباعة
 document.getElementById('print-doctor-schedule-btn').addEventListener('click', () => {
     const doctorId = document.getElementById('doctor-select').value;
-    if (!doctorId) {
-        showMessage('الرجاء اختيار دكتور لطباعة جدوله.', 'warning');
+    if (!doctorId || document.getElementById('doctor-schedule-display').classList.contains('hidden')) {
+        showMessage('الرجاء اختيار دكتور لعرض جدوله ثم الطباعة.', 'warning');
         return;
     }
 
     const scheduleToPrint = document.getElementById('doctor-schedule-display');
     if (scheduleToPrint) {
-        // إنشاء نافذة طباعة مؤقتة
         const printWindow = window.open('', '_blank');
         printWindow.document.write('<html><head><title>جدول الدكتور</title>');
-        printWindow.document.write('<link rel="stylesheet" href="css/style.css">'); // التنسيق الأساسي
-        printWindow.document.write('<link rel="stylesheet" href="css/print.css" media="print">'); // التنسيق للطباعة
+        printWindow.document.write('<link rel="stylesheet" href="css/style.css">');
+        printWindow.document.write('<link rel="stylesheet" href="css/print.css" media="print">');
         printWindow.document.write('</head><body>');
-        printWindow.document.write('<div class="main-content">'); // Wrap in main-content for print styling
+        printWindow.document.write('<div class="main-content">');
         printWindow.document.write(scheduleToPrint.outerHTML);
         printWindow.document.write('</div></body></html>');
         printWindow.document.close();
         printWindow.focus();
         printWindow.print();
-        // printWindow.close(); // قد تسبب إغلاق النافذة قبل الطباعة في بعض المتصفحات
     }
 });
 
