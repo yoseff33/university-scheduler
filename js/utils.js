@@ -1,26 +1,15 @@
 // js/utils.js
 
-/**
- * وظيفة لحفظ البيانات في LocalStorage.
- * @param {string} key - المفتاح الذي سيتم تخزين البيانات تحته.
- * @param {Array<Object>} data - البيانات التي سيتم تخزينها (يجب أن تكون قابلة للتحويل إلى JSON).
- */
 function saveData(key, data) {
     try {
         localStorage.setItem(key, JSON.stringify(data));
         console.log(`Data for ${key} saved successfully.`);
     } catch (e) {
         console.error(`Error saving data for ${key}:`, e);
-        // رسالة تنبيه للمستخدم في حالة وجود مشكلة في التخزين
         alert('حدث خطأ أثناء حفظ البيانات. قد يكون التخزين ممتلئًا أو المتصفح لا يدعم LocalStorage.');
     }
 }
 
-/**
- * وظيفة لجلب البيانات من LocalStorage.
- * @param {string} key - المفتاح الذي تم تخزين البيانات تحته.
- * @returns {Array<Object>} البيانات المحفوظة، أو مصفوفة فارغة إذا لم توجد بيانات أو حدث خطأ.
- */
 function getData(key) {
     try {
         const data = localStorage.getItem(key);
@@ -31,10 +20,6 @@ function getData(key) {
     }
 }
 
-/**
- * وظيفة لمسح البيانات من LocalStorage.
- * @param {string} key - المفتاح الذي سيتم مسح البيانات تحته.
- */
 function clearData(key) {
     try {
         localStorage.removeItem(key);
@@ -44,4 +29,17 @@ function clearData(key) {
     }
 }
 
-// ملاحظة: هذه الوظائف ستكون متاحة عالمياً بمجرد تضمين ملف utils.js في صفحات HTML قبل ملفات JS الأخرى التي تستخدمها.
+/**
+ * وظيفة لتحويل الوقت HH:MM إلى دقائق من منتصف الليل.
+ * تم نقلها إلى هنا لتكون متاحة عالمياً لجميع ملفات JS التي تحتاجها.
+ * @param {string} timeStr - الوقت بتنسيق HH:MM (مثال: "09:30").
+ * @returns {number} عدد الدقائق من منتصف الليل، أو -1 إذا كان المدخل غير صالح.
+ */
+const timeToMinutes = (timeStr) => {
+    if (!timeStr) return -1;
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+        return -1; // Invalid time format or out of range
+    }
+    return hours * 60 + minutes;
+};
