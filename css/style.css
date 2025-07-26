@@ -2,7 +2,7 @@
 
 /* Google Fonts Import */
 /* Noto Sans Arabic for Arabic text, Roboto for Latin text (numbers, fallback) */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;600;700&display=swap');
 
 /* Global Reset */
 * {
@@ -13,11 +13,11 @@
 
 /* Custom Text Selection Highlight */
 ::selection {
-    background: #4CAF50; /* Accent green highlight */
+    background: #00897B; /* Slightly darker Teal highlight */
     color: white;
 }
 ::-moz-selection { /* For Firefox */
-    background: #4CAF50;
+    background: #00897B;
     color: white;
 }
 
@@ -100,14 +100,14 @@ html {
     gap: 12px; /* Good spacing */
     font-size: 1.8rem; /* Impactful size */
     font-weight: 700; /* Bold */
-    color: #3f51b5; /* Deeper blue for brand */
+    color: #006064; /* Deep Teal for brand */
     text-decoration: none;
     transition: all 0.3s ease;
     letter-spacing: -0.5px; /* Slightly tighter letter spacing */
 }
 
 .nav-brand:hover {
-    color: #283593; /* Darker blue on hover */
+    color: #004D40; /* Darker Teal on hover */
     transform: translateY(-2px); /* Slight lift */
 }
 
@@ -118,7 +118,7 @@ html {
 
 .nav-brand i {
     font-size: 2.2rem; /* Larger icon */
-    color: #00796B; /* Dark Teal for icon */
+    color: #00897B; /* Vibrant Teal for icon */
     transition: all 0.3s ease;
 }
 
@@ -151,7 +151,7 @@ html {
 }
 
 .nav-link:hover {
-    background: #00796B; /* Dark Teal background on hover */
+    background: #00897B; /* Vibrant Teal background on hover */
     color: white;
     transform: translateY(-3px); /* Pronounced lift */
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* Soft shadow */
@@ -165,7 +165,7 @@ html {
     right: 50%;
     width: 0;
     height: 3px; /* Thicker underline */
-    background-color: #4CAF50; /* Accent Green underline */
+    background-color: #8BC34A; /* Accent Green underline */
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother animation */
     transform: translateX(50%);
 }
@@ -192,7 +192,9 @@ html {
     background: #ffffff; /* Pure white background */
     border-radius: 30px; /* More rounded corners */
     margin-bottom: 70px; /* More margin */
-    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.1); /* Prominent, soft shadow */
+    /* Sophisticated layered shadow */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08),
+                0 20px 60px rgba(0,0,0,0.05);
     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); /* Elegant transition */
     border: 1px solid #e0e6f0; /* Subtle border */
     position: relative;
@@ -207,7 +209,7 @@ html {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, rgba(240, 248, 255, 0.7), rgba(229, 246, 255, 0.4), rgba(200, 230, 250, 0.2));
+    background: linear-gradient(45deg, rgba(0, 121, 107, 0.05), rgba(76, 175, 80, 0.03), rgba(0, 121, 107, 0.01)); /* Faint accent colors */
     animation: rotateGradient 20s linear infinite;
     opacity: 0.6;
     z-index: 0;
@@ -221,7 +223,8 @@ html {
 
 .hero-section:hover {
     transform: translateY(-8px);
-    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 15px 45px rgba(0,0,0,0.12),
+                0 25px 80px rgba(0,0,0,0.08); /* Stronger hover shadow */
 }
 
 .hero-content {
@@ -233,7 +236,7 @@ html {
     font-size: 4.2rem;
     color: #263238;
     margin-bottom: 30px;
-    text-shadow: 2px 3px 10px rgba(0, 0, 0, 0.1);
+    text-shadow: 2px 3px 10px rgba(0, 0, 0, 0.08); /* Softer text shadow */
     font-weight: 800;
     line-height: 1.2;
     letter-spacing: -0.5px;
@@ -259,20 +262,20 @@ html {
     background: #ffffff;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1); /* Standard prominent shadow */
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     border: 1px solid #e0e6f0;
     position: relative;
 }
 
-.feature-card::before {
+.feature-card::before { /* Subtle overlay on hover */
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 121, 107, 0.05);
+    background-color: rgba(0, 121, 107, 0.05); /* Very faint teal overlay */
     opacity: 0;
     transition: opacity 0.3s ease;
     pointer-events: none;
@@ -285,7 +288,7 @@ html {
 .feature-card:hover {
     transform: translateY(-18px);
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
-    border-color: #00796B;
+    border-color: #00796B; /* Dark Teal border on hover */
 }
 
 .feature-card a {
@@ -300,14 +303,14 @@ html {
 
 .feature-card i {
     font-size: 4rem;
-    color: #3f51b5;
+    color: #00796B; /* Primary icon color (Teal) */
     margin-bottom: 30px;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .feature-card:hover i {
     transform: scale(1.2) rotate(15deg);
-    color: #00796B;
+    color: #006064; /* Darker Teal on hover */
 }
 
 .feature-card h3 {
@@ -319,7 +322,7 @@ html {
 }
 
 .feature-card:hover h3 {
-    color: #3f51b5;
+    color: #00796B; /* Teal on hover */
 }
 
 .feature-card p {
@@ -351,14 +354,14 @@ html {
     overflow: hidden;
 }
 
-.stat-card::after {
+.stat-card::after { /* Subtle wave effect on hover */
     content: '';
     position: absolute;
     bottom: -20px;
     left: 0;
     width: 100%;
     height: 40px;
-    background-color: rgba(0, 121, 107, 0.1);
+    background-color: rgba(76, 175, 80, 0.1); /* Green tint */
     transform: skewX(-20deg) scale(0);
     transition: all 0.4s ease;
     border-radius: 50%;
@@ -372,19 +375,19 @@ html {
 .stat-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
-    border-color: #4CAF50;
+    border-color: #8BC34A; /* Accent Green border on hover */
 }
 
 .stat-card i {
     font-size: 3.2rem;
-    color: #3f51b5;
+    color: #00796B;
     margin-bottom: 25px;
     transition: all 0.3s ease;
     position: relative;
     z-index: 1;
 }
 .stat-card:hover i {
-    color: #00796B;
+    color: #4CAF50; /* Brighter Green on hover */
     transform: rotate(5deg) scale(1.1);
 }
 
@@ -415,7 +418,7 @@ html {
     overflow: hidden;
 }
 
-.page-header::before {
+.page-header::before { /* Subtle background wave */
     content: '';
     position: absolute;
     bottom: -50px;
@@ -426,7 +429,7 @@ html {
     border-radius: 50%;
     transform: rotate(45deg);
 }
-.page-header::after {
+.page-header::after { /* Another subtle element */
     content: '';
     position: absolute;
     top: -30px;
@@ -472,7 +475,7 @@ html {
 }
 
 .card-header {
-    background: #3f51b5;
+    background: #00796B; /* Dark Teal header */
     color: white;
     padding: 25px 35px;
     display: flex;
@@ -563,7 +566,7 @@ html {
     font-size: 0.95rem;
 }
 .checkbox-item:hover {
-    color: #3f51b5;
+    color: #00796B;
 }
 
 .checkbox-item input[type="checkbox"] {
@@ -625,48 +628,48 @@ html {
 }
 
 .btn-primary {
-    background: #3f51b5;
+    background: #00796B; /* Deep Teal primary */
     color: white;
 }
 
 .btn-primary:hover {
-    background: #303f9f;
+    background: #00695C; /* Darker Teal on hover */
 }
 
 .btn-danger {
-    background: #ef5350;
+    background: #F44336; /* Red danger */
     color: white;
 }
 
 .btn-danger:hover {
-    background: #e53935;
+    background: #D32F2F; /* Darker red on hover */
 }
 
 .btn-success {
-    background: #4CAF50;
+    background: #4CAF50; /* Green success */
     color: white;
 }
 
 .btn-success:hover {
-    background: #388E3C;
+    background: #388E3C; /* Darker green on hover */
 }
 
 .btn-warning {
-    background: #FFC107;
+    background: #FF9800; /* Orange warning */
     color: white;
 }
 
 .btn-warning:hover {
-    background: #FFA000;
+    background: #F57C00; /* Darker orange on hover */
 }
 
 .btn-info {
-    background: #2196F3;
+    background: #2196F3; /* Blue info */
     color: white;
 }
 
 .btn-info:hover {
-    background: #1976D2;
+    background: #1976D2; /* Darker blue on hover */
 }
 
 /* Small button variant */
@@ -714,7 +717,7 @@ html {
 .item-card:hover {
     transform: translateX(10px);
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
-    border-color: #3f51b5;
+    border-color: #00796B; /* Primary Teal border on hover */
 }
 
 .item-header {
@@ -726,7 +729,7 @@ html {
 
 .item-title {
     font-weight: 700;
-    color: #3f51b5;
+    color: #00796B; /* Primary Teal for title */
     font-size: 1.3rem;
 }
 
@@ -776,14 +779,14 @@ html {
 
 .status-message.success {
     background: #e8f5e9;
-    color: #27ae60;
-    border: 1px solid #a7d08c;
+    color: #388E3C;
+    border: 1px solid #8BC34A;
 }
 
 .status-message.error {
     background: #fdeded;
-    color: #c0392b;
-    border: 1px solid #ef5350;
+    color: #D32F2F;
+    border: 1px solid #EF5350;
 }
 
 .status-message.info {
@@ -794,8 +797,8 @@ html {
 
 .status-message.warning {
     background: #fff8e1;
-    color: #f39c12;
-    border: 1px solid #ffcc80;
+    color: #F57C00;
+    border: 1px solid #FF9800;
 }
 
 .table-container {
@@ -822,14 +825,14 @@ html {
 }
 
 .schedule-table th {
-    background: #3f51b5;
+    background: #00796B; /* Dark Teal header */
     color: white;
     font-weight: 600;
     font-size: 1rem;
 }
 
 .schedule-table-time-header {
-    background: #e3f2fd;
+    background: #e0f2f7; /* Light Blue Gray background for time column */
     font-weight: 700;
     color: #263238;
     font-size: 0.95rem;
@@ -848,13 +851,13 @@ html {
 .schedule-table-cell.edit-mode-active:not(.has-lecture):hover {
     background-color: #f5fafd;
     cursor: pointer;
-    box-shadow: inset 0 0 0 2px #3f51b5;
+    box-shadow: inset 0 0 0 2px #00796B; /* Primary Teal border */
 }
 
 /* Styles for cells selected for move destination */
 .schedule-table-cell.selected-move-target {
-    background-color: #e3f2fd;
-    box-shadow: inset 0 0 0 3px #3f51b5;
+    background-color: #e3f2fd; /* Lighter blue */
+    box-shadow: inset 0 0 0 3px #00796B;
 }
 
 
@@ -880,7 +883,8 @@ html {
 
 /* Styles for the lecture currently selected for move */
 .schedule-slot.selected-for-move {
-    box-shadow: 0 0 0 3px #00796B, 0 8px 25px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 0 3px #004D40, /* Darker Teal outline */
+                0 8px 25px rgba(0, 0, 0, 0.25);
     transform: scale(1.02);
     opacity: 0.95;
     cursor: grabbing;
@@ -901,13 +905,14 @@ html {
 }
 
 /* Color Palette for Lectures (more refined) */
-.lecture-color-0 { --lecture-bg-color: #e0f8ff; --lecture-border-color: #4fc3f7; }
-.lecture-color-1 { --lecture-bg-color: #fff9e0; --lecture-border-color: #ffb300; }
-.lecture-color-2 { --lecture-bg-color: #e8f5e9; --lecture-border-color: #66bb6a; }
-.lecture-color-3 { --lecture-bg-color: #ffe0e0; --lecture-border-color: #ef5350; }
-.lecture-color-4 { --lecture-bg-color: #ede7f6; --lecture-border-color: #9575cd; }
-.lecture-color-5 { --lecture-bg-color: #e0f2f7; --lecture-border-color: #4db6ac; }
-.lecture-color-6 { --lecture-bg-color: #fff3e0; --lecture-border-color: #ff9800; }
+.lecture-color-0 { --lecture-bg-color: #E0F2F7; --lecture-border-color: #4DD0E1; } /* Light Cyan */
+.lecture-color-1 { --lecture-bg-color: #FFFDE7; --lecture-border-color: #FFEB3B; } /* Light Yellow */
+.lecture-color-2 { --lecture-bg-color: #E8F5E9; --lecture-border-color: #81C784; } /* Light Green */
+.lecture-color-3 { --lecture-bg-color: #FFEBEE; --lecture-border-color: #EF9A9A; } /* Light Red */
+.lecture-color-4 { --lecture-bg-color: #EDE7F6; --lecture-border-color: #B39DDB; } /* Light Purple */
+.lecture-color-5 { --lecture-bg-color: #F3E5F5; --lecture-border-color: #CE93D8; } /* Light Pink-Purple */
+.lecture-color-6 { --lecture-bg-color: #E0F7FA; --lecture-border-color: #4DD0E1; } /* Similar to 0 for more options */
+/* Add more lecture-color-N classes if you have more distinct course types */
 
 
 .schedule-slot-subject {
@@ -975,7 +980,7 @@ html {
 }
 
 .admin-stats .stat-card.total {
-    border-left: 4px solid #3f51b5;
+    border-left: 4px solid #00796B;
 }
 
 .filter-controls {
@@ -1228,7 +1233,7 @@ html {
         font-size: 1.1rem;
     }
     /* Tabs specific adjustments */
-    .tab-buttons {
+    .tabs-container {
         flex-direction: column;
         align-items: stretch;
     }
@@ -1456,9 +1461,9 @@ html {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    display: flex; /* Changed to flex for icon alignment */
+    align-items: center; /* Center items vertically */
+    gap: 10px; /* Space between icon and text */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
