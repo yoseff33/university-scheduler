@@ -13,35 +13,43 @@ const daysOfWeek = [
     { id: 'tuesday', name: 'الثلاثاء' },
     { id: 'wednesday', name: 'الأربعاء' },
     { id: 'thursday', name: 'الخميس' }
-    // يمكنك إضافة 'friday' و 'saturday' إذا كانت أيام عمل
 ];
 
 /**
  * وظيفة لعرض قائمة الدكاترة.
  */
 const displayDoctors = () => {
-    const doctorsUl = document.getElementById('doctors-ul');
-    doctorsUl.innerHTML = ''; // مسح القائمة الحالية
+    const doctorsListDiv = document.getElementById('doctors-list');
+    doctorsListDiv.innerHTML = ''; // مسح القائمة الحالية
 
     if (doctors.length === 0) {
-        doctorsUl.innerHTML = '<li style="color: #6b7280;">لا توجد بيانات دكاترة بعد.</li>';
+        doctorsListDiv.innerHTML = '<div class="empty-state"><p><i class="fas fa-info-circle"></i> لا توجد بيانات دكاترة بعد.</p></div>';
         return;
     }
 
     doctors.forEach((doctor, index) => {
-        const li = document.createElement('li');
-        li.className = 'item-list-item'; // لتطبيق التنسيقات من style.css
-        // بناء سلسلة الأوقات المتاحة بشكل مقروء
+        const doctorCard = document.createElement('div');
+        doctorCard.className = 'item-card';
+
         const availableTimesStr = daysOfWeek.map(dayInfo => {
             const slot = doctor.availableTimes[dayInfo.id];
             return slot && slot.start && slot.end ? `${dayInfo.name}: ${slot.start}-${slot.end}` : '';
-        }).filter(Boolean).join(', '); // تصفية السلاسل الفارغة وضمها
+        }).filter(Boolean).join(' | ');
 
-        li.innerHTML = `
-            ${doctor.name} - ساعات: ${doctor.weeklyHours} | متاح: ${availableTimesStr || 'غير محدد'} | غير متاح: ${doctor.unavailableTimes.join(', ') || 'لا يوجد'}
-            <button onclick="deleteItem('doctors', ${index})" class="delete-button">حذف</button>
+        doctorCard.innerHTML = `
+            <div class="item-header">
+                <div class="item-title">${doctor.name}</div>
+                <div class="item-actions">
+                    <button onclick="deleteItem('doctors', ${index})" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> حذف</button>
+                </div>
+            </div>
+            <div class="item-details">
+                <div class="item-detail"><strong>الساعات الأسبوعية:</strong> ${doctor.weeklyHours}</div>
+                <div class="item-detail"><strong>الأوقات المتاحة:</strong> ${availableTimesStr || 'غير محدد'}</div>
+                <div class="item-detail"><strong>أوقات غير مناسبة:</strong> ${doctor.unavailableTimes.join(', ') || 'لا يوجد'}</div>
+            </div>
         `;
-        doctorsUl.appendChild(li);
+        doctorsListDiv.appendChild(doctorCard);
     });
 };
 
@@ -49,22 +57,31 @@ const displayDoctors = () => {
  * وظيفة لعرض قائمة المقررات.
  */
 const displayCourses = () => {
-    const coursesUl = document.getElementById('courses-ul');
-    coursesUl.innerHTML = '';
+    const coursesListDiv = document.getElementById('courses-list');
+    coursesListDiv.innerHTML = '';
 
     if (courses.length === 0) {
-        coursesUl.innerHTML = '<li style="color: #6b7280;">لا توجد بيانات مقررات بعد.</li>';
+        coursesListDiv.innerHTML = '<div class="empty-state"><p><i class="fas fa-info-circle"></i> لا توجد بيانات مقررات بعد.</p></div>';
         return;
     }
 
     courses.forEach((course, index) => {
-        const li = document.createElement('li');
-        li.className = 'item-list-item';
-        li.innerHTML = `
-            ${course.name} (${course.code}) - ساعات: ${course.hours} - نوع: ${course.type === 'short' ? 'قصيرة (50 دقيقة)' : 'طويلة (1 ساعة و40 دقيقة)'} ${course.requiresLab ? '(يتطلب معمل)' : ''}
-            <button onclick="deleteItem('courses', ${index})" class="delete-button">حذف</button>
+        const courseCard = document.createElement('div');
+        courseCard.className = 'item-card';
+        courseCard.innerHTML = `
+            <div class="item-header">
+                <div class="item-title">${course.name} (${course.code})</div>
+                <div class="item-actions">
+                    <button onclick="deleteItem('courses', ${index})" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> حذف</button>
+                </div>
+            </div>
+            <div class="item-details">
+                <div class="item-detail"><strong>الساعات:</strong> ${course.hours}</div>
+                <div class="item-detail"><strong>النوع:</strong> ${course.type === 'short' ? 'قصيرة (50 دقيقة)' : 'طويلة (1 ساعة و40 دقيقة)'}</div>
+                <div class="item-detail"><strong>يتطلب معمل:</strong> ${course.requiresLab ? 'نعم' : 'لا'}</div>
+            </div>
         `;
-        coursesUl.appendChild(li);
+        coursesListDiv.appendChild(courseCard);
     });
 };
 
@@ -72,24 +89,33 @@ const displayCourses = () => {
  * وظيفة لعرض قائمة الشعب.
  */
 const displaySections = () => {
-    const sectionsUl = document.getElementById('sections-ul');
-    sectionsUl.innerHTML = '';
+    const sectionsListDiv = document.getElementById('sections-list');
+    sectionsListDiv.innerHTML = '';
 
     if (sections.length === 0) {
-        sectionsUl.innerHTML = '<li style="color: #6b7280;">لا توجد بيانات شُعب بعد.</li>';
+        sectionsListDiv.innerHTML = '<div class="empty-state"><p><i class="fas fa-info-circle"></i> لا توجد بيانات شُعب بعد.</p></div>';
         return;
     }
 
     sections.forEach((section, index) => {
         const doctor = doctors.find(d => d.id === section.doctorId);
         const course = courses.find(c => c.id === section.courseId);
-        const li = document.createElement('li');
-        li.className = 'item-list-item';
-        li.innerHTML = `
-            ${section.name} - طلاب: ${section.students} - مقرر: ${course ? course.name : 'غير معروف'} - دكتور: ${doctor ? doctor.name : 'غير معروف'}
-            <button onclick="deleteItem('sections', ${index})" class="delete-button">حذف</button>
+        const sectionCard = document.createElement('div');
+        sectionCard.className = 'item-card';
+        sectionCard.innerHTML = `
+            <div class="item-header">
+                <div class="item-title">${section.name}</div>
+                <div class="item-actions">
+                    <button onclick="deleteItem('sections', ${index})" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> حذف</button>
+                </div>
+            </div>
+            <div class="item-details">
+                <div class="item-detail"><strong>عدد الطلاب:</strong> ${section.students}</div>
+                <div class="item-detail"><strong>المقرر:</strong> ${course ? course.name : 'غير معروف'}</div>
+                <div class="item-detail"><strong>الدكتور المسؤول:</strong> ${doctor ? doctor.name : 'غير معروف'}</div>
+            </div>
         `;
-        sectionsUl.appendChild(li);
+        sectionsListDiv.appendChild(sectionCard);
     });
 };
 
@@ -97,22 +123,31 @@ const displaySections = () => {
  * وظيفة لعرض قائمة القاعات.
  */
 const displayRooms = () => {
-    const roomsUl = document.getElementById('rooms-ul');
-    roomsUl.innerHTML = '';
+    const roomsListDiv = document.getElementById('rooms-list');
+    roomsListDiv.innerHTML = '';
 
     if (rooms.length === 0) {
-        roomsUl.innerHTML = '<li style="color: #6b7280;">لا توجد بيانات قاعات بعد.</li>';
+        roomsListDiv.innerHTML = '<div class="empty-state"><p><i class="fas fa-info-circle"></i> لا توجد بيانات قاعات بعد.</p></div>';
         return;
     }
 
     rooms.forEach((room, index) => {
-        const li = document.createElement('li');
-        li.className = 'item-list-item';
-        li.innerHTML = `
-            ${room.name} - سعة: ${room.capacity} - نوع: ${room.type === 'classroom' ? 'قاعة دراسية' : room.type === 'lab' ? 'معمل' : 'قاعة تدريب'} ${room.forbiddenTimes.length > 0 ? `(أوقات ممنوعة: ${room.forbiddenTimes.join(', ')})` : ''}
-            <button onclick="deleteItem('rooms', ${index})" class="delete-button">حذف</button>
+        const roomCard = document.createElement('div');
+        roomCard.className = 'item-card';
+        roomCard.innerHTML = `
+            <div class="item-header">
+                <div class="item-title">${room.name}</div>
+                <div class="item-actions">
+                    <button onclick="deleteItem('rooms', ${index})" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> حذف</button>
+                </div>
+            </div>
+            <div class="item-details">
+                <div class="item-detail"><strong>السعة:</strong> ${room.capacity}</div>
+                <div class="item-detail"><strong>النوع:</strong> ${room.type === 'classroom' ? 'قاعة دراسية' : room.type === 'lab' ? 'معمل' : 'قاعة تدريب'}</div>
+                <div class="item-detail"><strong>أوقات ممنوعة:</strong> ${room.forbiddenTimes.length > 0 ? room.forbiddenTimes.join(', ') : 'لا يوجد'}</div>
+            </div>
         `;
-        roomsUl.appendChild(li);
+        roomsListDiv.appendChild(roomCard);
     });
 };
 
@@ -123,24 +158,34 @@ const displayRooms = () => {
  */
 window.deleteItem = (type, index) => {
     if (confirm('هل أنت متأكد من حذف هذا العنصر؟')) {
+        let success = false;
         if (type === 'doctors') {
             doctors.splice(index, 1);
             saveData('doctors', doctors);
             displayDoctors();
+            populateSectionsSelects();
+            success = true;
         } else if (type === 'courses') {
             courses.splice(index, 1);
             saveData('courses', courses);
             displayCourses();
-            populateSectionsSelects(); // تحديث قائمة المقررات في الشعب بعد الحذف
+            populateSectionsSelects();
+            success = true;
         } else if (type === 'sections') {
             sections.splice(index, 1);
             saveData('sections', sections);
             displaySections();
+            success = true;
         } else if (type === 'rooms') {
             rooms.splice(index, 1);
             saveData('rooms', rooms);
             displayRooms();
-            // populateRoomIssueSelect(); // إذا كانت دالة في صفحة doctor-view، يجب أن تكون في سياق تلك الصفحة
+            success = true;
+        }
+        if (success) {
+            showMessage('تم حذف العنصر بنجاح!', 'success');
+        } else {
+            showMessage('فشل حذف العنصر.', 'error');
         }
     }
 };
@@ -152,11 +197,9 @@ const populateSectionsSelects = () => {
     const sectionCourseSelect = document.getElementById('section-course');
     const sectionDoctorSelect = document.getElementById('section-doctor');
 
-    // مسح الخيارات الحالية
     sectionCourseSelect.innerHTML = '<option value="">اختر مقررًا</option>';
     sectionDoctorSelect.innerHTML = '<option value="">اختر دكتورًا</option>';
 
-    // ملء خيارات المقررات
     courses.forEach(course => {
         const option = document.createElement('option');
         option.value = course.id;
@@ -164,7 +207,6 @@ const populateSectionsSelects = () => {
         sectionCourseSelect.appendChild(option);
     });
 
-    // ملء خيارات الدكاترة
     doctors.forEach(doctor => {
         const option = document.createElement('option');
         option.value = doctor.id;
@@ -175,12 +217,11 @@ const populateSectionsSelects = () => {
 
 // معالج حدث لإرسال نموذج الدكتور
 document.getElementById('doctor-form').addEventListener('submit', (e) => {
-    e.preventDefault(); // منع الإرسال الافتراضي للصفحة
+    e.preventDefault();
 
     const name = document.getElementById('doctor-name').value;
     const weeklyHours = parseInt(document.getElementById('doctor-hours').value);
 
-    // جمع الأوقات المتاحة لكل يوم
     const availableTimes = {};
     daysOfWeek.forEach(dayInfo => {
         const startInput = document.querySelector(`.time-input[data-day="${dayInfo.id}"][data-type="start"]`);
@@ -191,22 +232,22 @@ document.getElementById('doctor-form').addEventListener('submit', (e) => {
     });
 
     const unavailableTimesInput = document.getElementById('doctor-unavailable').value;
-    // تقسيم الأوقات غير المناسبة وتنظيف المسافات البيضاء
     const unavailableTimes = unavailableTimesInput ? unavailableTimesInput.split(',').map(t => t.trim()) : [];
 
     const newDoctor = {
-        id: Date.now(), // معرف فريد باستخدام الطابع الزمني
+        id: Date.now(),
         name,
         weeklyHours,
         availableTimes,
         unavailableTimes,
-        assignedHours: 0 // عدد الساعات المجدولة فعليًا للدكتور، يتم تحديثه في generate.js
+        assignedHours: 0
     };
     doctors.push(newDoctor);
-    saveData('doctors', doctors); // حفظ البيانات المحدثة في LocalStorage
-    displayDoctors(); // تحديث عرض القائمة
-    populateSectionsSelects(); // تحديث قائمة الدكاترة في الشعب
-    e.target.reset(); // مسح حقول النموذج
+    saveData('doctors', doctors);
+    displayDoctors();
+    populateSectionsSelects();
+    e.target.reset();
+    showMessage('تمت إضافة الدكتور بنجاح!', 'success');
 });
 
 // معالج حدث لإرسال نموذج المقرر
@@ -226,13 +267,14 @@ document.getElementById('course-form').addEventListener('submit', (e) => {
         hours,
         type,
         requiresLab,
-        assignedSections: [] // لتتبع الشعب المخصصة لهذا المقرر (يمكن استخدامها في منطق التوليد)
+        assignedSections: []
     };
     courses.push(newCourse);
     saveData('courses', courses);
     displayCourses();
-    populateSectionsSelects(); // تحديث قائمة المقررات في الشعب
+    populateSectionsSelects();
     e.target.reset();
+    showMessage('تمت إضافة المقرر بنجاح!', 'success');
 });
 
 // معالج حدث لإرسال نموذج الشعبة
@@ -244,9 +286,8 @@ document.getElementById('section-form').addEventListener('submit', (e) => {
     const courseId = parseInt(document.getElementById('section-course').value);
     const doctorId = parseInt(document.getElementById('section-doctor').value);
 
-    // التحقق من أن المقرر والدكتور المختارين موجودين
     if (isNaN(courseId) || isNaN(doctorId) || !courses.some(c => c.id === courseId) || !doctors.some(d => d.id === doctorId)) {
-        alert('الرجاء اختيار مقرر ودكتور صالحين.');
+        showMessage('الرجاء اختيار مقرر ودكتور صالحين.', 'error');
         return;
     }
 
@@ -256,12 +297,13 @@ document.getElementById('section-form').addEventListener('submit', (e) => {
         students,
         courseId,
         doctorId,
-        isScheduled: false // لتتبع ما إذا تم جدولة هذه الشعبة في generate.js
+        isScheduled: false
     };
     sections.push(newSection);
     saveData('sections', sections);
     displaySections();
     e.target.reset();
+    showMessage('تمت إضافة الشعبة بنجاح!', 'success');
 });
 
 // معالج حدث لإرسال نموذج القاعة
@@ -273,7 +315,6 @@ document.getElementById('room-form').addEventListener('submit', (e) => {
     const type = document.getElementById('room-type').value;
 
     const labForbiddenTimesInput = document.getElementById('lab-forbidden-times').value;
-    // تقسيم الأوقات الممنوعة للمعامل وتنظيف المسافات البيضاء
     const forbiddenTimes = labForbiddenTimesInput ? labForbiddenTimesInput.split(',').map(t => t.trim()) : [];
 
     const newRoom = {
@@ -288,6 +329,7 @@ document.getElementById('room-form').addEventListener('submit', (e) => {
     displayRooms();
     // populateRoomIssueSelect(); // هذه الوظيفة تنتمي لـ doctor-view.js
     e.target.reset();
+    showMessage('تمت إضافة القاعة بنجاح!', 'success');
 });
 
 // عند تحميل الصفحة، يتم عرض جميع البيانات الموجودة وملء قوائم الاختيار
@@ -296,5 +338,5 @@ document.addEventListener('DOMContentLoaded', () => {
     displayCourses();
     displaySections();
     displayRooms();
-    populateSectionsSelects(); // لملء قوائم الاختيار بعد تحميل البيانات
+    populateSectionsSelects();
 });
