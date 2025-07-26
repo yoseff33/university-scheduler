@@ -4,73 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المساعدة - نظام جدولة المحاضرات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <nav class="navbar">
-        <div class="container">
-            <a href="index.html" class="navbar-brand">نظام جدولة المحاضرات</a>
-            <div class="nav-links">
-                <a href="index.html">الرئيسية</a>
-                <a href="data-entry.html">إدخال البيانات</a>
-                <a href="generate.html">توليد الجداول</a>
-                <a href="doctor-view.html">جداول الدكاترة</a>
-                <a href="help.html">المساعدة</a>
-            </div>
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-calendar-alt"></i> نظام جدولة المحاضرات
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="data-entry.html" class="nav-link"><i class="fas fa-plus-circle"></i> إدخال البيانات</a></li>
+                <li><a href="generate.html" class="nav-link"><i class="fas fa-cogs"></i> توليد الجداول</a></li>
+                <li><a href="doctor-view.html" class="nav-link"><i class="fas fa-user-md"></i> جداول الدكاترة</a></li>
+                <li><a href="help.html" class="nav-link"><i class="fas fa-question-circle"></i> المساعدة</a></li>
+            </ul>
         </div>
     </nav>
 
-    <main class="container">
-        <h1 class="main-section-title" style="text-align: center; font-size: 2.25rem; font-weight: bold; color: #1e40af; margin-bottom: 1.5rem;">المساعدة والتعليمات</h1>
+    <main class="main-content">
+        <div class="page-header">
+            <h1>المساعدة والتعليمات</h1>
+            <p>تعلم كيفية استخدام النظام خطوة بخطوة للحصول على أفضل النتائج.</p>
+        </div>
 
-        <section class="main-section help-section">
-            <h2>كيف تستخدم النظام؟</h2>
+        <section class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-info-circle"></i> كيف تستخدم النظام؟</h2>
+            </div>
+            <div class="card-body">
+                <h3><i class="fas fa-file-alt"></i> 1. إدخال البيانات (<span class="font-mono">data-entry.html</span>)</h3>
+                <p>تعد هذه الخطوة الأساس الأول لاستخدام النظام. توجه إلى صفحة <strong>"إدخال البيانات"</strong> واملأ جميع النماذج بعناية:</p>
+                <ul>
+                    <li><strong>بيانات الدكاترة:</strong> أدخل اسم الدكتور، عدد ساعات عمله الأسبوعية، الأوقات المتاحة له (من - إلى لكل يوم)، وأي أوقات غير مناسبة (مثلاً مواعيد شخصية أو اجتماعات ثابتة).</li>
+                    <li><strong>بيانات المقررات:</strong> أدخل اسم المقرر، رمزه، عدد ساعاته الأسبوعية، ونوع المحاضرة (قصيرة أو طويلة). حدد إذا كان المقرر يتطلب معملًا.</li>
+                    <li><strong>بيانات الشعب:</strong> أدخل اسم الشعبة، عدد الطلاب فيها، ثم اربطها بالمقرر والدكتور المسؤولين عنها.</li>
+                    <li><strong>بيانات القاعات:</strong> أدخل اسم القاعة، سعتها، ونوعها (قاعة دراسية، معمل، قاعة تدريب). حدد أي أوقات ممنوعة لاستخدام المعامل إن وجدت.</li>
+                </ul>
+                <p>
+                    <strong style="color: #dc2626;">هام:</strong> تأكد من حفظ بياناتك بعد كل إدخال. يتم حفظ البيانات تلقائيًا في متصفحك (Local Storage) ولا تحتاج إلى اتصال بالإنترنت أو قاعدة بيانات.
+                </p>
 
-            <h3>1. إدخال البيانات (<span class="font-mono bg-light-gray p-small rounded-small">data-entry.html</span>)</h3>
-            <p>
-                تعد هذه الخطوة الأساس الأول لاستخدام النظام. توجه إلى صفحة <strong>"إدخال البيانات"</strong> واملأ جميع النماذج بعناية:
-            </p>
-            <ul>
-                <li><strong>بيانات الدكاترة:</strong> أدخل اسم الدكتور، عدد ساعات عمله الأسبوعية، الأوقات المتاحة له (من - إلى لكل يوم)، وأي أوقات غير مناسبة (مثلاً مواعيد شخصية أو اجتماعات ثابتة).</li>
-                <li><strong>بيانات المقررات:</strong> أدخل اسم المقرر، رمزه، عدد ساعاته الأسبوعية، ونوع المحاضرة (قصيرة أو طويلة). حدد إذا كان المقرر يتطلب معملًا.</li>
-                <li><strong>بيانات الشعب:</strong> أدخل اسم الشعبة، عدد الطلاب فيها، ثم اربطها بالمقرر والدكتور المسؤولين عنها.</li>
-                <li><strong>بيانات القاعات:</strong> أدخل اسم القاعة، سعتها، ونوعها (قاعة دراسية، معمل، قاعة تدريب). حدد أي أوقات ممنوعة لاستخدام المعامل إن وجدت.</li>
-            </ul>
-            <p>
-                <strong class="text-red">هام:</strong> تأكد من حفظ بياناتك بعد كل إدخال. يتم حفظ البيانات تلقائيًا في متصفحك (Local Storage) ولا تحتاج إلى اتصال بالإنترنت أو قاعدة بيانات.
-            </p>
+                <h3><i class="fas fa-cogs"></i> 2. توليد الجداول (<span class="font-mono">generate.html</span>)</h3>
+                <p>بعد إدخال جميع البيانات اللازمة، انتقل إلى صفحة <strong>"توليد الجداول"</strong>.</p>
+                <ul>
+                    <li>اضغط على زر <strong style="color: #059669;">"توليد الجداول تلقائيًا"</strong>. سيقوم النظام بتشغيل خوارزمية ذكية لمطابقة المقررات مع الدكاترة والقاعات والأوقات، مع مراعاة القيود التي أدخلتها.</li>
+                    <li>ستظهر الجداول الناتجة لكل دكتور على حدة.</li>
+                    <li><strong>التعديل اليدوي (السحب والإفلات):</strong> يمكنك سحب وإفلات المحاضرات بين الأوقات أو بين القاعات لتعديل الجدول يدويًا إذا لزم الأمر.</li>
+                    <li><strong>التصدير:</strong> يمكنك تصدير جداول الدكاترة كصور للطباعة أو المشاركة عن طريق زر <strong style="color: #2563eb;">"تصدير الجداول كصور"</strong>.</li>
+                </ul>
 
-            <h3>2. توليد الجداول (<span class="font-mono bg-light-gray p-small rounded-small">generate.html</span>)</h3>
-            <p>
-                بعد إدخال جميع البيانات اللازمة، انتقل إلى صفحة <strong>"توليد الجداول"</strong>.
-            </p>
-            <ul>
-                <li>اضغط على زر <strong style="color: #10b981;">"توليد الجداول تلقائيًا"</strong>. سيقوم النظام بتشغيل خوارزمية ذكية لمطابقة المقررات مع الدكاترة والقاعات والأوقات، مع مراعاة القيود التي أدخلتها.</li>
-                <li>ستظهر الجداول الناتجة لكل دكتور على حدة.</li>
-                <li><strong>التعديل اليدوي (السحب والإفلات):</strong> يمكنك سحب وإفلات المحاضرات بين الأوقات أو بين القاعات لتعديل الجدول يدويًا إذا لزم الأمر.</li>
-                <li><strong>التصدير:</strong> يمكنك تصدير جداول الدكاترة كصور للطباعة أو المشاركة عن طريق زر <strong style="color: #9333ea;">"تصدير الجداول كصور"</strong>.</li>
-            </ul>
+                <h3><i class="fas fa-user-md"></i> 3. جداول الدكاترة (<span class="font-mono">doctor-view.html</span>)</h3>
+                <p>تتيح لك هذه الصفحة عرض جداول الدكاترة بشكل فردي:</p>
+                <ul>
+                    <li>اختر اسم الدكتور من القائمة المنسدلة لعرض جدوله الخاص.</li>
+                    <li><strong style="color: #dc2626;">الإبلاغ عن مشاكل القاعات:</strong> يوجد نموذج خاص يمكنك استخدامه للإبلاغ عن أي أعطال أو مشاكل في القاعات (مثل أعطال التكييف أو البروجيكتور).</li>
+                </ul>
 
-            <h3>3. جداول الدكاترة (<span class="font-mono bg-light-gray p-small rounded-small">doctor-view.html</span>)</h3>
-            <p>
-                تتيح لك هذه الصفحة عرض جداول الدكاترة بشكل فردي:
-            </p>
-            <ul>
-                <li>اختر اسم الدكتور من القائمة المنسدلة لعرض جدوله الخاص.</li>
-                <li><strong class="text-red">الإبلاغ عن مشاكل القاعات:</strong> يوجد نموذج خاص يمكنك استخدامه للإبلاغ عن أي أعطال أو مشاكل في القاعات (مثل أعطال التكييف أو البروجيكتور).</li>
-            </ul>
-
-            <h3>ملاحظات هامة:</h3>
-            <ul>
-                <li>يعمل هذا الموقع بالكامل من جهة العميل، مما يعني أن جميع بياناتك محفوظة محليًا في متصفحك ولا يتم إرسالها إلى أي خادم.</li>
-                <li>عند مسح بيانات التصفح (الكاش والبيانات المحلية)، قد تفقد البيانات المدخلة.</li>
-                <li>للحصول على أفضل النتائج في توليد الجداول، تأكد من أن البيانات المدخلة دقيقة وكافية.</li>
-            </ul>
+                <h3><i class="fas fa-exclamation-triangle"></i> ملاحظات هامة:</h3>
+                <ul>
+                    <li>يعمل هذا الموقع بالكامل من جهة العميل، مما يعني أن جميع بياناتك محفوظة محليًا في متصفحك ولا يتم إرسالها إلى أي خادم.</li>
+                    <li>عند مسح بيانات التصفح (الكاش والبيانات المحلية)، قد تفقد البيانات المدخلة.</li>
+                    <li>للحصول على أفضل النتائج في توليد الجداول، تأكد من أن البيانات المدخلة دقيقة وكافية.</li>
+                </ul>
+            </div>
         </section>
     </main>
 
     <footer class="footer">
         <p>&copy; 2025 نظام جدولة المحاضرات الجامعية. جميع الحقوق محفوظة.</p>
     </footer>
-</body>
+    <script src="js/main.js"></script> </body>
 </html>
