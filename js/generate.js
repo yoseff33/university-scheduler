@@ -517,26 +517,20 @@ const displayGeneratedSchedules = () => {
             const timeSlot = timeSlots[i];
             const displayTime = timeSlot.endsWith(':00') ? convertTo12HourFormat(timeSlot) : '';
 
-            // This logic is for displaying only hourly labels. If a 30-min slot is the start of a lecture spanning multiple slots,
-            // we will draw its row. If it's just an internal 30-min interval that is rowspaned, we skip the row.
-            // Simplified: only show time label for XX:00 slots. All rows are drawn.
-            
             const tr = document.createElement('tr');
-            tr.innerHTML = `<td class="schedule-table-time-header">${displayTime}</td>`; // Display full hours only
+            tr.innerHTML = `<td class="schedule-table-time-header">${displayTime}</td>`;
 
             days.forEach(day => {
-                const cellKey = `${doctorId}-${day}-${timeSlot}`;
-                
-                // If this cell is part of a previous rowspan, skip creating new td
-                if (occupiedCells.has(cellKey)) {
-                    return;
-                }
-
                 const td = document.createElement('td');
                 td.className = `schedule-table-cell`;
                 td.setAttribute('data-day', day);
                 td.setAttribute('data-timeslot', timeSlot); // Keep 24h for internal logic
                 td.setAttribute('data-doctorid', doctor.id);
+
+                const cellId = `${doctorId}-${day}-${timeSlot}`;
+                if (occupiedCells.has(cellId)) {
+                    return;
+                }
 
                 const lecture = doctorSchedules[doctorId][day][timeSlot];
                 if (lecture && lecture.startTime === timeSlot) { // تأكد أنه بداية المحاضرة وليس جزء منها
@@ -544,7 +538,6 @@ const displayGeneratedSchedules = () => {
 
                     if (slotsOccupied > 1) {
                         td.rowSpan = slotsOccupied;
-                        // Mark subsequent cells as occupied
                         for (let j = 1; j < slotsOccupied; j++) {
                             const nextTimeSlotIndex = timeSlots.indexOf(timeSlot) + j;
                             if (nextTimeSlotIndex < timeSlots.length) {
@@ -564,7 +557,7 @@ const displayGeneratedSchedules = () => {
                     lectureCard.setAttribute('data-original-day', day);
                     lectureCard.setAttribute('data-original-timeslot', timeSlot);
                     lectureCard.setAttribute('data-doctor-id', lecture.doctorId);
-                    lectureCard.setAttribute('data-duration-slots', slotsOccupied); // This is now 30-min slots
+                    lectureCard.setAttribute('data-duration-slots', slotsOccupied);
                     lectureCard.setAttribute('data-lecture-index', lecture.lectureIndex);
 
                     // Display new details
@@ -619,9 +612,6 @@ const disableEditMode = (saveChanges = true) => {
     if (saveChanges) {
         showMessage('تم الخروج من وضع التحرير.', 'info');
     } else {
-        // If changes are to be discarded, reload from localStorage
-        // This current setup saves changes immediately upon edit/move, so "discard"
-        // would require reloading *all* state before rendering. For now, it just exits edit mode.
         showMessage('تم إلغاء وضع التحرير.', 'info');
     }
     selectedLectureForMove = null;
@@ -791,10 +781,9 @@ const moveSelectedLectureTo = (targetCell) => {
             displayGeneratedSchedules();
             return;
         }
-        // Check if the current slot in the temporary schedule is null for the new doctor and room
         const doctorSlotOccupied = (tempDoctorSchedules[targetDoctorId] && tempDoctorSchedules[targetDoctorId][targetDay] && tempDoctorSchedules[targetDoctorId][targetDay][checkSlot]);
         const roomSlotOccupied = (tempRoomAvailability[room.id] && tempRoomAvailability[room.id][targetDay] && !tempRoomAvailability[room.id][targetDay][checkSlot]); // If room is not available
-
+        
         if (doctorSlotOccupied || !roomSlotOccupied) {
              showMessage('تعارض في الموقع الجديد خلال التحقق الأخير (قد يكون الوقت محجوزاً أو القاعة غير متاحة). لا يمكن النقل.', 'warning');
              selectedLectureForMove = null;
