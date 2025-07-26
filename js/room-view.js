@@ -2,6 +2,8 @@
 
 let rooms = getData('rooms');
 let schedule = getData('generatedSchedule'); // جدول العام للمحاضرات
+let doctors = getData('doctors'); // لجلب اسم الدكتور
+let courses = getData('courses'); // لجلب اسم المقرر
 
 const daysArabic = {
     sunday: "الأحد",
@@ -46,7 +48,8 @@ const displayRoomSchedule = (roomId) => {
     roomScheduleBody.innerHTML = '';
 
     const room = rooms.find(r => r.id === roomId);
-    if (!room || Object.keys(schedule).length === 0) { // Check if general schedule exists
+    // تأكد من وجود القاعة ووجود جدول مجدول
+    if (!room || Object.keys(schedule).length === 0 || doctors.length === 0 || courses.length === 0) {
         selectedRoomNameElem.textContent = 'الرجاء اختيار قاعة.';
         return;
     }
@@ -121,6 +124,12 @@ document.getElementById('room-select').addEventListener('change', (e) => {
 
 document.addEventListener('DOMContentLoaded', () => {
     populateRoomSelect();
+
+    // تأكد من تحديث متغيرات البيانات بعد التحميل
+    rooms = getData('rooms');
+    schedule = getData('generatedSchedule');
+    doctors = getData('doctors');
+    courses = getData('courses');
 
     if (rooms.length > 0 && Object.keys(schedule).length > 0) {
         const firstRoomId = rooms[0].id;
