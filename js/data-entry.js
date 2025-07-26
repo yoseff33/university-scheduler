@@ -270,7 +270,7 @@ window.editItem = (type, idToEdit) => {
         if (itemToEdit) {
             document.getElementById('doctor-name').value = itemToEdit.name;
             document.getElementById('doctor-hours').value = itemToEdit.weeklyHours;
-            daysOfWeek.slice(0, 5).forEach(dayInfo => { // فقط أيام الأحد-الخميس
+            daysOfWeek.slice(0, 5).forEach(dayInfo => {
                 const startInput = document.getElementById(`${dayInfo.id}-start`);
                 const endInput = document.getElementById(`${dayInfo.id}-end`);
                 if (startInput && endInput) {
@@ -461,7 +461,7 @@ const labForbiddenRanges = [];     // لتخزين النطاقات المؤقت
 
 const getDayNameFromId = (id) => {
     const day = daysOfWeek.find(d => d.id === id);
-    return day ? day.name : id; // Return id if not found (shouldn't happen with correct data)
+    return day ? day.name : id;
 };
 
 const populateDynamicTimeRanges = (ranges, type) => {
@@ -476,7 +476,7 @@ const populateDynamicTimeRanges = (ranges, type) => {
     }
 
     tempArray.length = 0;
-    if (ranges) { // Ensure ranges is not null/undefined
+    if (ranges) {
         ranges.forEach(range => tempArray.push(range));
     }
 
@@ -571,8 +571,6 @@ const addDynamicTimeRange = (type) => {
 
 
 // --- معالجات الأحداث (Event Handlers) ---
-
-// ربط معالجات حدث الإرسال (Submit handlers)
 
 document.getElementById('doctor-form').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -806,7 +804,7 @@ document.getElementById('apply-to-all-weekdays-btn').addEventListener('click', (
         showMessage('الرجاء إدخال أوقات الأحد أولاً لتطبيقها.', 'warning');
         return;
     }
-    if (timeToMinutes(sundayStart) >= timeToMinutes(sundayEnd)) {
+    if (timeToMinutes(sundayStart) === -1 || timeToMinutes(sundayEnd) === -1 || timeToMinutes(sundayStart) >= timeToMinutes(sundayEnd)) {
         showMessage('وقت نهاية الأحد يجب أن يكون بعد وقت بدايته.', 'warning');
         return;
     }
