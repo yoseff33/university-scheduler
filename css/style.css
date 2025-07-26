@@ -1186,3 +1186,85 @@ body {
     from { transform: translateX(0); opacity: 1; }
     to { transform: translateX(-100%); opacity: 0; }
 }
+/* --- Tabbed Interface for Data Entry --- */
+.tabs-container {
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    margin-bottom: 40px;
+    padding: 20px; /* Padding for the container */
+}
+
+.tab-buttons {
+    display: flex;
+    justify-content: center; /* Center the tabs */
+    flex-wrap: wrap; /* Allow tabs to wrap on smaller screens */
+    gap: 10px; /* Space between tab buttons */
+    margin-bottom: 30px; /* Space below tab buttons */
+    border-bottom: 2px solid #e0e6f0; /* Separator line */
+    padding-bottom: 15px; /* Padding above line */
+}
+
+.tab-button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    background: #e0e6f0; /* Light gray background for inactive tabs */
+    color: #6a7f9b; /* Muted text color */
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+}
+
+.tab-button:hover {
+    background: #d1d9e2; /* Slightly darker on hover */
+    color: #4a5d7c;
+    transform: translateY(-2px); /* Slight lift on hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.tab-button.active {
+    background: #5b7dae; /* Active tab background */
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* More prominent shadow for active tab */
+    transform: translateY(-3px); /* Active tab stands out more */
+}
+
+.tab-button.active:hover {
+    background: #4a6c8e; /* Darker active on hover */
+    transform: translateY(-3px); /* Maintain lift */
+}
+
+.tab-content {
+    display: none; /* Hide all tab content by default */
+    padding: 10px; /* Padding inside tab content */
+    animation: fadeIn 0.5s ease-in; /* Fade in effect for content */
+}
+
+.tab-content.active {
+    display: block; /* Show active tab content */
+}
+
+/* Ensure empty state also works within tabs */
+.tab-content .empty-state {
+    margin-top: 20px;
+}
+
+/* Responsive adjustments for tabs */
+@media (max-width: 768px) {
+    .tab-buttons {
+        flex-direction: column; /* Stack tabs vertically on smaller screens */
+        align-items: stretch; /* Make tabs full width */
+    }
+    .tab-button {
+        width: 100%; /* Full width */
+        text-align: center;
+        justify-content: center; /* Center content in stacked tabs */
+    }
+}
