@@ -67,19 +67,6 @@ const displayDoctorSchedule = (doctorId) => {
         const timeSlot = timeSlots[i];
         const displayTime = timeSlot.endsWith(':00') ? convertTo12HourFormat(timeSlot) : '';
 
-        if (displayTime === '') {
-            const prevHourSlot = timeSlots[i-1];
-            let shouldSkipRow = false;
-            for (const day of days) {
-                const lecture = doctorSchedules[doctorId][day][prevHourSlot];
-                if (lecture && lecture.startTime === prevHourSlot && lecture.slotsOccupied > 1) {
-                    shouldSkipRow = true;
-                    break;
-                }
-            }
-            if (shouldSkipRow) continue;
-        }
-
         const tr = document.createElement('tr');
         tr.innerHTML = `<td class="schedule-table-time-header">${displayTime}</td>`;
 
@@ -106,7 +93,7 @@ const displayDoctorSchedule = (doctorId) => {
                     }
                 }
                 const courseColorClass = getCourseColorClass(lecture.courseId);
-                const labOrTheory = lecture.isLab ? 'عملي' : 'نظري'; // Use isLab property
+                const labOrTheory = lecture.isLab ? 'عملي' : 'نظري';
 
                 td.innerHTML = `
                     <div class="schedule-slot colored-lecture ${courseColorClass}">
@@ -114,7 +101,7 @@ const displayDoctorSchedule = (doctorId) => {
                         <div class="schedule-slot-info">${lecture.sectionName}</div>
                         <div class="schedule-slot-info">${lecture.roomName}</div>
                         <div class="schedule-slot-details">
-                            <span>${lecture.courseCode}</span> | <span>${labOrTheory}</span> | <span>(${lecture.type === 'short' ? '50 دقيقة' : '100 دقيقة'})</span>
+                            <span>${lecture.courseCode}</span> | <span>${labOrTheory}</span> | <span>(${lecture.durationMinutes} دقيقة)</span>
                         </div>
                     </div>
                 `;
@@ -125,7 +112,7 @@ const displayDoctorSchedule = (doctorId) => {
             tr.appendChild(td);
         });
         doctorScheduleBody.appendChild(tr);
-    });
+    }
 };
 
 document.getElementById('doctor-select').addEventListener('change', (e) => {
