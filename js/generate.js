@@ -314,22 +314,38 @@ const generateSchedules = () => {
         }
     });
 
-    const sortedLectures = lecturesToSchedule.sort((a, b) => {
-        // Primary sort: Long lectures before short lectures
-        if (a.requiredType === 'long' && b.requiredType === 'short') return -1;
-        if (a.requiredType === 'short' && b.requiredType === 'long') return 1;
-
-        // Secondary sort: For 3-hour courses, ensure long part (partOrder: 1) comes before short part (partOrder: 2)
-        if (a.sectionId === b.sectionId && a.courseId === b.courseId && a.partOrder && b.partOrder) {
-            return a.partOrder - b.partOrder;
+    const sortedLectures = [...lecturesToSchedule].sort((a, b) => {
+        // 1. الأولوية للمحاضرات الطويلة (100 دقيقة) قبل القصيرة (50 دقيقة) لنفس المقرر والشعبة
+        if (a.sectionId === b.sectionId && a.courseId === b.courseId) {
+            if (a.durationMinutes === LECTURE_DURATION_LONG && b.durationMinutes === LECTURE_DURATION_SHORT) return -1; // a (100) comes before b (50)
+            if (a.durationMinutes === LECTURE_DURATION_SHORT && b.durationMinutes === LECTURE_DURATION_LONG) return 1;  // b (100) comes before a (50)
         }
 
-        // Tertiary sort: Larger sections first (harder to fit)
+        // 2. ثم، الأولوية للمقررات التي تتطلب معمل (لتجد قاعة معمل مبكراً)
+        const courseA = courses.find(c => c.id === a.courseId);
+        const courseB = courses.find(c => c.id === b.courseId);
+        if (courseA && courseB) {
+            if (courseA.requiresLab && !courseB.requiresLab) return -1;
+            if (!courseA.requiresLab && courseB.requiresLab) return 1;
+        }
+
+        // 3. ثم، الأولوية للمقررات ذات الساعات الأسبوعية الأكبر (لأنها قد تكون أصعب في الجدولة)
+        if (courseA && courseB && courseA.hours !== courseB.hours) {
+            return courseB.hours - courseA.hours;
+        }
+
+        // 4. ثم، الأولوية للشعب ذات عدد الطلاب الأكبر (لتجد قاعات أكبر مبكراً)
         const sectionA = sections.find(s => s.id === a.sectionId);
         const sectionB = sections.find(s => s.id === b.sectionId);
-        if (sectionA && sectionB) {
+        if (sectionA && sectionB && sectionA.students !== sectionB.students) {
             return sectionB.students - sectionA.students;
         }
+
+        // 5. أخيراً، ترتيب أبجدي لأسماء المقررات لتسلسل ثابت
+        if (courseA && courseB) {
+            return courseA.name.localeCompare(courseB.name);
+        }
+
         return 0;
     });
 
@@ -577,7 +593,7 @@ const displayGeneratedSchedules = () => {
                     lectureCard.setAttribute('data-original-day', day);
                     lectureCard.setAttribute('data-original-timeslot', timeSlot);
                     lectureCard.setAttribute('data-doctor-id', lecture.doctorId);
-                    lectureCard.setAttribute('data-duration-slots', slotsOccupied);
+                    lectureCard.setAttribute('data-duration-slots', slotsOccupied); // This is now 30-min slots
                     lectureCard.setAttribute('data-lecture-index', lecture.lectureIndex);
 
                     const labOrTheory = lecture.isLab ? 'عملي' : 'نظري';
@@ -749,10 +765,9 @@ const moveSelectedLectureTo = (targetCell) => {
     }
 
     // --- Validity checks for the move (using temporary states) ---
-    // Deep clone the *entire* relevant state to perform temporary checks
     const tempDoctorSchedules = JSON.parse(JSON.stringify(doctorSchedules));
     const tempRoomAvailability = JSON.parse(JSON.stringify(roomAvailability));
-    const tempDoctors = JSON.parse(JSON.stringify(doctors)); // Clone doctors list too
+    const tempDoctors = JSON.parse(JSON.stringify(doctors));
 
     const originalLectureRoomId = lectureData.roomId;
 
@@ -761,12 +776,12 @@ const moveSelectedLectureTo = (targetCell) => {
     // Temporarily "remove" the lecture from its original spot in the temporary copies
     const tempOldDoctor = tempDoctors.find(d => d.id === originalDoctorId);
     if (tempOldDoctor) {
-        tempOldDoctor.assignedHours -= durationMinutes; // Decrement assigned hours in temp old doctor
+        tempOldDoctor.assignedHours -= durationMinutes;
         const originalLectureStartSlotIndex = timeSlots.indexOf(originalTimeSlot);
         for (let i = 0; i < slotsOccupied; i++) {
             const currentOriginalSlot = timeSlots[originalLectureStartSlotIndex + i];
             if (currentOriginalSlot && tempDoctorSchedules[originalDoctorId] && tempDoctorSchedules[originalDoctorId][originalDay]) {
-                tempDoctorSchedules[originalDoctorId][originalDay][currentOriginalSlot] = null; // Clears doctor's schedule slot
+                tempDoctorSchedules[originalDoctorId][originalDay][currentOriginalSlot] = null;
                 console.log(`[moveSelectedLectureTo] Temp cleared doctor ${originalDoctorId} schedule at ${originalDay} ${currentOriginalSlot}`);
             }
         }
@@ -780,7 +795,7 @@ const moveSelectedLectureTo = (targetCell) => {
         for (let i = 0; i < slotsOccupied; i++) {
             const currentOriginalSlot = timeSlots[originalLectureStartSlotIndex + i];
             if (currentOriginalSlot) {
-                originalRoomCurrentState[originalDay][currentOriginalSlot] = true; // Mark room slot as available
+                originalRoomCurrentState[originalDay][currentOriginalSlot] = true;
                 console.log(`[moveSelectedLectureTo] Temp cleared room ${originalLectureRoomId} availability at ${originalDay} ${currentOriginalSlot}`);
             }
         }
@@ -803,7 +818,7 @@ const moveSelectedLectureTo = (targetCell) => {
 
     // Increment assigned hours for the target doctor temporarily before check (if doctor changes)
     let assignedHoursAdjusted = false;
-    if (newDoctorTemp.id !== originalDoctorId) { // Only adjust if doctor is changing
+    if (newDoctorTemp.id !== originalDoctorId) {
         newDoctorTemp.assignedHours += durationMinutes;
         assignedHoursAdjusted = true;
     }
@@ -833,7 +848,7 @@ const moveSelectedLectureTo = (targetCell) => {
         return;
     }
 
-    // Final check for consecutive slots at target in temp state (double check no overlaps in the new location)
+    // Final check for consecutive slots at target (should cover doctor and room availability within the new block)
     const targetTimeSlotIndex = timeSlots.indexOf(targetTimeSlot);
     for (let i = 0; i < slotsOccupied; i++) {
         const checkSlot = timeSlots[targetTimeSlotIndex + i];
@@ -844,8 +859,6 @@ const moveSelectedLectureTo = (targetCell) => {
             console.log('[moveSelectedLectureTo] Not enough consecutive slots in timeSlots array for target.');
             return;
         }
-        // Check if the slot is actually free in the temporary states for both doctor and room
-        // This is a direct check on the temporary schedule data itself, confirming it's null/available
         const doctorSlotOccupiedInTemp = (tempDoctorSchedules[targetDoctorId] && tempDoctorSchedules[targetDoctorId][targetDay] && tempDoctorSchedules[targetDoctorId][targetDay][checkSlot]);
         const roomSlotOccupiedInTemp = (tempRoomAvailability[room.id] && tempRoomAvailability[room.id][targetDay] && !tempRoomAvailability[room.id][targetDay][checkSlot]);
         
@@ -865,7 +878,7 @@ const moveSelectedLectureTo = (targetCell) => {
     const newLectureData = {
         ...lectureData,
         doctorId: targetDoctorId,
-        doctorName: newDoctorTemp.name, // Use name from the found doctor in tempDoctors
+        doctorName: newDoctorTemp.name,
         startTime: targetTimeSlot,
     };
 
