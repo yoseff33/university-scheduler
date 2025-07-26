@@ -15,8 +15,8 @@ const timeSlots = [
 const days = ["sunday", "monday", "tuesday", "wednesday", "thursday"];
 
 const lectureDurations = {
-    short: 50,
-    long: 100
+    short: 50, // 1 hour unit in course.hours
+    long: 100  // 2 hour units in course.hours
 };
 const MIN_BREAK_TIME_MINUTES = 10; // 10 دقائق فاصل بين المحاضرات (إذا كان ذلك ممكنًا)
 
@@ -65,14 +65,8 @@ const initializeScheduleStructures = () => {
     });
 };
 
-const timeToMinutes = (timeStr) => {
-    if (!timeStr) return -1;
-    const [hours, minutes] = timeStr.split(':').map(Number);
-    return hours * 60 + minutes;
-};
-
 // وظيفة مساعدة لتحديد ما إذا كان هناك وقت كافٍ للراحة بعد المحاضرة السابقة
-const hasEnoughBreakTime = (doctorId, day, currentStartTimeMinutes, currentLectureType) => {
+const hasEnoughBreakTime = (doctorId, day, currentStartTimeMinutes) => {
     const timeSlotIndex = timeSlots.indexOf(timeSlots.find(slot => timeToMinutes(slot) === currentStartTimeMinutes));
     if (timeSlotIndex === 0) return true; // أول محاضرة في اليوم لا تحتاج لفاصل قبلها
 
@@ -80,12 +74,8 @@ const hasEnoughBreakTime = (doctorId, day, currentStartTimeMinutes, currentLectu
     const prevLectureData = doctorSchedules[doctorId][day][prevTimeSlot];
 
     if (prevLectureData) {
-        // المحاضرة السابقة في نفس الـ time slot (لو كانت طويلة) لا تعتبر فاصل
-        if (prevLectureData.startTime === prevTimeSlot && prevLectureData.type === 'long' && prevLectureData.durationSlots > 1) {
-             // هذه الخلية هي جزء من محاضرة طويلة بدأت في timeSlotIndex - 1، لا تحتاج لفاصل
-             return true;
-        }
-
+        // إذا كانت الخلية السابقة جزءًا من محاضرة طويلة بدأت في وقت سابق، فلا يوجد حاجة لفاصل هنا
+        // نتحقق من أن المحاضرة السابقة انتهت بالفعل في الفترة الزمنية السابقة
         const prevLectureEndTimeMinutes = timeToMinutes(prevLectureData.startTime) + lectureDurations[prevLectureData.type];
         if (currentStartTimeMinutes - prevLectureEndTimeMinutes < MIN_BREAK_TIME_MINUTES) {
             return false; // لا يوجد وقت كاف للراحة
@@ -145,7 +135,7 @@ const isDoctorAvailable = (doctor, day, startTime, lectureLengthMinutes) => {
     }
 
     // تحقق من وجود فاصل زمني كافٍ قبل المحاضرة الحالية
-    if (!hasEnoughBreakTime(doctor.id, day, startLectureMinutes, lectureLengthMinutes)) {
+    if (!hasEnoughBreakTime(doctor.id, day, startLectureMinutes)) {
         return false;
     }
 
@@ -201,7 +191,7 @@ const generateSchedules = () => {
 
     initializeScheduleStructures();
 
-    // نحدد المحاضرات التي يجب جدولتها (وليست الشعب)
+    // نحدد المحاضرات التي يجب جدولتها (وليست الشعب) بناءً على course.hours ونوع المحاضرة
     const lecturesToSchedule = [];
     sections.forEach(section => {
         const course = courses.find(c => c.id === section.courseId);
@@ -209,50 +199,54 @@ const generateSchedules = () => {
             console.warn(`Section ${section.name} linked to non-existent course.`);
             return;
         }
-        // بناءً على course.hours، نحدد كم "وحدة محاضرة" يجب جدولتها
-        // نفترض أن كل "ساعة" في course.hours هي وحدة تدريسية
-        // إذا كان نوع المحاضرة "طويلة" (100 دقيقة)، فهي تستهلك وحدتين.
-        // إذا كان نوع المحاضرة "قصيرة" (50 دقيقة)، فهي تستهلك وحدة واحدة.
-
-        let remainingHours = course.hours;
-        let lectureCounter = 0;
+        
+        let remainingHours = course.hours; // ساعات المقرر كـ "وحدات ساعة"
+        let lectureCounter = 0; // لتمييز المحاضرات الفرعية لنفس المقرر
 
         while (remainingHours > 0) {
-            let lectureTypeForThisUnit = course.type;
-            let durationForThisUnit = lectureDurations[lectureTypeForThisUnit];
-            let hoursConsumed = lectureTypeForThisUnit === 'long' ? 2 : 1; // كم وحدة ساعة تستهلك المحاضرة
+            let lectureTypeForThisUnit = course.type; // ابدأ بنوع المحاضرة المفضل للمقرر
+            let durationForThisUnit;
+            let hoursConsumed; // عدد وحدات الساعات التي تستهلكها هذه المحاضرة
 
-            if (remainingHours < hoursConsumed) {
-                // إذا لم يتبق ساعات كافية لمحاضرة كاملة من هذا النوع، اجعلها قصيرة
+            if (lectureTypeForThisUnit === 'long' && remainingHours >= 2) {
+                durationForThisUnit = lectureDurations.long;
+                hoursConsumed = 2;
+            } else { // إذا لم يتبق ساعتين لمحاضرة طويلة، أو النوع المفضل قصير
                 lectureTypeForThisUnit = 'short';
                 durationForThisUnit = lectureDurations.short;
                 hoursConsumed = 1;
             }
-
+            
             lecturesToSchedule.push({
                 sectionId: section.id,
                 courseId: course.id,
                 doctorId: section.doctorId,
                 requiredType: lectureTypeForThisUnit,
                 durationMinutes: durationForThisUnit,
-                lectureIndex: lectureCounter++ // لتمييز المحاضرات المتعددة لنفس المقرر
+                lectureIndex: lectureCounter++ // مؤشر فرعي لكل قطعة محاضرة
             });
             remainingHours -= hoursConsumed;
         }
     });
 
     // فرز المحاضرات لجدولة الصعب أولاً
-    // (مثلاً، المحاضرات الطويلة أولاً، أو التي تتطلب معامل، أو الشعب الأكبر)
     const sortedLectures = lecturesToSchedule.sort((a, b) => {
+        // الأولوية للمحاضرات الطويلة
         if (a.requiredType === 'long' && b.requiredType === 'short') return -1;
         if (a.requiredType === 'short' && b.requiredType === 'long') return 1;
-        // هنا يمكن إضافة عوامل فرز أخرى (مثل الشعبة الأكبر، أو المعامل)
+
+        // ثم الأولوية للشعب الأكبر
+        const sectionA = sections.find(s => s.id === a.sectionId);
+        const sectionB = sections.find(s => s.id === b.sectionId);
+        if (sectionA && sectionB) {
+            return sectionB.students - sectionA.students;
+        }
         return 0;
     });
 
     let successfullyScheduledCount = 0;
     let failedToScheduleCount = 0;
-    let unscheduledLecturesDetails = []; // لتتبع المحاضرات التي لم يتم جدولتها
+    let unscheduledLecturesDetails = [];
 
     for (const lectureUnit of sortedLectures) {
         let lectureScheduled = false;
@@ -261,7 +255,7 @@ const generateSchedules = () => {
         const section = sections.find(s => s.id === lectureUnit.sectionId);
 
         if (!doctor || !course || !section) {
-            console.warn(`Skipping lecture unit: missing associated data for section ${section.name}.`);
+            console.warn(`Skipping lecture unit: missing associated data for section ${section ? section.name : 'N/A'}.`);
             unscheduledLecturesDetails.push(`الشعبة "${section ? section.name : 'غير معروف'}" - المقرر "${course ? course.name : 'غير معروف'}" (بيانات غير مكتملة)`);
             failedToScheduleCount++;
             continue;
@@ -270,12 +264,12 @@ const generateSchedules = () => {
         const lectureLengthMinutes = lectureUnit.durationMinutes;
 
         // محاولة توزيع المحاضرات عبر أيام الأسبوع بالتساوي (قدر الإمكان)
-        // يمكن تحقيق ذلك عن طريق تدوير ترتيب الأيام أو محاولة الأيام التي لديها أقل عدد من محاضرات هذا الدكتور
-        const doctorDaysLoad = {}; // { day: numLectures }
+        // ترتيب الأيام بناءً على أقل عدد من المحاضرات المجدولة للدكتور في ذلك اليوم
+        const doctorDaysLoad = {};
         days.forEach(day => doctorDaysLoad[day] = 0);
-        for(const docDay in doctorSchedules[doctor.id]) {
-            for(const slot in doctorSchedules[doctor.id][docDay]) {
-                if(doctorSchedules[doctor.id][docDay][slot] && doctorSchedules[doctor.id][docDay][slot].startTime === slot) { // فقط بدايات المحاضرات
+        for(const docDay of days) {
+            for(const slot of timeSlots) {
+                if(doctorSchedules[doctor.id][docDay][slot] && doctorSchedules[doctor.id][docDay][slot].startTime === slot) {
                     doctorDaysLoad[docDay]++;
                 }
             }
@@ -289,9 +283,9 @@ const generateSchedules = () => {
             const suitableRooms = rooms.filter(r => {
                 return r.capacity >= section.students &&
                        (course.requiresLab ? r.type === 'lab' : r.type !== 'lab');
-            }).sort(() => 0.5 - Math.random());
+            }).sort(() => 0.5 - Math.random()); // خلط القاعات أيضًا
 
-            const shuffledTimeSlots = [...timeSlots].sort(() => 0.5 - Math.random());
+            const shuffledTimeSlots = [...timeSlots].sort(() => 0.5 - Math.random()); // خلط الأوقات
 
             for (const timeSlot of shuffledTimeSlots) {
                 if (lectureScheduled) break;
@@ -330,7 +324,7 @@ const generateSchedules = () => {
                                         type: lectureUnit.requiredType,
                                         startTime: timeSlot,
                                         durationSlots: slotsNeeded,
-                                        lectureIndex: lectureUnit.lectureIndex // مؤشر الوحدة الفرعية للمحاضرة
+                                        lectureIndex: lectureUnit.lectureIndex
                                     };
                                     schedule[day][currentSlot][room.id] = assignedLectureData;
                                     roomAvailability[room.id][day][currentSlot] = false;
@@ -355,21 +349,29 @@ const generateSchedules = () => {
     saveData('generatedSchedule', schedule);
     saveData('doctorSchedules', doctorSchedules);
     saveData('doctors', doctors);
-    // حالة isScheduled للشعبة غير مستخدمة بنفس الأهمية الآن لأننا نتبع وحدات المحاضرات
-    // ولكن يمكن تحديثها إذا تم جدولة *جميع* وحدات المحاضرة للشعبة
+    
     sections.forEach(s => {
-        s.isScheduled = lecturesToSchedule.filter(lu => lu.sectionId === s.id).every(lu => {
-            // تحقق إذا ما تم جدولة هذه الوحدة في أي مكان في doctorSchedules
+        // تحديث حالة isScheduled للشعبة بناءً على جدولة جميع وحدات محاضراتها
+        const allLectureUnitsForSection = lecturesToSchedule.filter(lu => lu.sectionId === s.id);
+        const scheduledLectureUnitsForSection = allLectureUnitsForSection.filter(lu => {
+            // تحقق ما إذا كانت هذه الوحدة تم جدولتها فعلاً في أي مكان
             const docSched = doctorSchedules[lu.doctorId];
+            if (!docSched) return false;
             for (const day in docSched) {
                 for (const slot in docSched[day]) {
-                    if (docSched[day][slot] && docSched[day][slot].sectionId === lu.sectionId && docSched[day][slot].courseId === lu.courseId && docSched[day][slot].lectureIndex === lu.lectureIndex) {
+                    const scheduledLecture = docSched[day][slot];
+                    if (scheduledLecture &&
+                        scheduledLecture.sectionId === lu.sectionId &&
+                        scheduledLecture.courseId === lu.courseId &&
+                        scheduledLecture.lectureIndex === lu.lectureIndex &&
+                        scheduledLecture.startTime === slot) { // تأكد من أنها بداية المحاضرة
                         return true;
                     }
                 }
             }
             return false;
         });
+        s.isScheduled = (allLectureUnitsForSection.length === scheduledLectureUnitsForSection.length && allLectureUnitsForSection.length > 0);
     });
     saveData('sections', sections);
 
@@ -455,11 +457,11 @@ const displayGeneratedSchedules = () => {
                 const td = document.createElement('td');
                 td.className = `schedule-table-cell`;
                 td.setAttribute('data-day', day);
-                td.setAttribute('data-timeslot', timeSlot);
+                td.setAttribute('data-timeslot', timeSlot); // Keep 24h for internal logic
                 td.setAttribute('data-doctorid', doctor.id);
 
                 const lecture = doctorSchedules[doctorId][day][timeSlot];
-                if (lecture && lecture.startTime === timeSlot) {
+                if (lecture && lecture.startTime === timeSlot) { // تأكد أنه بداية المحاضرة وليس جزء منها
                     const lectureLengthMinutes = lectureDurations[lecture.type];
                     const slotsOccupied = Math.ceil(lectureLengthMinutes / lectureDurations.short);
 
@@ -538,6 +540,7 @@ const addContentEditableListeners = () => {
                     }
                     
                     // تحديث البيانات الأصلية (هذا الجزء يجب استخدامه بحذر)
+                    // يفضل أن تكون التعديلات على الأسماء فقط لكونها مرئية، وليس تغيير البيانات الأساسية التي تتطلب IDs
                     if (field === 'courseName') {
                         const course = courses.find(c => c.id === lectureData.courseId);
                         if (course) course.name = newText;
@@ -607,44 +610,44 @@ const initDragula = () => {
             const lectureLengthMinutes = lectureDurations[lectureType];
 
             // --- التحقق المؤقت من الصلاحية (Mocking the state) ---
-            // 1. إزالة المحاضرة مؤقتًا من جدولها الأصلي
-            // (هذا ليس مثالياً إذا كانت الخوارزمية تتأثر بترتيب الجدولة، لكنه مقبول للتحقق المؤقت)
+            // 1. إنشاء نسخ مؤقتة من هياكل البيانات
             const tempDoctorSchedules = JSON.parse(JSON.stringify(doctorSchedules));
             const tempRoomAvailability = JSON.parse(JSON.stringify(roomAvailability));
             const tempDoctors = JSON.parse(JSON.stringify(doctors));
 
+            // 2. إزالة المحاضرة مؤقتًا من جدولها الأصلي في النسخ المؤقتة
             const tempOldDoctor = tempDoctors.find(d => d.id === originalDoctorId);
             if (tempOldDoctor) {
                 tempOldDoctor.assignedHours -= lectureLengthMinutes;
                 for (let i = 0; i < durationSlots; i++) {
                     const currentOriginalSlot = timeSlots[timeSlots.indexOf(originalTimeSlot) + i];
-                    if (currentOriginalSlot && tempDoctorSchedules[originalDoctorId][originalDay]) {
+                    if (currentOriginalSlot && tempDoctorSchedules[originalDoctorId] && tempDoctorSchedules[originalDoctorId][originalDay]) {
                         tempDoctorSchedules[originalDoctorId][originalDay][currentOriginalSlot] = null;
                     }
                 }
             }
             for (let i = 0; i < durationSlots; i++) {
                 const currentOriginalSlot = timeSlots[timeSlots.indexOf(originalTimeSlot) + i];
-                if (currentOriginalSlot && tempRoomAvailability[originalRoomId]) {
+                if (currentOriginalSlot && tempRoomAvailability[originalRoomId] && tempRoomAvailability[originalRoomId][originalDay]) {
                     tempRoomAvailability[originalRoomId][originalDay][currentOriginalSlot] = true;
                 }
             }
             
-            // 2. التحقق من التوفر في الموقع الجديد باستخدام الحالة المؤقتة
+            // 3. التحقق من التوفر في الموقع الجديد باستخدام الحالة المؤقتة
             const newDoctorTemp = tempDoctors.find(d => d.id === targetDoctorId);
             if (!newDoctorTemp) { // Should not happen if newDoctor exists
                  showMessage('خطأ داخلي: لم يتم العثور على الدكتور الجديد المؤقت.', 'error');
                  return false;
             }
 
-            // A. تحقق من توفر الدكتور
+            // A. تحقق من توفر الدكتور (باستخدام الدالة المعدلة التي تقبل هياكل مؤقتة)
             const doctorAvailable = isDoctorAvailableCheckForDrag(newDoctorTemp, targetDay, targetTimeSlot, lectureLengthMinutes, tempDoctorSchedules);
             if (!doctorAvailable) {
                  showMessage(`الدكتور ${newDoctor.name} غير متاح في ${daysArabic[targetDay]} ${convertTo12HourFormat(targetTimeSlot)} أو سيتجاوز ساعاته.`, 'warning');
                  return false;
             }
 
-            // B. تحقق من توفر القاعة
+            // B. تحقق من توفر القاعة (باستخدام الدالة المعدلة التي تقبل هياكل مؤقتة)
             const roomAvailable = isRoomAvailableCheckForDrag(room, targetDay, targetTimeSlot, lectureLengthMinutes, tempRoomAvailability);
             if (!roomAvailable) {
                  showMessage(`القاعة ${room.name} غير متاحة في ${daysArabic[targetDay]} ${convertTo12HourFormat(targetTimeSlot)}.`, 'warning');
@@ -660,6 +663,7 @@ const initDragula = () => {
                     return false;
                 }
                 const targetCellElement = document.querySelector(`td[data-day="${targetDay}"][data-timeslot="${checkSlot}"][data-doctorid="${targetDoctorId}"]`);
+                // تأكد أن الخلية مستهدفة وغير مشغولة
                 if (targetCellElement && targetCellElement.querySelector('.draggable-lecture') && targetCellElement.querySelector('.draggable-lecture') !== el) {
                     showMessage('يوجد تداخل مع محاضرة أخرى في الموقع الجديد.', 'warning');
                     return false;
@@ -672,6 +676,7 @@ const initDragula = () => {
     });
 
     // وظائف مساعدة للتحقق خلال عملية السحب والإفلات (باستخدام هياكل مؤقتة)
+    // هذه الدوال مطابقة تقريباً للدوال الرئيسية لكنها تقبل هياكل بيانات كمعامل
     const isDoctorAvailableCheckForDrag = (doctor, day, startTime, lectureLengthMinutes, currentDoctorSchedules) => {
         const startLectureMinutes = timeToMinutes(startTime);
         const endLectureMinutes = startLectureMinutes + lectureLengthMinutes;
@@ -712,18 +717,19 @@ const initDragula = () => {
 
         for (let i = 0; i < slotsNeeded; i++) {
             const currentSlot = timeSlots[timeSlotIndex + i];
-            if (!currentSlot || currentDoctorSchedules[doctor.id][day][currentSlot]) {
+            // هنا نستخدم currentDoctorSchedules بدلاً من doctorSchedules العامة
+            if (!currentSlot || (currentDoctorSchedules[doctor.id] && currentDoctorSchedules[doctor.id][day] && currentDoctorSchedules[doctor.id][day][currentSlot])) {
                 return false;
             }
         }
         // تحقق من وجود فاصل زمني كافٍ قبل المحاضرة الحالية في الجدول المؤقت
-        if (!hasEnoughBreakTimeCheckForDrag(doctor.id, day, startLectureMinutes, lectureLengthMinutes, currentDoctorSchedules)) {
+        if (!hasEnoughBreakTimeCheckForDrag(doctor.id, day, startLectureMinutes, currentDoctorSchedules)) {
             return false;
         }
         return true;
     };
 
-    const hasEnoughBreakTimeCheckForDrag = (doctorId, day, currentStartTimeMinutes, currentLectureType, currentDoctorSchedules) => {
+    const hasEnoughBreakTimeCheckForDrag = (doctorId, day, currentStartTimeMinutes, currentDoctorSchedules) => {
         const timeSlotIndex = timeSlots.indexOf(timeSlots.find(slot => timeToMinutes(slot) === currentStartTimeMinutes));
         if (timeSlotIndex === 0) return true;
 
@@ -773,7 +779,8 @@ const initDragula = () => {
 
         for (let i = 0; i < slotsNeeded; i++) {
             const currentSlot = timeSlots[timeSlotIndex + i];
-            if (!currentSlot || !currentRoomAvailability[room.id][day][currentSlot]) {
+            // هنا نستخدم currentRoomAvailability بدلاً من roomAvailability العامة
+            if (!currentSlot || (currentRoomAvailability[room.id] && currentRoomAvailability[room.id][day] && !currentRoomAvailability[room.id][day][currentSlot])) {
                 return false;
             }
         }
@@ -808,7 +815,6 @@ const initDragula = () => {
         for (let i = 0; i < durationSlots; i++) {
             const currentOriginalSlot = timeSlots[timeSlots.indexOf(originalTimeSlot) + i];
             if (currentOriginalSlot) {
-                // Ensure to clear the actual schedule entry, not just doctorSchedules
                 if (schedule[originalDay] && schedule[originalDay][currentOriginalSlot] && schedule[originalDay][currentOriginalSlot][roomId]) {
                     delete schedule[originalDay][currentOriginalSlot][roomId];
                 }
@@ -833,7 +839,7 @@ const initDragula = () => {
             type: lectureType,
             startTime: targetTimeSlot,
             durationSlots: durationSlots,
-            lectureIndex: lectureIndex // الحفاظ على مؤشر المحاضرة الفرعية
+            lectureIndex: lectureIndex
         };
 
         const newDoctor = doctors.find(d => d.id === targetDoctorId);
@@ -857,19 +863,16 @@ const initDragula = () => {
             }
         }
 
-        // تحديث خصائص المحاضرة في DOM لتناسب الموقع الجديد
         el.setAttribute('data-doctor-id', targetDoctorId);
         el.setAttribute('data-original-day', targetDay);
         el.setAttribute('data-original-timeslot', targetTimeSlot);
 
-        // إعادة عرض الجداول لتحديث الـ rowspan وأي تأثيرات بصرية
         displayGeneratedSchedules();
 
-        // حفظ الجداول المحدثة بعد التعديل اليدوي
         saveData('generatedSchedule', schedule);
         saveData('doctorSchedules', doctorSchedules);
         saveData('doctors', doctors);
-        saveData('sections', sections); // تحديث إذا كانت حالة isScheduled تغيرت (ليست مرتبطة بالنقل المباشر عادة)
+        saveData('sections', sections);
 
         showMessage('تم تعديل الجدول بالسحب والإفلات بنجاح!', 'success');
         console.log('Schedule updated via drag and drop.');
@@ -911,6 +914,30 @@ document.getElementById('export-schedules-btn').addEventListener('click', () => 
         });
     });
 });
+
+document.getElementById('print-all-schedules-btn').addEventListener('click', () => {
+    const schedulesToPrint = document.getElementById('schedule-output');
+    if (schedulesToPrint && schedulesToPrint.children.length > 0 && !document.getElementById('no-schedules-message').classList.contains('hidden')) {
+         showMessage('لا توجد جداول لطباعتها. الرجاء توليد الجداول أولاً.', 'warning');
+         return;
+    }
+    
+    // إنشاء نافذة طباعة مؤقتة
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write('<html><head><title>جداول الدكاترة</title>');
+    printWindow.document.write('<link rel="stylesheet" href="css/style.css">'); // التنسيق الأساسي
+    printWindow.document.write('<link rel="stylesheet" href="css/print.css" media="print">'); // التنسيق للطباعة
+    printWindow.document.write('</head><body>');
+    printWindow.document.write('<div class="main-content">'); // Wrap in main-content for print styling
+    printWindow.document.write('<h1 style="text-align: center; margin-bottom: 20px;">جداول الدكاترة</h1>');
+    printWindow.document.write(schedulesToPrint.outerHTML);
+    printWindow.document.write('</div></body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    // printWindow.close(); // قد تسبب إغلاق النافذة قبل الطباعة في بعض المتصفحات
+});
+
 
 // زر "بدء فصل جديد / مسح الجداول الحالية"
 document.getElementById('clear-schedules-btn').addEventListener('click', () => {
