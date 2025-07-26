@@ -2,8 +2,8 @@
 
 // جلب البيانات من LocalStorage
 let doctors = getData('doctors');
-let rooms = getData('rooms'); // نحتاج القاعات لعرضها في نموذج البلاغات
-let doctorSchedules = getData('doctorSchedules'); // الجداول المجدولة للدكاترة
+let rooms = getData('rooms');
+let doctorSchedules = getData('doctorSchedules');
 
 // أيام الأسبوع للواجهة
 const daysArabic = {
@@ -23,7 +23,7 @@ const days = ["sunday", "monday", "tuesday", "wednesday", "thursday"];
  */
 const populateDoctorSelect = () => {
     const doctorSelect = document.getElementById('doctor-select');
-    doctorSelect.innerHTML = '<option value="">-- اختر دكتور --</option>'; // الخيار الافتراضي
+    doctorSelect.innerHTML = '<option value="">-- اختر دكتور --</option>';
 
     doctors.forEach(doctor => {
         const option = document.createElement('option');
@@ -41,41 +41,44 @@ const displayDoctorSchedule = (doctorId) => {
     const scheduleDisplayDiv = document.getElementById('doctor-schedule-display');
     const selectedDoctorNameElem = document.getElementById('selected-doctor-name');
     const doctorScheduleBody = document.getElementById('doctor-schedule-body');
+    const noDoctorSelectedMessage = document.getElementById('no-doctor-selected-message');
 
-    scheduleDisplayDiv.classList.add('hidden'); // إخفاء الجدول افتراضيًا
-    doctorScheduleBody.innerHTML = ''; // مسح المحتوى القديم
+    scheduleDisplayDiv.classList.add('hidden');
+    noDoctorSelectedMessage.classList.remove('hidden'); // عرض رسالة "اختر دكتور" افتراضياً
+    doctorScheduleBody.innerHTML = '';
 
     const doctor = doctors.find(d => d.id === doctorId);
-    if (!doctor || !doctorSchedules[doctorId]) {
+    if (!doctor || !doctorSchedules[doctorId] || Object.keys(doctorSchedules[doctorId]).every(day => Object.values(doctorSchedules[doctorId][day]).every(slot => slot === null))) {
         selectedDoctorNameElem.textContent = 'الرجاء اختيار دكتور.';
         return;
     }
 
     selectedDoctorNameElem.textContent = `جدول الدكتور: ${doctor.name}`;
-    scheduleDisplayDiv.classList.remove('hidden'); // إظهار الجدول
+    scheduleDisplayDiv.classList.remove('hidden');
+    noDoctorSelectedMessage.classList.add('hidden'); // إخفاء رسالة "اختر دكتور"
 
-    const occupiedCells = new Set(); // لتتبع الخلايا المدمجة (المشغولة بواسطة محاضرات طويلة)
+    const occupiedCells = new Set();
 
     timeSlots.forEach(timeSlot => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td class="time-slot-header">${timeSlot}</td>`;
+        tr.innerHTML = `<td class="schedule-table-time-header">${timeSlot}</td>`;
 
         days.forEach(day => {
             const cellId = `${doctorId}-${day}-${timeSlot}`;
             if (occupiedCells.has(cellId)) {
-                return; // لا نضيف TD إذا كانت الخلية مدمجة بالفعل
+                return;
             }
 
             const td = document.createElement('td');
-            td.className = 'schedule-cell'; // يمكن إضافة كلاس خاص بالخلايا هنا
+            td.className = 'schedule-table-cell';
 
             const lecture = doctorSchedules[doctorId][day][timeSlot];
-            if (lecture) {
+            if (lecture && lecture.startTime === timeSlot) {
                 const lectureType = lecture.type;
                 const lectureDurationMinutes = lectureType === 'short' ? 50 : 100;
                 const slotsOccupied = Math.ceil(lectureDurationMinutes / 50);
 
-                if (lectureType === 'long' && slotsOccupied > 1) {
+                if (slotsOccupied > 1) {
                     td.rowSpan = slotsOccupied;
                     for (let i = 1; i < slotsOccupied; i++) {
                         const nextTimeSlotIndex = timeSlots.indexOf(timeSlot) + i;
@@ -86,16 +89,16 @@ const displayDoctorSchedule = (doctorId) => {
                 }
 
                 td.innerHTML = `
-                    <div class="lecture-display-card">
-                        <p class="lecture-course-name">${lecture.courseName}</p>
-                        <p class="lecture-section-name">${lecture.sectionName}</p>
-                        <p class="lecture-room-name">${lecture.roomName}</p>
-                        <p class="lecture-type-info">${lectureType === 'short' ? 'قصيرة' : 'طويلة'}</p>
+                    <div class="schedule-slot">
+                        <div class="schedule-slot-subject">${lecture.courseName}</div>
+                        <div class="schedule-slot-info">${lecture.sectionName}</div>
+                        <div class="schedule-slot-info">${lecture.roomName}</div>
+                        <div class="schedule-slot-info">(${lectureType === 'short' ? 'قصيرة' : 'طويلة'})</div>
                     </div>
                 `;
                 td.classList.add('has-lecture');
-            } else {
-                td.textContent = ''; // خلية فارغة
+            } else if (!lecture && !occupiedCells.has(cellId)) {
+                td.textContent = '';
             }
             tr.appendChild(td);
         });
@@ -110,7 +113,7 @@ document.getElementById('doctor-select').addEventListener('change', (e) => {
         displayDoctorSchedule(selectedDoctorId);
     } else {
         document.getElementById('doctor-schedule-display').classList.add('hidden');
-        document.getElementById('selected-doctor-name').textContent = 'الرجاء اختيار دكتور.';
+        document.getElementById('no-doctor-selected-message').classList.remove('hidden');
     }
 });
 
@@ -138,42 +141,41 @@ document.getElementById('room-issue-form').addEventListener('submit', (e) => {
     const issueDescription = document.getElementById('issue-description').value;
 
     if (isNaN(roomId) || !rooms.some(r => r.id === roomId)) {
-        alert('الرجاء اختيار قاعة صالحة.');
+        showMessage('الرجاء اختيار قاعة صالحة.', 'error');
         return;
     }
 
     const room = rooms.find(r => r.id === roomId);
-    // في بيئة العميل فقط، يمكننا عرض رسالة نجاح بسيطة
-    const statusDiv = document.getElementById('issue-report-status');
-    statusDiv.textContent = `تم استلام بلاغك عن مشكلة "${issueType}" في القاعة "${room.name}" بنجاح! الوصف: "${issueDescription}"`;
-    statusDiv.classList.remove('hidden');
-
-    // يمكن هنا إضافة منطق لحفظ هذه البلاغات في localStorage
-    // أو طباعتها في الكونسول للمراجعة
-    console.log('New Room Issue Report:', {
+    
+    // يمكن هنا تخزين البلاغات في localStorage أيضاً
+    // مثال بسيط جداً:
+    let issueReports = getData('issueReports') || [];
+    issueReports.push({
+        id: Date.now(),
         roomId: roomId,
         roomName: room.name,
         issueType: issueType,
         description: issueDescription,
-        timestamp: new Date().toLocaleString()
+        timestamp: new Date().toLocaleString(),
+        status: 'pending' // حالة افتراضية
     });
+    saveData('issueReports', issueReports);
+
+    showMessage(`تم استلام بلاغك عن مشكلة "${issueType}" في القاعة "${room.name}" بنجاح!`, 'success');
 
     e.target.reset(); // مسح حقول النموذج بعد الإرسال
-    setTimeout(() => {
-        statusDiv.classList.add('hidden'); // إخفاء رسالة الحالة بعد فترة
-    }, 5000);
 });
-
 
 // عند تحميل الصفحة، يتم ملء قوائم الاختيار وعرض أول جدول دكتور إذا كان موجوداً
 document.addEventListener('DOMContentLoaded', () => {
     populateDoctorSelect();
     populateRoomIssueSelect();
 
-    // حاول عرض جدول أول دكتور إذا كان هناك دكاترة وجداول مجدولة
     if (doctors.length > 0 && Object.keys(doctorSchedules).length > 0) {
         const firstDoctorId = doctors[0].id;
         document.getElementById('doctor-select').value = firstDoctorId;
         displayDoctorSchedule(firstDoctorId);
+    } else {
+        document.getElementById('no-doctor-selected-message').classList.remove('hidden');
     }
 });
