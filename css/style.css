@@ -1,7 +1,7 @@
 /* css/style.css */
 
 /* Google Fonts Import */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap');
 
 /* Global Reset */
 * {
@@ -22,17 +22,16 @@
 
 /* Base Body Styles */
 body {
-    font-family: 'Tajawal', 'Montserrat', sans-serif; /* Primary for Arabic, Montserrat for Latin fallback */
-    /* Rich, subtle gradient background with light texture */
-    background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);
+    font-family: 'Tajawal', 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #f7f9fc 0%, #eef2f5 100%);
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e0e0e0' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 54v-4h-2v4H0v2h4v4h2v-4h4v-2H6zM6-20v4h-2v-4H0v-2h4v-4h2v4h4v2H6zM36-20v4h-2v-4h-4v-2h4v-4h2v4h4v2h-4zM6 4v-4h-2v4H0v2h4v4h2v-4h4V6H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     
     min-height: 100vh;
-    color: #212121; /* Very Dark Gray for main text */
-    direction: rtl; /* Right-to-left support */
-    text-align: right; /* Default text alignment for RTL */
-    overflow-x: hidden; /* Prevent horizontal scroll */
-    line-height: 1.7; /* Enhanced readability */
+    color: #263238;
+    direction: rtl;
+    text-align: right;
+    overflow-x: hidden;
+    line-height: 1.7;
 }
 
 /* Custom Scrollbar for Webkit (Chrome, Safari, Edge) */
@@ -182,7 +181,7 @@ html {
 .main-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 60px 40px;
+    padding: 50px 30px;
     min-height: calc(100vh - 170px);
 }
 
@@ -236,7 +235,7 @@ html {
     font-size: 4.5rem;
     color: #212121;
     margin-bottom: 30px;
-    text-shadow: 2px 4px 12px rgba(0, 0, 0, 0.08);
+    text-shadow: 2px 3px 10px rgba(0, 0, 0, 0.08);
     font-weight: 900;
     line-height: 1.2;
     letter-spacing: -0.5px;
@@ -255,7 +254,7 @@ html {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
     gap: 50px;
-    margin-bottom: 80px;
+    margin-bottom: 70px;
 }
 
 .feature-card {
@@ -467,7 +466,7 @@ html {
     border-radius: 20px;
     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: all 0.3s ease;
     border: 1px solid #e0e0e0;
     margin-bottom: 40px;
 }
@@ -532,7 +531,7 @@ html {
 .form-group textarea:focus {
     outline: none;
     border-color: #8BC34A;
-    box-shadow: 0 0 0 5px rgba(139, 195, 74, 0.25); /* Larger, softer focus shadow */
+    box-shadow: 0 0 0 5px rgba(139, 195, 74, 0.25);
 }
 
 /* Validation error style */
@@ -590,7 +589,7 @@ html {
 .checkbox-item input[type="checkbox"]:checked {
     background-color: #4CAF50;
     border-color: #4CAF50;
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.12), 0 0 0 5px rgba(139, 195, 74, 0.25); /* Stronger outer shadow */
+    box-shadow: inset 0 1px 4px rgba(0,0,0,0.12), 0 0 0 5px rgba(139, 195, 74, 0.25);
 }
 
 /* Checkmark for custom checkbox */
@@ -856,7 +855,7 @@ html {
 .schedule-table-cell.edit-mode-active:not(.has-lecture):hover {
     background-color: #f5fafd;
     cursor: pointer;
-    box-shadow: inset 0 0 0 3px #00796B; /* Primary Teal border */
+    box-shadow: inset 0 0 0 3px #00796B;
 }
 
 /* Styles for cells selected for move destination */
@@ -888,8 +887,8 @@ html {
 
 /* Styles for the lecture currently selected for move */
 .schedule-slot.selected-for-move {
-    box-shadow: 0 0 0 4px #FFB300, /* Amber outline for selected */
-                0 12px 35px rgba(0, 0, 0, 0.25); /* Stronger shadow */
+    box-shadow: 0 0 0 4px #FFB300,
+                0 12px 35px rgba(0, 0, 0, 0.25);
     transform: scale(1.03);
     opacity: 0.98;
     cursor: grabbing;
@@ -910,13 +909,13 @@ html {
 }
 
 /* Color Palette for Lectures (more refined) */
-.lecture-color-0 { --lecture-bg-color: #E0F7FA; --lecture-border-color: #4DD0E1; } /* Light Cyan */
-.lecture-color-1 { --lecture-bg-color: #FFFDE7; --lecture-border-color: #FFEB3B; } /* Light Yellow */
-.lecture-color-2 { --lecture-bg-color: #E8F5E9; --lecture-border-color: #81C784; } /* Light Green */
-.lecture-color-3 { --lecture-bg-color: #FFEBEE; --lecture-border-color: #EF9A9A; } /* Light Red */
-.lecture-color-4 { --lecture-bg-color: #EDE7F6; --lecture-border-color: #B39DDB; } /* Light Purple */
-.lecture-color-5 { --lecture-bg-color: #F3E5F5; --lecture-border-color: #CE93D8; } /* Light Pink-Purple */
-.lecture-color-6 { --lecture-bg-color: #E0F7FA; --lecture-border-color: #4DD0E1; } /* Similar to 0 for more options */
+.lecture-color-0 { --lecture-bg-color: #E0F7FA; --lecture-border-color: #4DD0E1; }
+.lecture-color-1 { --lecture-bg-color: #FFFDE7; --lecture-border-color: #FFEB3B; }
+.lecture-color-2 { --lecture-bg-color: #E8F5E9; --lecture-border-color: #81C784; }
+.lecture-color-3 { --lecture-bg-color: #FFEBEE; --lecture-border-color: #EF9A9A; }
+.lecture-color-4 { --lecture-bg-color: #EDE7F6; --lecture-border-color: #B39DDB; }
+.lecture-color-5 { --lecture-bg-color: #F3E5F5; --lecture-border-color: #CE93D8; }
+.lecture-color-6 { --lecture-bg-color: #E0F7FA; --lecture-border-color: #4DD0E1; }
 
 
 .schedule-slot-subject {
@@ -1402,7 +1401,7 @@ html {
     align-items: flex-end;
     margin-top: 20px;
     padding-top: 15px;
-    border-top: 1px solid #eceff1;
+    border-top: 1px solid #e0e0e0;
 }
 
 .add-time-range-controls .form-group {
