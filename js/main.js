@@ -56,8 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalCoursesElement = document.getElementById('total-courses');
         const totalSectionsElement = document.getElementById('total-sections');
         const totalRoomsElement = document.getElementById('total-rooms');
-        const totalReportsElement = document.getElementById('total-reports'); // جديد
-        const pendingReportsElement = document.getElementById('pending-reports'); // جديد
+        const totalReportsElement = document.getElementById('total-reports');
+        const pendingReportsElement = document.getElementById('pending-reports');
 
         if (totalDoctorsElement) totalDoctorsElement.textContent = doctors.length;
         if (totalCoursesElement) totalCoursesElement.textContent = courses.length;
