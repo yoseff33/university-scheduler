@@ -4,44 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>توليد الجداول - نظام جدولة المحاضرات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.css">
 </head>
 <body>
     <nav class="navbar">
-        <div class="container">
-            <a href="index.html" class="navbar-brand">نظام جدولة المحاضرات</a>
-            <div class="nav-links">
-                <a href="index.html">الرئيسية</a>
-                <a href="data-entry.html">إدخال البيانات</a>
-                <a href="generate.html">توليد الجداول</a>
-                <a href="doctor-view.html">جداول الدكاترة</a>
-                <a href="help.html">المساعدة</a>
-            </div>
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-calendar-alt"></i> نظام جدولة المحاضرات
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="data-entry.html" class="nav-link"><i class="fas fa-plus-circle"></i> إدخال البيانات</a></li>
+                <li><a href="generate.html" class="nav-link"><i class="fas fa-cogs"></i> توليد الجداول</a></li>
+                <li><a href="doctor-view.html" class="nav-link"><i class="fas fa-user-md"></i> جداول الدكاترة</a></li>
+                <li><a href="help.html" class="nav-link"><i class="fas fa-question-circle"></i> المساعدة</a></li>
+            </ul>
         </div>
     </nav>
 
-    <main class="container">
-        <h1 class="main-section-title" style="text-align: center; font-size: 2.25rem; font-weight: bold; color: #1e40af; margin-bottom: 1.5rem;">توليد الجداول الدراسية</h1>
-
-        <div class="main-section" style="text-align: center;">
-            <button id="generate-schedule-btn" class="generate-button">
-                توليد الجداول تلقائيًا
-            </button>
-            <p id="generation-status" class="generation-status"></p>
+    <main class="main-content">
+        <div class="page-header">
+            <h1>توليد الجداول الدراسية</h1>
+            <p>انقر على الزر لتوليد الجداول تلقائيًا، ثم قم بتعديلها يدوياً إذا لزم الأمر.</p>
         </div>
 
-        <div id="schedule-output" class="schedule-grid-output">
+        <section class="card schedule-controls">
+            <div class="card-header">
+                <h2><i class="fas fa-random"></i> خيارات التوليد</h2>
             </div>
+            <div class="card-body">
+                <div class="control-buttons">
+                    <button id="generate-schedule-btn" class="btn btn-success"><i class="fas fa-sync-alt"></i> توليد الجداول تلقائيًا</button>
+                    <button id="export-schedules-btn" class="btn btn-primary"><i class="fas fa-download"></i> تصدير الجداول كصور</button>
+                </div>
+                <div id="generation-status" class="status-message info"></div>
+            </div>
+        </section>
 
-        <div class="export-options-section">
-            <h2>خيارات الجدول</h2>
-            <button id="export-schedules-btn" class="export-button">
-                تصدير الجداول كصور
-            </button>
-            <p>سيتم تصدير كل جدول كصورة منفصلة.</p>
-        </div>
-
+        <section class="card" style="margin-top: 30px;">
+            <div class="card-header">
+                <h2><i class="fas fa-table"></i> الجداول المجدولة</h2>
+            </div>
+            <div class="card-body">
+                <div id="schedule-output">
+                    </div>
+                <div id="no-schedules-message" class="empty-state hidden">
+                    <p><i class="fas fa-info-circle"></i> لا توجد جداول لعرضها. يرجى إدخال البيانات وتوليد الجداول.</p>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="footer">
@@ -52,5 +65,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/generate.js"></script>
-</body>
+    <script src="js/main.js"></script> </body>
 </html>
