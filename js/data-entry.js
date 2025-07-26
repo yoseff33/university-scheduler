@@ -791,62 +791,97 @@ tabButtons.forEach(button => {
 });
 
 // --- Attach dynamic time range controls ---
-document.getElementById('add-doctor-unavailable-btn').addEventListener('click', () => addDynamicTimeRange('doctor'));
-document.getElementById('add-lab-forbidden-btn').addEventListener('click', () => addDynamicTimeRange('lab'));
+// Check if buttons exist before adding listeners
+const addDoctorUnavailableBtn = document.getElementById('add-doctor-unavailable-btn');
+if (addDoctorUnavailableBtn) {
+    addDoctorUnavailableBtn.addEventListener('click', () => addDynamicTimeRange('doctor'));
+} else {
+    console.warn("Element with ID 'add-doctor-unavailable-btn' not found.");
+}
+
+const addLabForbiddenBtn = document.getElementById('add-lab-forbidden-btn');
+if (addLabForbiddenBtn) {
+    addLabForbiddenBtn.addEventListener('click', () => addDynamicTimeRange('lab'));
+} else {
+    console.warn("Element with ID 'add-lab-forbidden-btn' not found.");
+}
 
 
 // --- وظائف للأزرار المساعدة (جديد) ---
-document.getElementById('smart-fill-morning-btn').addEventListener('click', () => {
-    const defaultStart = "08:00";
-    const defaultEnd = "12:00"; // 12:00 PM
-    daysOfWeek.slice(0, 5).forEach(dayInfo => { // الأحد إلى الخميس
-        document.getElementById(`${dayInfo.id}-start`).value = defaultStart;
-        document.getElementById(`${dayInfo.id}-end`).value = defaultEnd;
-        clearValidationError(`${dayInfo.id}-start`);
+const smartFillMorningBtn = document.getElementById('smart-fill-morning-btn');
+if (smartFillMorningBtn) {
+    smartFillMorningBtn.addEventListener('click', () => {
+        const defaultStart = "08:00";
+        const defaultEnd = "12:00"; // 12:00 PM
+        daysOfWeek.slice(0, 5).forEach(dayInfo => { // الأحد إلى الخميس
+            document.getElementById(`${dayInfo.id}-start`).value = defaultStart;
+            document.getElementById(`${dayInfo.id}-end`).value = defaultEnd;
+            clearValidationError(`${dayInfo.id}-start`);
+        });
+        showMessage('تم ملء أوقات الدوام الصباحي (08:00 صباحاً - 12:00 ظهراً) لكل أيام الأسبوع.', 'info', 5000);
     });
-    showMessage('تم ملء أوقات الدوام الصباحي (08:00 صباحاً - 12:00 ظهراً) لكل أيام الأسبوع.', 'info', 5000);
-});
+} else {
+    console.warn("Element with ID 'smart-fill-morning-btn' not found.");
+}
 
-document.getElementById('smart-fill-full-day-btn').addEventListener('click', () => {
-    const defaultStart = "08:00";
-    const defaultEnd = "17:00"; // 5:00 PM
-    daysOfWeek.slice(0, 5).forEach(dayInfo => { // الأحد إلى الخميس
-        document.getElementById(`${dayInfo.id}-start`).value = defaultStart;
-        document.getElementById(`${dayInfo.id}-end`).value = defaultEnd;
-        clearValidationError(`${dayInfo.id}-start`);
+
+const smartFillFullDayBtn = document.getElementById('smart-fill-full-day-btn');
+if (smartFillFullDayBtn) {
+    smartFillFullDayBtn.addEventListener('click', () => {
+        const defaultStart = "08:00";
+        const defaultEnd = "17:00"; // 5:00 PM
+        daysOfWeek.slice(0, 5).forEach(dayInfo => { // الأحد إلى الخميس
+            document.getElementById(`${dayInfo.id}-start`).value = defaultStart;
+            document.getElementById(`${dayInfo.id}-end`).value = defaultEnd;
+            clearValidationError(`${dayInfo.id}-start`);
+        });
+        showMessage('تم ملء أوقات الدوام الكامل (08:00 صباحاً - 05:00 مساءً) لكل أيام الأسبوع.', 'info', 5000);
     });
-    showMessage('تم ملء أوقات الدوام الكامل (08:00 صباحاً - 05:00 مساءً) لكل أيام الأسبوع.', 'info', 5000);
-});
+} else {
+    console.warn("Element with ID 'smart-fill-full-day-btn' not found.");
+}
 
-document.getElementById('apply-to-all-weekdays-btn').addEventListener('click', () => { // Keep this for custom copy
-    const sundayStart = document.getElementById('sunday-start').value;
-    const sundayEnd = document.getElementById('sunday-end').value;
 
-    if (!sundayStart || !sundayEnd) {
-        showMessage('الرجاء إدخال أوقات الأحد أولاً لتطبيقها.', 'warning');
-        return;
-    }
-    if (timeToMinutes(sundayStart) === -1 || timeToMinutes(sundayEnd) === -1 || timeToMinutes(sundayStart) >= timeToMinutes(sundayEnd)) {
-        showMessage('وقت نهاية الأحد يجب أن يكون بعد وقت بدايته.', 'warning');
-        return;
-    }
+const applyToAllWeekdaysBtn = document.getElementById('apply-to-all-weekdays-btn');
+if (applyToAllWeekdaysBtn) {
+    applyToAllWeekdaysBtn.addEventListener('click', () => { // Keep this for custom copy
+        const sundayStart = document.getElementById('sunday-start').value;
+        const sundayEnd = document.getElementById('sunday-end').value;
 
-    daysOfWeek.slice(1, 5).forEach(dayInfo => { // من الإثنين إلى الخميس
-        document.getElementById(`${dayInfo.id}-start`).value = sundayStart;
-        document.getElementById(`${dayInfo.id}-end`).value = sundayEnd;
-        clearValidationError(`${dayInfo.id}-start`);
+        if (!sundayStart || !sundayEnd) {
+            showMessage('الرجاء إدخال أوقات الأحد أولاً لتطبيقها.', 'warning');
+            return;
+        }
+        if (timeToMinutes(sundayStart) === -1 || timeToMinutes(sundayEnd) === -1 || timeToMinutes(sundayStart) >= timeToMinutes(sundayEnd)) {
+            showMessage('وقت نهاية الأحد يجب أن يكون بعد وقت بدايته.', 'warning');
+            return;
+        }
+
+        daysOfWeek.slice(1, 5).forEach(dayInfo => { // من الإثنين إلى الخميس
+            document.getElementById(`${dayInfo.id}-start`).value = sundayStart;
+            document.getElementById(`${dayInfo.id}-end`).value = sundayEnd;
+            clearValidationError(`${dayInfo.id}-start`); // Clear potential errors
+        });
+        showMessage('تم تطبيق أوقات الأحد على أيام العمل الأخرى.', 'info');
     });
-    showMessage('تم تطبيق أوقات الأحد على أيام العمل الأخرى.', 'info');
-});
+} else {
+    console.warn("Element with ID 'apply-to-all-weekdays-btn' not found.");
+}
 
-document.getElementById('clear-all-available-times-btn').addEventListener('click', () => {
-    daysOfWeek.slice(0, 5).forEach(dayInfo => { // الأحد إلى الخميس
-        document.getElementById(`${dayInfo.id}-start`).value = '';
-        document.getElementById(`${dayInfo.id}-end`).value = '';
-        clearValidationError(`${dayInfo.id}-start`);
+
+const clearAllAvailableTimesBtn = document.getElementById('clear-all-available-times-btn');
+if (clearAllAvailableTimesBtn) {
+    clearAllAvailableTimesBtn.addEventListener('click', () => {
+        daysOfWeek.slice(0, 5).forEach(dayInfo => { // الأحد إلى الخميس
+            document.getElementById(`${dayInfo.id}-start`).value = '';
+            document.getElementById(`${dayInfo.id}-end`).value = '';
+            clearValidationError(`${dayInfo.id}-start`); // Clear potential errors
+        });
+        showMessage('تم مسح جميع الأوقات المتاحة.', 'info');
     });
-    showMessage('تم مسح جميع الأوقات المتاحة.', 'info');
-});
+} else {
+    console.warn("Element with ID 'clear-all-available-times-btn' not found.");
+}
 
 
 document.addEventListener('DOMContentLoaded', () => {
