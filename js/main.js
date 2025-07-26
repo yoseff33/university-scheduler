@@ -41,16 +41,31 @@ function convertTo12HourFormat(time24h) {
     return `${String(hour12).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
 }
 
-// عند تحميل الصفحة، عرض الإحصائيات الأولية في الصفحة الرئيسية
+// Navbar shrink on scroll logic
+let lastScrollTop = 0; // To track scroll direction for future features
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Main JavaScript loaded.');
+
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        window.addEventListener('scroll', () => {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > 50) { // Shrink after scrolling 50px
+                navbar.classList.add('shrink');
+            } else {
+                navbar.classList.remove('shrink');
+            }
+            lastScrollTop = scrollTop;
+        });
+    }
 
     const updateHomepageStats = () => {
         const doctors = getData('doctors');
         const courses = getData('courses');
         const sections = getData('sections');
         const rooms = getData('rooms');
-        const issueReports = getData('issueReports') || []; // جلب البلاغات
+        const issueReports = getData('issueReports') || [];
 
         const totalDoctorsElement = document.getElementById('total-doctors');
         const totalCoursesElement = document.getElementById('total-courses');
@@ -67,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pendingReportsElement) pendingReportsElement.textContent = issueReports.filter(r => r.status === 'pending').length;
     };
 
-    // إضافة كلاس 'homepage' إلى body في index.html ليعمل هذا الكود
     if (document.body.classList.contains('homepage')) {
         updateHomepageStats();
     }
