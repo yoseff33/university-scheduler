@@ -41,11 +41,11 @@ body {
     font-size: 1.5rem;
     font-weight: bold;
     color: #2563eb;
-    transition: color 0.3s ease; /* Added transition */
+    transition: color 0.3s ease;
 }
 
 .nav-brand:hover {
-    color: #1d4ed8; /* Darker blue on hover */
+    color: #1d4ed8;
 }
 
 .nav-brand i {
@@ -68,7 +68,7 @@ body {
     align-items: center;
     gap: 8px;
     white-space: nowrap;
-    position: relative; /* For underline effect */
+    position: relative;
 }
 
 .nav-link:hover {
@@ -82,17 +82,17 @@ body {
     content: '';
     position: absolute;
     bottom: -5px;
-    right: 50%; /* Start from center */
+    right: 50%;
     width: 0;
     height: 2px;
     background-color: white;
     transition: all 0.3s ease-out;
-    transform: translateX(50%); /* Adjust to stay centered */
+    transform: translateX(50%);
 }
 
 .nav-link:hover::after {
-    width: calc(100% - 20px); /* Adjust width to leave some padding */
-    right: 10px; /* Position correctly with padding */
+    width: calc(100% - 20px);
+    right: 10px;
     transform: translateX(0);
 }
 
@@ -279,11 +279,11 @@ body {
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    transition: all 0.3s ease; /* Added transition for general card hover */
+    transition: all 0.3s ease;
 }
 
 .card:hover {
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); /* Slight shadow increase on hover */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
 .card-header {
@@ -337,6 +337,12 @@ body {
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
+
+/* Validation error style */
+.form-group .input-error {
+    border-color: #ef4444; /* Red border for error fields */
+}
+
 
 .checkbox-group {
     display: grid;
@@ -423,6 +429,15 @@ body {
 
 .btn-warning:hover {
     background: #b45309;
+}
+
+.btn-info { /* New button color */
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-info:hover {
+    background: #2563eb;
 }
 
 /* Items List (for displaying lists of data) */
@@ -580,8 +595,8 @@ body {
 }
 
 .schedule-slot {
-    background: #f0f9ff; /* Light blue background for lectures */
-    border: 2px solid #2563eb;
+    background: #f0f9ff; /* Default light blue background for lectures */
+    border: 2px solid #2563eb; /* Default blue border */
     border-radius: 6px;
     padding: 8px;
     margin: 2px;
@@ -597,6 +612,47 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+/* Specific colors for lectures based on course ID (applied by JS) */
+.schedule-slot.colored-lecture {
+    /* These properties will be set via JS using --lecture-bg-color and --lecture-border-color */
+    /* They are defined in the CSS section below as lecture-color-X */
+    background: var(--lecture-bg-color);
+    border-color: var(--lecture-border-color);
+}
+
+/* Color Palette for Lectures */
+/* These are the base colors used by JS to set custom properties */
+.lecture-color-0 { /* Default if no specific color is applied by JS vars */
+    --lecture-bg-color: #f0f9ff; /* Light blue */
+    --lecture-border-color: #2563eb; /* Blue */
+}
+.lecture-color-1 {
+    --lecture-bg-color: #fffbeb; /* Light orange */
+    --lecture-border-color: #d97706; /* Orange */
+}
+.lecture-color-2 {
+    --lecture-bg-color: #ecfdf5; /* Light green */
+    --lecture-border-color: #059669; /* Green */
+}
+.lecture-color-3 {
+    --lecture-bg-color: #fef2f2; /* Light red */
+    --lecture-border-color: #dc2626; /* Red */
+}
+.lecture-color-4 {
+    --lecture-bg-color: #f5f3ff; /* Light purple */
+    --lecture-border-color: #7c3aed; /* Purple */
+}
+.lecture-color-5 {
+    --lecture-bg-color: #e0f2f7; /* Light teal */
+    --lecture-border-color: #0d9488; /* Teal */
+}
+.lecture-color-6 {
+    --lecture-bg-color: #fff7ed; /* Light amber */
+    --lecture-border-color: #ea580c; /* Amber */
+}
+/* Add more lecture-color-N classes if you have more distinct course types */
+
+
 .schedule-slot-subject {
     font-weight: bold;
     color: #1e40af;
@@ -607,6 +663,21 @@ body {
     color: #64748b;
     font-size: 0.75rem;
 }
+
+/* Styles for contenteditable elements */
+.schedule-slot [contenteditable="true"] {
+    outline: none; /* Remove default focus outline */
+    padding: 2px 4px;
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+    min-width: 50px; /* Ensure contenteditable is visible */
+}
+
+.schedule-slot [contenteditable="true"]:focus {
+    background-color: rgba(255, 255, 255, 0.8); /* Light background on focus */
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3); /* Blue shadow */
+}
+
 
 /* Dragula specific styles */
 .gu-transit {
@@ -628,19 +699,18 @@ body {
 
 
 /* Admin Reports */
-.admin-stats {
-    margin-bottom: 30px;
+.admin-reports-section .stats-grid {
+    margin-bottom: 20px; /* Adjust spacing for admin stats */
 }
-
-.stat-card.pending {
+.admin-stats .stat-card.pending {
     border-left: 4px solid #f59e0b;
 }
 
-.stat-card.resolved {
+.admin-stats .stat-card.resolved {
     border-left: 4px solid #10b981;
 }
 
-.stat-card.total {
+.admin-stats .stat-card.total {
     border-left: 4px solid #6366f1;
 }
 
@@ -651,14 +721,16 @@ body {
     flex-wrap: wrap;
 }
 
-.filter-controls select {
+.filter-controls select,
+.filter-controls input[type="text"] {
     padding: 8px 12px;
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     background: white;
     transition: all 0.3s ease;
 }
-.filter-controls select:focus {
+.filter-controls select:focus,
+.filter-controls input[type="text"]:focus {
     outline: none;
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
