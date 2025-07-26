@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدخال البيانات - نظام جدولة المحاضرات</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="navbar-brand">نظام جدولة المحاضرات</a>
+            <div class="nav-links">
+                <a href="index.html">الرئيسية</a>
+                <a href="data-entry.html">إدخال البيانات</a>
+                <a href="generate.html">توليد الجداول</a>
+                <a href="doctor-view.html">جداول الدكاترة</a>
+                <a href="help.html">المساعدة</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h1 class="main-section-title" style="text-align: center; font-size: 2.25rem; font-weight: bold; color: #1e40af; margin-bottom: 1.5rem;">إدخال البيانات الأساسية</h1>
+
+        <section class="form-section">
+            <h2>بيانات الدكاترة</h2>
+            <form id="doctor-form" class="form-grid">
+                <div class="form-group">
+                    <label for="doctor-name">اسم الدكتور:</label>
+                    <input type="text" id="doctor-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="doctor-hours">عدد ساعات العمل الأسبوعية:</label>
+                    <input type="number" id="doctor-hours" class="form-control" min="1" required>
+                </div>
+                <div class="form-group col-span-1-md-2 full-width">
+                    <label class="time-slot-day-header">الأوقات المتاحة لكل يوم (من - إلى):</label>
+                    <div class="time-slots-grid">
+                        <div>
+                            <p class="time-slot-day-header">الأحد</p>
+                            <input type="time" class="time-input" data-day="sunday" data-type="start">
+                            <input type="time" class="time-input" data-day="sunday" data-type="end">
+                        </div>
+                        <div>
+                            <p class="time-slot-day-header">الإثنين</p>
+                            <input type="time" class="time-input" data-day="monday" data-type="start">
+                            <input type="time" class="time-input" data-day="monday" data-type="end">
+                        </div>
+                        <div>
+                            <p class="time-slot-day-header">الثلاثاء</p>
+                            <input type="time" class="time-input" data-day="tuesday" data-type="start">
+                            <input type="time" class="time-input" data-day="tuesday" data-type="end">
+                        </div>
+                        <div>
+                            <p class="time-slot-day-header">الأربعاء</p>
+                            <input type="time" class="time-input" data-day="wednesday" data-type="start">
+                            <input type="time" class="time-input" data-day="wednesday" data-type="end">
+                        </div>
+                        <div>
+                            <p class="time-slot-day-header">الخميس</p>
+                            <input type="time" class="time-input" data-day="thursday" data-type="start">
+                            <input type="time" class="time-input" data-day="thursday" data-type="end">
+                        </div>
+                        </div>
+                </div>
+                <div class="form-group col-span-1-md-2 full-width">
+                    <label for="doctor-unavailable">أوقات غير مناسبة (مثال: الأحد 09:00-10:00, الإثنين 14:00-15:00):</label>
+                    <input type="text" id="doctor-unavailable" class="form-control" placeholder="أدخل الأوقات مفصولة بفواصل">
+                    <p class="text-xs text-gray-500" style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">مثال: الأحد 09:00-10:00, الإثنين 14:00-15:00</p>
+                </div>
+                <div class="col-span-1-md-2 flex-end">
+                    <button type="submit" class="form-submit-button">إضافة دكتور</button>
+                </div>
+            </form>
+            <div id="doctors-list" class="list-container">
+                <h3>الدكاترة المسجلون:</h3>
+                <ul id="doctors-ul" class="item-list">
+                    </ul>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h2>بيانات المقررات</h2>
+            <form id="course-form" class="form-grid">
+                <div class="form-group">
+                    <label for="course-name">اسم المقرر:</label>
+                    <input type="text" id="course-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="course-code">رمز المقرر:</label>
+                    <input type="text" id="course-code" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="course-hours">عدد ساعات المقرر الأسبوعية:</label>
+                    <input type="number" id="course-hours" class="form-control" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="course-type">نوع المحاضرة:</label>
+                    <select id="course-type" class="form-control">
+                        <option value="short">قصيرة (50 دقيقة)</option>
+                        <option value="long">طويلة (1 ساعة و40 دقيقة)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="course-requires-lab">يتطلب معمل؟</label>
+                    <input type="checkbox" id="course-requires-lab" class="form-control-checkbox">
+                    <span>نعم</span>
+                </div>
+                <div class="col-span-1-md-2 flex-end">
+                    <button type="submit" class="form-submit-button">إضافة مقرر</button>
+                </div>
+            </form>
+            <div id="courses-list" class="list-container">
+                <h3>المقررات المسجلة:</h3>
+                <ul id="courses-ul" class="item-list">
+                    </ul>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h2>بيانات الشُعب</h2>
+            <form id="section-form" class="form-grid">
+                <div class="form-group">
+                    <label for="section-name">اسم الشعبة:</label>
+                    <input type="text" id="section-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="section-students">عدد الطلاب:</label>
+                    <input type="number" id="section-students" class="form-control" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="section-course">المقرر المرتبط:</label>
+                    <select id="section-course" class="form-control" required>
+                        <option value="">اختر مقررًا</option>
+                        </select>
+                </div>
+                <div class="form-group">
+                    <label for="section-doctor">الدكتور المسؤول:</label>
+                    <select id="section-doctor" class="form-control" required>
+                        <option value="">اختر دكتورًا</option>
+                        </select>
+                </div>
+                <div class="col-span-1-md-2 flex-end">
+                    <button type="submit" class="form-submit-button">إضافة شعبة</button>
+                </div>
+            </form>
+            <div id="sections-list" class="list-container">
+                <h3>الشُعب المسجلة:</h3>
+                <ul id="sections-ul" class="item-list">
+                    </ul>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h2>بيانات القاعات</h2>
+            <form id="room-form" class="form-grid">
+                <div class="form-group">
+                    <label for="room-name">اسم القاعة:</label>
+                    <input type="text" id="room-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="room-capacity">سعة القاعة:</label>
+                    <input type="number" id="room-capacity" class="form-control" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="room-type">نوع القاعة:</label>
+                    <select id="room-type" class="form-control" required>
+                        <option value="classroom">قاعة دراسية</option>
+                        <option value="lab">معمل</option>
+                        <option value="training-room">قاعة تدريب</option>
+                    </select>
+                </div>
+                <div class="form-group col-span-1-md-2 full-width">
+                    <label for="lab-forbidden-times">أوقات ممنوعة لاستخدام المعامل (مثال: الأحد 12:00-23:59, الإثنين 16:00-17:00):</label>
+                    <input type="text" id="lab-forbidden-times" class="form-control" placeholder="أدخل الأوقات مفصولة بفواصل، يطبق على المعامل فقط">
+                    <p class="text-xs text-gray-500" style="font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem;">مثال: الأحد 12:00-23:59, الإثنين 16:00-17:00</p>
+                </div>
+                <div class="col-span-1-md-2 flex-end">
+                    <button type="submit" class="form-submit-button">إضافة قاعة</button>
+                </div>
+            </form>
+            <div id="rooms-list" class="list-container">
+                <h3>القاعات المسجلة:</h3>
+                <ul id="rooms-ul" class="item-list">
+                    </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 نظام جدولة المحاضرات الجامعية. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script src="js/utils.js"></script>
+    <script src="js/data-entry.js"></script>
+</body>
+</html>

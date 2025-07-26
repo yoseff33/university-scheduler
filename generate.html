@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>توليد الجداول - نظام جدولة المحاضرات</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="navbar-brand">نظام جدولة المحاضرات</a>
+            <div class="nav-links">
+                <a href="index.html">الرئيسية</a>
+                <a href="data-entry.html">إدخال البيانات</a>
+                <a href="generate.html">توليد الجداول</a>
+                <a href="doctor-view.html">جداول الدكاترة</a>
+                <a href="help.html">المساعدة</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h1 class="main-section-title" style="text-align: center; font-size: 2.25rem; font-weight: bold; color: #1e40af; margin-bottom: 1.5rem;">توليد الجداول الدراسية</h1>
+
+        <div class="main-section" style="text-align: center;">
+            <button id="generate-schedule-btn" class="generate-button">
+                توليد الجداول تلقائيًا
+            </button>
+            <p id="generation-status" class="generation-status"></p>
+        </div>
+
+        <div id="schedule-output" class="schedule-grid-output">
+            </div>
+
+        <div class="export-options-section">
+            <h2>خيارات الجدول</h2>
+            <button id="export-schedules-btn" class="export-button">
+                تصدير الجداول كصور
+            </button>
+            <p>سيتم تصدير كل جدول كصورة منفصلة.</p>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 نظام جدولة المحاضرات الجامعية. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/generate.js"></script>
+</body>
+</html>

@@ -1,0 +1,608 @@
+/* css/style.css */
+
+/* Basic Reset & RTL Support */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f3f4f6; /* Equivalent to bg-gray-100 */
+    color: #333;
+    line-height: 1.6;
+    direction: rtl; /* Right-to-left support for Arabic */
+    text-align: right; /* Default text alignment for RTL */
+}
+
+.container {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem; /* Equivalent to p-6 */
+    padding-right: 1.5rem; /* Equivalent to p-6 */
+}
+
+/* Navigation Bar */
+.navbar {
+    background-color: #2563eb; /* Equivalent to bg-blue-600 */
+    padding: 1rem 0; /* Equivalent to p-4 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Equivalent to shadow-md */
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-brand {
+    color: #fff;
+    font-size: 2rem; /* Equivalent to text-2xl */
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    margin-right: 1rem; /* Equivalent to space-x-4 and space-x-reverse */
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #bfdbfe; /* Equivalent to hover:text-blue-200 */
+}
+
+/* Main Content Section */
+.main-section {
+    background-color: #fff;
+    padding: 2rem; /* Equivalent to p-8 */
+    border-radius: 0.5rem; /* Equivalent to rounded-lg */
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* Equivalent to shadow-lg */
+    margin-top: 2rem; /* Equivalent to mt-8 */
+    margin-bottom: 2rem;
+}
+
+.main-section h1 {
+    font-size: 2.5rem; /* Equivalent to text-4xl */
+    font-weight: 800; /* Equivalent to font-extrabold */
+    color: #1e40af; /* Equivalent to text-blue-800 */
+    margin-bottom: 1.5rem; /* Equivalent to mb-6 */
+    text-align: center;
+}
+
+.main-section p {
+    font-size: 1.125rem; /* Equivalent to text-lg */
+    color: #4b5563; /* Equivalent to text-gray-700 */
+    line-height: 1.75; /* Equivalent to leading-relaxed */
+    margin-bottom: 1.5rem; /* Equivalent to mb-6 or mb-8 */
+}
+
+.main-section ul {
+    list-style-type: disc;
+    padding-right: 1.5rem; /* Equivalent to pr-6 or list-inside */
+    color: #4b5563;
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+    max-width: 42rem; /* Equivalent to max-w-2xl */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: right;
+}
+
+.main-section ul li {
+    margin-bottom: 0.5rem; /* Equivalent to space-y-2 */
+}
+
+.main-section ul li strong {
+    color: #1d4ed8; /* Equivalent to text-blue-700 */
+}
+
+/* Call to Action Buttons */
+.cta-buttons {
+    margin-top: 2.5rem; /* Equivalent to mt-10 */
+    display: flex;
+    flex-direction: column; /* Equivalent to flex-col */
+    justify-content: center;
+    align-items: center;
+    gap: 1rem; /* Equivalent to gap-4 */
+}
+
+.cta-button {
+    background-color: #1d4ed8; /* Equivalent to bg-blue-700 */
+    color: #fff;
+    font-weight: bold;
+    padding: 0.75rem 2rem; /* Equivalent to py-3 px-8 */
+    border-radius: 9999px; /* Equivalent to rounded-full */
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Equivalent to shadow-lg */
+}
+
+.cta-button:hover {
+    background-color: #1e40af; /* Equivalent to hover:bg-blue-800 */
+    transform: scale(1.05); /* Equivalent to hover:scale-105 */
+}
+
+.cta-button.secondary {
+    background-color: #e5e7eb; /* Equivalent to bg-gray-200 */
+    color: #1d4ed8; /* Equivalent to text-blue-700 */
+}
+
+.cta-button.secondary:hover {
+    background-color: #d1d5db; /* Equivalent to hover:bg-gray-300 */
+}
+
+/* Footer */
+.footer {
+    background-color: #2563eb; /* Equivalent to bg-blue-600 */
+    color: #fff;
+    padding: 1rem; /* Equivalent to p-4 */
+    text-align: center;
+    margin-top: 3rem; /* Equivalent to mt-12 */
+}
+
+/* Form Sections */
+.form-section {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.form-section h2 {
+    font-size: 1.5rem; /* Equivalent to text-2xl */
+    font-weight: 600; /* Equivalent to font-semibold */
+    color: #1d4ed8; /* Equivalent to text-blue-700 */
+    margin-bottom: 1rem; /* Equivalent to mb-4 */
+    padding-bottom: 0.5rem; /* Equivalent to pb-2 */
+    border-bottom: 1px solid #d1d5db; /* Equivalent to border-b */
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Equivalent to grid-cols-1 */
+    gap: 1.5rem; /* Equivalent to gap-6 */
+}
+
+@media (min-width: 768px) { /* Equivalent to md breakpoint */
+    .form-grid {
+        grid-template-columns: 1fr 1fr; /* Equivalent to md:grid-cols-2 */
+    }
+    .col-span-1-md-2 { /* Equivalent to col-span-1 md:col-span-2 */
+        grid-column: span 1 / span 1;
+    }
+    .col-span-1-md-2.full-width {
+        grid-column: span 2 / span 2;
+    }
+}
+@media (min-width: 1024px) { /* Equivalent to lg breakpoint */
+    .time-slots-grid {
+        grid-template-columns: repeat(7, minmax(0, 1fr)); /* Equivalent to lg:grid-cols-7 */
+    }
+}
+
+
+.form-group label {
+    display: block;
+    color: #374151; /* Equivalent to text-gray-700 */
+    font-size: 0.875rem; /* Equivalent to text-sm */
+    font-weight: bold;
+    margin-bottom: 0.5rem; /* Equivalent to mb-2 */
+}
+
+.form-control {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Equivalent to shadow */
+    appearance: none;
+    border: 1px solid #d1d5db; /* Equivalent to border */
+    border-radius: 0.25rem; /* Equivalent to rounded */
+    width: 100%;
+    padding: 0.5rem 0.75rem; /* Equivalent to py-2 px-3 */
+    color: #374151; /* Equivalent to text-gray-700 */
+    line-height: 1.25; /* Equivalent to leading-tight */
+    outline: none;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* Equivalent to focus:shadow-outline */
+    border-color: #2563eb; /* Equivalent to focus:border-blue-600 */
+}
+
+textarea.form-control {
+    min-height: 5rem; /* Example height for textarea */
+}
+
+input[type="checkbox"] {
+    margin-left: 0.5rem; /* Equivalent to ml-2 */
+    line-height: normal; /* Equivalent to leading-tight */
+}
+
+.form-submit-button {
+    background-color: #2563eb; /* Equivalent to bg-blue-600 */
+    color: #fff;
+    font-weight: bold;
+    padding: 0.5rem 1rem; /* Equivalent to py-2 px-4 */
+    border-radius: 0.25rem; /* Equivalent to rounded */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    outline: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Equivalent to focus:shadow-outline */
+}
+
+.form-submit-button:hover {
+    background-color: #1e40af; /* Equivalent to hover:bg-blue-700 */
+}
+
+.flex-end {
+    display: flex;
+    justify-content: flex-end; /* Equivalent to justify-end */
+}
+
+.list-container {
+    margin-top: 2rem; /* Equivalent to mt-8 */
+    border-top: 1px solid #d1d5db; /* Equivalent to border-t */
+    padding-top: 1.5rem; /* Equivalent to pt-6 */
+}
+
+.list-container h3 {
+    font-size: 1.25rem; /* Equivalent to text-xl */
+    font-weight: 600; /* Equivalent to font-semibold */
+    margin-bottom: 1rem; /* Equivalent to mb-4 */
+}
+
+.item-list {
+    list-style-type: disc;
+    padding-right: 1.5rem; /* Equivalent to pr-6 */
+    color: #374151; /* Equivalent to text-gray-800 */
+    line-height: 1.5;
+}
+
+.item-list li {
+    margin-bottom: 0.5rem; /* Equivalent to space-y-2 */
+}
+
+.item-list button {
+    margin-right: 0.5rem; /* Equivalent to mr-2 */
+    color: #ef4444; /* Equivalent to text-red-500 */
+    font-size: 0.875rem; /* Equivalent to text-sm */
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.item-list button:hover {
+    color: #dc2626; /* Equivalent to hover:text-red-700 */
+}
+
+/* Specific styles for time slots in data entry */
+.time-slot-day-header {
+    font-weight: 500; /* Equivalent to font-medium */
+    color: #1f2937; /* Equivalent to text-gray-800 */
+    margin-bottom: 0.5rem; /* Equivalent to mb-2 */
+}
+
+.time-input {
+    display: block;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    color: #374151;
+}
+
+.time-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* Equivalent to grid-cols-2 */
+    gap: 1rem; /* Equivalent to gap-4 */
+}
+@media (min-width: 768px) { /* Equivalent to md breakpoint */
+    .time-slots-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr)); /* Equivalent to md:grid-cols-4 */
+    }
+}
+
+/* Schedule Generation Page */
+.generation-status {
+    margin-top: 1rem; /* Equivalent to mt-4 */
+    color: #4b5563; /* Equivalent to text-gray-600 */
+    text-align: center;
+}
+
+.generate-button {
+    background-color: #10b981; /* Equivalent to bg-green-600 */
+    color: #fff;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem; /* Equivalent to py-3 px-6 */
+    border-radius: 9999px; /* Equivalent to rounded-full */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    cursor: pointer;
+}
+
+.generate-button:hover {
+    background-color: #059669; /* Equivalent to hover:bg-green-700 */
+    transform: scale(1.05);
+}
+
+.schedule-grid-output {
+    display: grid;
+    grid-template-columns: 1fr; /* Equivalent to grid-cols-1 */
+    gap: 2rem; /* Equivalent to gap-8 */
+}
+@media (min-width: 1024px) { /* Equivalent to lg breakpoint */
+    .schedule-grid-output {
+        grid-template-columns: 1fr 1fr; /* Equivalent to lg:grid-cols-2 */
+    }
+}
+
+.doctor-schedule-card {
+    background-color: #fff;
+    padding: 1.5rem; /* Equivalent to p-6 */
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.doctor-schedule-card h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1d4ed8;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.doctor-schedule-card p {
+    color: #4b5563;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.schedule-table-container {
+    overflow-x: auto;
+}
+
+.schedule-table {
+    min-width: 100%;
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-collapse: collapse; /* Ensure borders collapse correctly */
+}
+
+.schedule-table thead tr {
+    background-color: #3b82f6; /* Equivalent to bg-blue-500 */
+    color: #fff;
+}
+
+.schedule-table th, .schedule-table td {
+    padding: 0.75rem 1rem; /* Equivalent to py-3 px-4 */
+    text-align: right;
+    border-bottom: 1px solid #d1d5db; /* Equivalent to border-b border-gray-300 */
+    border-left: 1px solid #d1d5db; /* Add left border for separation */
+}
+
+.schedule-table th:last-child, .schedule-table td:last-child {
+    border-left: none; /* No left border on the last column */
+}
+
+.schedule-table tbody tr:hover {
+    background-color: #f9fafb; /* Equivalent to hover:bg-gray-50 */
+}
+
+.time-slot-cell {
+    position: relative; /* For positioning draggable content */
+    border-left: 1px solid #d1d5db; /* Separator for columns */
+}
+
+.time-slot-cell.has-lecture {
+    background-color: #eff6ff; /* Light blue background for cells with lectures */
+}
+
+.draggable-lecture {
+    background-color: #bfdbfe; /* Equivalent to bg-blue-100 */
+    padding: 0.5rem; /* Equivalent to p-2 */
+    border-radius: 0.25rem; /* Equivalent to rounded */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Equivalent to shadow-sm */
+    font-size: 0.875rem; /* Equivalent to text-sm */
+    cursor: grab;
+    text-align: right;
+    white-space: normal; /* Allow text to wrap */
+    word-break: break-word;
+    min-height: 3rem; /* Minimum height for better drag/drop experience */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end; /* Align text to the right in RTL */
+}
+
+.draggable-lecture p {
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+}
+
+.draggable-lecture .font-semibold {
+    font-weight: 600;
+}
+
+.draggable-lecture .text-xs {
+    font-size: 0.75rem;
+}
+
+.draggable-lecture.gu-mirror { /* Dragula mirror styling */
+    opacity: 0.8;
+    background-color: #dbeafe;
+    border: 1px dashed #60a5fa;
+    z-index: 9999;
+}
+
+/* Export Button */
+.export-options-section {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.export-options-section h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1d4ed8;
+    margin-bottom: 1rem;
+}
+
+.export-button {
+    background-color: #9333ea; /* Equivalent to bg-purple-600 */
+    color: #fff;
+    font-weight: bold;
+    padding: 0.5rem 1.25rem; /* Equivalent to py-2 px-5 */
+    border-radius: 9999px; /* Equivalent to rounded-full */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    cursor: pointer;
+}
+
+.export-button:hover {
+    background-color: #7e22ce; /* Equivalent to hover:bg-purple-700 */
+    transform: scale(1.05);
+}
+
+.export-options-section p {
+    font-size: 0.875rem; /* Equivalent to text-sm */
+    color: #6b7280; /* Equivalent to text-gray-500 */
+    margin-top: 0.5rem; /* Equivalent to mt-2 */
+}
+
+/* Doctor View Page */
+.select-wrapper {
+    margin-bottom: 1.5rem; /* Equivalent to mb-6 */
+}
+
+.select-wrapper label {
+    display: block;
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.doctor-schedule-display {
+    margin-top: 1.5rem; /* Equivalent to mt-6 */
+    border-top: 1px solid #d1d5db; /* Equivalent to border-t */
+    padding-top: 1.5rem; /* Equivalent to pt-6 */
+}
+
+.doctor-schedule-display h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1d4ed8;
+    margin-bottom: 1rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Room Issue Report Form */
+.issue-report-button {
+    background-color: #dc2626; /* Equivalent to bg-red-600 */
+    color: #fff;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    outline: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.issue-report-button:hover {
+    background-color: #b91c1c; /* Equivalent to hover:bg-red-700 */
+}
+
+.issue-report-status {
+    margin-top: 1rem;
+    text-align: center;
+    color: #16a34a; /* Equivalent to text-green-700 */
+    font-weight: 600;
+}
+
+/* Help Page */
+.help-section h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1d4ed8;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #d1d5db;
+}
+
+.help-section h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #2563eb;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.help-section p {
+    color: #4b5563;
+    margin-bottom: 1rem;
+}
+
+.help-section ul {
+    list-style-type: disc;
+    padding-right: 1.5rem;
+    color: #4b5563;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.help-section ul li {
+    margin-bottom: 0.5rem;
+}
+
+.help-section ul li strong {
+    color: #1d4ed8;
+}
+
+.help-section strong.text-red {
+    color: #dc2626;
+}
+
+.font-mono {
+    font-family: monospace;
+}
+.bg-light-gray {
+    background-color: #e5e7eb; /* Equivalent to bg-gray-200 */
+}
+.p-small {
+    padding: 0.25rem; /* Equivalent to p-1 */
+}
+.rounded-small {
+    border-radius: 0.25rem; /* Equivalent to rounded */
+}
+
+/* Dragula specific styles */
+.gu-transit {
+    opacity: 0.5;
+    background-color: #c7d2fe; /* light blue */
+}
+
+.gu-hide {
+    display: none;
+}

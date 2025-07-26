@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جداول الدكاترة - نظام جدولة المحاضرات</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="navbar-brand">نظام جدولة المحاضرات</a>
+            <div class="nav-links">
+                <a href="index.html">الرئيسية</a>
+                <a href="data-entry.html">إدخال البيانات</a>
+                <a href="generate.html">توليد الجداول</a>
+                <a href="doctor-view.html">جداول الدكاترة</a>
+                <a href="help.html">المساعدة</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h1 class="main-section-title" style="text-align: center; font-size: 2.25rem; font-weight: bold; color: #1e40af; margin-bottom: 1.5rem;">عرض جداول الدكاترة</h1>
+
+        <div class="main-section">
+            <div class="select-wrapper">
+                <label for="doctor-select">اختر دكتورًا لعرض جدوله:</label>
+                <select id="doctor-select" class="form-control">
+                    <option value="">-- اختر دكتور --</option>
+                    </select>
+            </div>
+
+            <div id="doctor-schedule-display" class="doctor-schedule-display hidden">
+                <h2 id="selected-doctor-name" style="font-size: 1.5rem; font-weight: 600; color: #1d4ed8; margin-bottom: 1rem;"></h2>
+                <div class="schedule-table-container">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr>
+                                <th>الوقت</th>
+                                <th>الأحد</th>
+                                <th>الإثنين</th>
+                                <th>الثلاثاء</th>
+                                <th>الأربعاء</th>
+                                <th>الخميس</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctor-schedule-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <section class="form-section">
+            <h2>نموذج الإبلاغ عن مشاكل القاعات</h2>
+            <form id="room-issue-form" class="form-grid">
+                <div class="form-group">
+                    <label for="issue-room">القاعة المتضررة:</label>
+                    <select id="issue-room" class="form-control" required>
+                        <option value="">اختر قاعة</option>
+                        </select>
+                </div>
+                <div class="form-group">
+                    <label for="issue-type">نوع المشكلة:</label>
+                    <select id="issue-type" class="form-control" required>
+                        <option value="AC">عطل تكييف</option>
+                        <option value="projector">عطل بروجيكتور</option>
+                        <option value="lights">إضاءة</option>
+                        <option value="chairs-tables">كراسي/طاولات</option>
+                        <option value="other">أخرى</option>
+                    </select>
+                </div>
+                <div class="form-group col-span-1-md-2 full-width">
+                    <label for="issue-description">وصف تفصيلي للمشكلة:</label>
+                    <textarea id="issue-description" rows="4" class="form-control" required></textarea>
+                </div>
+                <div class="col-span-1-md-2 flex-end">
+                    <button type="submit" class="issue-report-button">إبلاغ عن مشكلة</button>
+                </div>
+            </form>
+            <div id="issue-report-status" class="issue-report-status hidden">
+                تم استلام بلاغك بنجاح!
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 نظام جدولة المحاضرات الجامعية. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script src="js/utils.js"></script>
+    <script src="js/doctor-view.js"></script>
+</body>
+</html>
