@@ -11,8 +11,8 @@ let editingItemType = null;
 const daysOfWeek = [
     { id: 'sunday', name: 'الأحد' },
     { id: 'monday', name: 'الإثنين' },
-    { id: 'tuesday', name: 'الثلاثاء' },
-    { id: 'wednesday', 'name': 'الأربعاء' },
+    { id: 'tuesday', 'name': 'الثلاثاء' },
+    { id: 'wednesday', name: 'الأربعاء' },
     { id: 'thursday', name: 'الخميس' }
 ];
 
@@ -24,6 +24,7 @@ function showValidationError(elementId, message) {
         errorSpan = document.createElement('span');
         errorSpan.id = `${elementId}-error`;
         errorSpan.className = 'field-error';
+        // إضافة span بعد العنصر (أو بعد الـ input مباشرة في الـ DOM)
         element.parentNode.insertBefore(errorSpan, element.nextSibling);
     }
     errorSpan.textContent = message;
@@ -34,11 +35,14 @@ function clearValidationError(elementId) {
     const errorSpan = document.getElementById(`${elementId}-error`);
     if (errorSpan) {
         errorSpan.textContent = '';
-        document.getElementById(elementId).classList.remove('input-error');
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.classList.remove('input-error');
+        }
     }
 }
 
-// --- وظائف العرض (Display Functions) --- (نفس السابق)
+// --- وظائف العرض (Display Functions) ---
 
 const displayDoctors = () => {
     const doctorsListDiv = document.getElementById('doctors-list');
@@ -55,6 +59,7 @@ const displayDoctors = () => {
 
         const availableTimesStr = daysOfWeek.map(dayInfo => {
             const slot = doctor.availableTimes[dayInfo.id];
+            // استخدام convertTo12HourFormat
             return slot && slot.start && slot.end ? `${dayInfo.name}: ${convertTo12HourFormat(slot.start)}-${convertTo12HourFormat(slot.end)}` : '';
         }).filter(Boolean).join(' | ');
 
@@ -69,7 +74,7 @@ const displayDoctors = () => {
             <div class="item-details">
                 <div class="item-detail"><strong>الساعات الأسبوعية:</strong> ${doctor.weeklyHours}</div>
                 <div class="item-detail"><strong>الأوقات المتاحة:</strong> ${availableTimesStr || 'غير محدد'}</div>
-                <div class="item-detail"><strong>أوقات غير مناسبة:</strong> ${doctor.unavailableTimes.join(', ') || 'لا يوجد'}</div>
+                <div class="item-detail"><strong>أوقات غير مناسبة:</strong> ${(doctor.unavailableTimes && doctor.unavailableTimes.length > 0) ? doctor.unavailableTimes.join(', ') : 'لا يوجد'}</div>
             </div>
         `;
         doctorsListDiv.appendChild(doctorCard);
@@ -161,14 +166,14 @@ const displayRooms = () => {
             <div class="item-details">
                 <div class="item-detail"><strong>السعة:</strong> ${room.capacity}</div>
                 <div class="item-detail"><strong>النوع:</strong> ${room.type === 'classroom' ? 'قاعة دراسية' : room.type === 'lab' ? 'معمل' : 'قاعة تدريب'}</div>
-                <div class="item-detail"><strong>أوقات ممنوعة:</strong> ${room.forbiddenTimes.length > 0 ? room.forbiddenTimes.join(', ') : 'لا يوجد'}</div>
+                <div class="item-detail"><strong>أوقات ممنوعة:</strong> ${(room.forbiddenTimes && room.forbiddenTimes.length > 0) ? room.forbiddenTimes.join(', ') : 'لا يوجد'}</div>
             </div>
         `;
         roomsListDiv.appendChild(roomCard);
     });
 };
 
-// --- وظائف التعديل والحذف والملء (Edit, Delete, Populate) --- (نفس السابق)
+// --- وظائف التعديل والحذف والملء (Edit, Delete, Populate) ---
 
 window.deleteItem = (type, idToDelete) => {
     if (confirm('هل أنت متأكد من حذف هذا العنصر؟')) {
@@ -200,12 +205,14 @@ window.deleteItem = (type, idToDelete) => {
         const newCollection = collection.filter(item => item.id !== idToDelete);
 
         if (newCollection.length < initialLength) {
+            // Update the global array reference based on type
             if (type === 'doctors') doctors = newCollection;
             else if (type === 'courses') courses = newCollection;
             else if (type === 'sections') sections = newCollection;
             else if (type === 'rooms') rooms = newCollection;
 
-            saveData(saveKey, (type === 'doctors' ? doctors : type === 'courses' ? courses : type === 'sections' ? sections : rooms));
+            // Pass the updated collection to saveData
+            saveData(saveKey, newCollection); // Use newCollection here
             displayFn();
             populateSectionsSelects(); // تحديث القوائم المنسدلة
             showMessage('تم حذف العنصر بنجاح!', 'success');
@@ -257,7 +264,7 @@ window.editItem = (type, idToEdit) => {
         if (itemToEdit) {
             document.getElementById('section-name').value = itemToEdit.name;
             document.getElementById('section-students').value = itemToEdit.students;
-            populateSectionsSelects();
+            populateSectionsSelects(); // تأكد من ملء القوائم قبل تحديد القيمة
             document.getElementById('section-course').value = itemToEdit.courseId;
             document.getElementById('section-doctor').value = itemToEdit.doctorId;
         }
@@ -298,20 +305,21 @@ const resetFormToAddMode = (type) => {
         submitButton = document.getElementById('room-form-submit-btn');
         submitButton.textContent = 'إضافة قاعة';
     }
-    submitButton.classList.add('btn-primary');
-    submitButton.classList.remove('btn-warning');
+    if (submitButton) { // Ensure button exists before modifying
+        submitButton.classList.add('btn-primary');
+        submitButton.classList.remove('btn-warning');
+    }
 };
 
 const populateSectionsSelects = () => {
     const sectionCourseSelect = document.getElementById('section-course');
     const sectionDoctorSelect = document.getElementById('section-doctor');
 
-    // حفظ القيمة المختارة قبل مسح الخيارات
     const currentCourseId = sectionCourseSelect.value;
     const currentDoctorId = sectionDoctorSelect.value;
 
     sectionCourseSelect.innerHTML = '<option value="">اختر مقررًا</option>';
-    sectionDoctorSelect.innerHTML = '<option value="">اختر دكتورًا</option>'; // Always clear and repopulate
+    sectionDoctorSelect.innerHTML = '<option value="">اختر دكتورًا</option>';
 
     doctors.forEach(doctor => {
         const option = document.createElement('option');
@@ -327,7 +335,6 @@ const populateSectionsSelects = () => {
         sectionCourseSelect.appendChild(option);
     });
 
-    // إعادة تحديد القيمة المختارة إذا كان في وضع التعديل أو كانت هناك قيمة سابقة
     if (editingItemType === 'sections' && editingItemId) {
         const currentSection = sections.find(s => s.id === editingItemId);
         if (currentSection) {
@@ -335,7 +342,6 @@ const populateSectionsSelects = () => {
             sectionDoctorSelect.value = currentSection.doctorId;
         }
     } else {
-        // حاول إعادة تحديد القيمة إذا كانت موجودة (لمنعه من العودة إلى "اختر...")
         if (currentCourseId && sectionCourseSelect.querySelector(`option[value="${currentCourseId}"]`)) {
             sectionCourseSelect.value = currentCourseId;
         }
@@ -357,7 +363,23 @@ document.getElementById('doctor-hours').addEventListener('input', (e) => {
     if (isNaN(value) || value <= 0) showValidationError('doctor-hours', 'عدد ساعات العمل يجب أن يكون رقماً موجباً.');
     else clearValidationError('doctor-hours');
 });
-// يمكنك إضافة المزيد من التحققات لحقول الوقت، مثل وقت النهاية بعد وقت البداية
+// تحقق من أن وقت النهاية بعد وقت البداية
+daysOfWeek.forEach(dayInfo => {
+    const startInput = document.getElementById(`${dayInfo.id}-start`);
+    const endInput = document.getElementById(`${dayInfo.id}-end`);
+    if (startInput && endInput) { // Ensure elements exist
+        const validateTimeRange = () => {
+            if (startInput.value && endInput.value && timeToMinutes(startInput.value) >= timeToMinutes(endInput.value)) {
+                showValidationError(startInput.id, 'وقت النهاية يجب أن يكون بعد وقت البداية.');
+            } else {
+                clearValidationError(startInput.id);
+            }
+        };
+        startInput.addEventListener('change', validateTimeRange);
+        endInput.addEventListener('change', validateTimeRange);
+    }
+});
+
 
 document.getElementById('course-name').addEventListener('input', (e) => {
     if (e.target.value.trim() === '') showValidationError('course-name', 'اسم المقرر مطلوب.');
@@ -399,7 +421,7 @@ document.getElementById('room-name').addEventListener('input', (e) => {
 });
 document.getElementById('room-capacity').addEventListener('input', (e) => {
     const value = parseInt(e.target.value);
-    if (isNaN(value) || value <= 0) showValidationError('room-capacity', 'سعة القاعة يجب أن تكون رقماً موجباً.');
+    if (isNaN(value) || value <= 0) showValidationError('room-capacity', 'سعة القاعة يجب أن يكون رقماً موجباً.');
     else clearValidationError('room-capacity');
 });
 document.getElementById('room-type').addEventListener('change', (e) => {
@@ -412,22 +434,22 @@ document.getElementById('room-type').addEventListener('change', (e) => {
 
 document.getElementById('doctor-form').addEventListener('submit', (e) => {
     e.preventDefault();
-    // إعادة التحقق قبل الإرسال النهائي
     let isValid = true;
-    if (document.getElementById('doctor-name').value.trim() === '') { showValidationError('doctor-name', 'اسم الدكتور مطلوب.'); isValid = false; } else clearValidationError('doctor-name');
-    const hours = parseInt(document.getElementById('doctor-hours').value);
-    if (isNaN(hours) || hours <= 0) { showValidationError('doctor-hours', 'عدد ساعات العمل يجب أن يكون رقماً موجباً.'); isValid = false; } else clearValidationError('doctor-hours');
+    // Clear all previous errors first
+    document.querySelectorAll('.field-error').forEach(span => span.textContent = '');
+    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
 
-    // تحقق من أن الأوقات المتاحة منطقية (وقت النهاية بعد وقت البداية)
+    if (document.getElementById('doctor-name').value.trim() === '') { showValidationError('doctor-name', 'اسم الدكتور مطلوب.'); isValid = false; }
+    const hours = parseInt(document.getElementById('doctor-hours').value);
+    if (isNaN(hours) || hours <= 0) { showValidationError('doctor-hours', 'عدد ساعات العمل يجب أن يكون رقماً موجباً.'); isValid = false; }
+
     daysOfWeek.forEach(dayInfo => {
-        const startInput = document.querySelector(`[data-day="${dayInfo.id}"][data-type="start"]`);
-        const endInput = document.querySelector(`[data-day="${dayInfo.id}"][data-type="end"]`);
+        const startInput = document.getElementById(`${dayInfo.id}-start`);
+        const endInput = document.getElementById(`${dayInfo.id}-end`);
         if (startInput && endInput && startInput.value && endInput.value) {
-            if (timeToMinutes(startInput.value) >= timeToMinutes(endInput.value)) {
+            if (timeToMinutes(startInput.value) === -1 || timeToMinutes(endInput.value) === -1 || timeToMinutes(startInput.value) >= timeToMinutes(endInput.value)) {
                 showValidationError(startInput.id, 'وقت النهاية يجب أن يكون بعد وقت البداية.');
                 isValid = false;
-            } else {
-                clearValidationError(startInput.id);
             }
         }
     });
@@ -437,13 +459,12 @@ document.getElementById('doctor-form').addEventListener('submit', (e) => {
         return;
     }
 
-    // ... (بقية منطق الإرسال من الكود السابق) ...
     const name = document.getElementById('doctor-name').value;
     const weeklyHours = parseInt(document.getElementById('doctor-hours').value);
     const availableTimes = {};
     daysOfWeek.forEach(dayInfo => {
-        const startInput = document.querySelector(`[data-day="${dayInfo.id}"][data-type="start"]`);
-        const endInput = document.querySelector(`[data-day="${dayInfo.id}"][data-type="end"]`);
+        const startInput = document.getElementById(`${dayInfo.id}-start`);
+        const endInput = document.getElementById(`${dayInfo.id}-end`);
         if (startInput && endInput && startInput.value && endInput.value) {
             availableTimes[dayInfo.id] = { start: startInput.value, end: endInput.value };
         }
@@ -477,17 +498,19 @@ document.getElementById('doctor-form').addEventListener('submit', (e) => {
 document.getElementById('course-form').addEventListener('submit', (e) => {
     e.preventDefault();
     let isValid = true;
-    if (document.getElementById('course-name').value.trim() === '') { showValidationError('course-name', 'اسم المقرر مطلوب.'); isValid = false; } else clearValidationError('course-name');
-    if (document.getElementById('course-code').value.trim() === '') { showValidationError('course-code', 'رمز المقرر مطلوب.'); isValid = false; } else clearValidationError('course-code');
+    document.querySelectorAll('.field-error').forEach(span => span.textContent = '');
+    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+    if (document.getElementById('course-name').value.trim() === '') { showValidationError('course-name', 'اسم المقرر مطلوب.'); isValid = false; }
+    if (document.getElementById('course-code').value.trim() === '') { showValidationError('course-code', 'رمز المقرر مطلوب.'); isValid = false; }
     const hours = parseInt(document.getElementById('course-hours').value);
-    if (isNaN(hours) || hours <= 0) { showValidationError('course-hours', 'عدد ساعات المقرر يجب أن يكون رقماً موجباً.'); isValid = false; } else clearValidationError('course-hours');
+    if (isNaN(hours) || hours <= 0) { showValidationError('course-hours', 'عدد ساعات المقرر يجب أن يكون رقماً موجباً.'); isValid = false; }
 
     if (!isValid) {
         showMessage('الرجاء تصحيح الأخطاء في النموذج.', 'error');
         return;
     }
     
-    // ... (بقية منطق الإرسال من الكود السابق) ...
     const name = document.getElementById('course-name').value;
     const code = document.getElementById('course-code').value;
     const type = document.getElementById('course-type').value;
@@ -519,18 +542,20 @@ document.getElementById('course-form').addEventListener('submit', (e) => {
 document.getElementById('section-form').addEventListener('submit', (e) => {
     e.preventDefault();
     let isValid = true;
-    if (document.getElementById('section-name').value.trim() === '') { showValidationError('section-name', 'اسم الشعبة مطلوب.'); isValid = false; } else clearValidationError('section-name');
+    document.querySelectorAll('.field-error').forEach(span => span.textContent = '');
+    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+    if (document.getElementById('section-name').value.trim() === '') { showValidationError('section-name', 'اسم الشعبة مطلوب.'); isValid = false; }
     const students = parseInt(document.getElementById('section-students').value);
-    if (isNaN(students) || students <= 0) { showValidationError('section-students', 'عدد الطلاب يجب أن يكون رقماً موجباً.'); isValid = false; } else clearValidationError('section-students');
-    if (document.getElementById('section-course').value === '') { showValidationError('section-course', 'الرجاء اختيار مقرر.'); isValid = false; } else clearValidationError('section-course');
-    if (document.getElementById('section-doctor').value === '') { showValidationError('section-doctor', 'الرجاء اختيار دكتور.'); isValid = false; } else clearValidationError('section-doctor');
+    if (isNaN(students) || students <= 0) { showValidationError('section-students', 'عدد الطلاب يجب أن يكون رقماً موجباً.'); isValid = false; }
+    if (document.getElementById('section-course').value === '') { showValidationError('section-course', 'الرجاء اختيار مقرر.'); isValid = false; }
+    if (document.getElementById('section-doctor').value === '') { showValidationError('section-doctor', 'الرجاء اختيار دكتور.'); isValid = false; }
 
     if (!isValid) {
         showMessage('الرجاء تصحيح الأخطاء في النموذج.', 'error');
         return;
     }
     
-    // ... (بقية منطق الإرسال من الكود السابق) ...
     const name = document.getElementById('section-name').value;
     const studentsVal = parseInt(document.getElementById('section-students').value);
     const courseId = parseInt(document.getElementById('section-course').value);
@@ -560,17 +585,19 @@ document.getElementById('section-form').addEventListener('submit', (e) => {
 document.getElementById('room-form').addEventListener('submit', (e) => {
     e.preventDefault();
     let isValid = true;
-    if (document.getElementById('room-name').value.trim() === '') { showValidationError('room-name', 'اسم القاعة مطلوب.'); isValid = false; } else clearValidationError('room-name');
+    document.querySelectorAll('.field-error').forEach(span => span.textContent = '');
+    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+    if (document.getElementById('room-name').value.trim() === '') { showValidationError('room-name', 'اسم القاعة مطلوب.'); isValid = false; }
     const capacity = parseInt(document.getElementById('room-capacity').value);
-    if (isNaN(capacity) || capacity <= 0) { showValidationError('room-capacity', 'سعة القاعة يجب أن تكون رقماً موجباً.'); isValid = false; } else clearValidationError('room-capacity');
-    if (document.getElementById('room-type').value === '') { showValidationError('room-type', 'الرجاء اختيار نوع القاعة.'); isValid = false; } else clearValidationError('room-type');
+    if (isNaN(capacity) || capacity <= 0) { showValidationError('room-capacity', 'سعة القاعة يجب أن يكون رقماً موجباً.'); isValid = false; }
+    if (document.getElementById('room-type').value === '') { showValidationError('room-type', 'الرجاء اختيار نوع القاعة.'); isValid = false; }
 
     if (!isValid) {
         showMessage('الرجاء تصحيح الأخطاء في النموذج.', 'error');
         return;
     }
     
-    // ... (بقية منطق الإرسال من الكود السابق) ...
     const name = document.getElementById('room-name').value;
     const capacityVal = parseInt(document.getElementById('room-capacity').value);
     const type = document.getElementById('room-type').value;
