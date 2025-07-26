@@ -158,7 +158,6 @@ document.getElementById('room-issue-form').addEventListener('submit', (e) => {
     showMessage(`تم استلام بلاغك عن مشكلة "${issueType}" في القاعة "${room.name}" بنجاح!`, 'success');
 
     e.target.reset();
-    // إعادة عرض البلاغات بعد إضافة بلاغ جديد لتظهر في القائمة
     applyFilters();
     updateReportStats();
 });
