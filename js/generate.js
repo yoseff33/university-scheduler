@@ -367,7 +367,7 @@ const generateSchedules = () => {
                     for (const room of suitableRooms) {
                         if (isRoomAvailable(room, day, timeSlot, lectureLengthMinutes, roomAvailability)) {
                             const startIndexInSlots = timeSlots.indexOf(timeSlot);
-                            const slotsNeeded = Math.ceil(lectureLengthMinutes / 30); // Each row is 30 minutes
+                            const slotsNeeded = Math.ceil(lectureLengthMinutes / 30); // Each row is 30 دقيقة
 
                             let canScheduleInSlots = true;
                             for (let i = 0; i < slotsNeeded; i++) {
@@ -560,7 +560,6 @@ const displayGeneratedSchedules = () => {
                     lectureCard.setAttribute('data-duration-slots', slotsOccupied);
                     lectureCard.setAttribute('data-lecture-index', lecture.lectureIndex);
 
-                    // Display new details
                     const labOrTheory = lecture.isLab ? 'عملي' : 'نظري';
                     lectureCard.innerHTML = `
                         <div class="schedule-slot-subject" ${editMode ? 'contenteditable="true"' : ''} data-field="courseName">${lecture.courseName}</div>
