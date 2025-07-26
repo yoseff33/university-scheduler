@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    <nav class="navbar">
+<body class="homepage"> <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-brand">
                 <i class="fas fa-calendar-alt"></i> نظام جدولة المحاضرات
@@ -18,7 +17,7 @@
                 <li><a href="data-entry.html" class="nav-link"><i class="fas fa-plus-circle"></i> إدخال البيانات</a></li>
                 <li><a href="generate.html" class="nav-link"><i class="fas fa-cogs"></i> توليد الجداول</a></li>
                 <li><a href="doctor-view.html" class="nav-link"><i class="fas fa-user-md"></i> جداول الدكاترة</a></li>
-                <li><a href="help.html" class="nav-link"><i class="fas fa-question-circle"></i> المساعدة</a></li>
+                <li><a href="room-view.html" class="nav-link"><i class="fas fa-door-open"></i> جداول القاعات</a></li> <li><a href="admin-reports.html" class="nav-link"><i class="fas fa-bug"></i> البلاغات</a></li> <li><a href="help.html" class="nav-link"><i class="fas fa-question-circle"></i> المساعدة</a></li>
             </ul>
         </div>
     </nav>
@@ -51,24 +50,38 @@
             <div class="feature-card">
                 <a href="generate.html">
                     <i class="fas fa-hand-pointer"></i>
-                    <h3>تعديل بالسحب والإفلات</h3>
-                    <p>عدّل الجداول بعد توليدها بسهولة عن طريق السحب والإفلات.</p>
+                    <h3>تعديل بالسحب والإفلات والتحرير المباشر</h3>
+                    <p>عدّل الجداول بعد توليدها بسهولة عن طريق السحب والإفلات أو التحرير المباشر.</p>
                 </a>
             </div>
             <div class="feature-card">
                 <a href="doctor-view.html">
                     <i class="fas fa-chart-bar"></i>
-                    <h3>مراقبة وتقارير</h3>
+                    <h3>مراقبة جداول الدكاترة والبلاغات</h3>
                     <p>عرض جداول الدكاترة الفردية والإبلاغ عن مشاكل القاعات.</p>
+                </a>
+            </div>
+            <div class="feature-card">
+                <a href="room-view.html">
+                    <i class="fas fa-door-open"></i>
+                    <h3>جداول القاعات التفصيلية</h3>
+                    <p>عرض تفصيلي لجدول استخدام كل قاعة.</p>
+                </a>
+            </div>
+            <div class="feature-card">
+                <a href="admin-reports.html">
+                    <i class="fas fa-bug"></i>
+                    <h3>إدارة تقارير المشاكل</h3>
+                    <p>استعراض وإدارة بلاغات أعطال القاعات.</p>
                 </a>
             </div>
         </section>
 
         <section class="stats-section">
-            <h2 class="page-header">
+            <div class="page-header">
                 <h1>أرقام وإحصائيات</h1>
                 <p>نظرة سريعة على قدرات النظام.</p>
-            </h2>
+            </div>
             <div class="stats-grid">
                 <div class="stat-card">
                     <i class="fas fa-chalkboard-teacher"></i>
@@ -90,6 +103,16 @@
                     <h3><span id="total-rooms">0</span>+</h3>
                     <p>القاعات المتوفرة</p>
                 </div>
+                <div class="stat-card">
+                    <i class="fas fa-bug"></i>
+                    <h3><span id="total-reports">0</span></h3>
+                    <p>إجمالي البلاغات</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-hourglass-half"></i>
+                    <h3><span id="pending-reports">0</span></h3>
+                    <p>بلاغات قيد الانتظار</p>
+                </div>
             </div>
         </section>
     </main>
@@ -98,7 +121,7 @@
         <p>&copy; 2025 نظام جدولة المحاضرات الجامعية. جميع الحقوق محفوظة.</p>
     </footer>
 
-    <script src="js/utils.js"></script>
+    <div class="message-toast-container"></div> <script src="js/utils.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
