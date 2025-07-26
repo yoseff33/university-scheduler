@@ -12,9 +12,14 @@ const daysArabic = {
     wednesday: "الأربعاء",
     thursday: "الخميس"
 };
-const timeSlots = [
-    "08:00", "08:50", "09:40", "10:30", "11:20", "12:10", "13:00", "13:50", "14:40", "15:30", "16:20", "17:10"
-];
+// أوقات الجدول الآن بفواصل 30 دقيقة
+const timeSlots = [];
+for (let h = 8; h <= 17; h++) { // من 8 صباحاً إلى 5 مساءً (بما في ذلك 5:00)
+    timeSlots.push(`${String(h).padStart(2, '0')}:00`);
+    if (h < 17) { // لا نضيف 30 دقيقة بعد 5:00 PM
+        timeSlots.push(`${String(h).padStart(2, '0')}:30`);
+    }
+}
 const days = ["sunday", "monday", "tuesday", "wednesday", "thursday"];
 
 const getCourseColorClass = (courseId) => {
@@ -48,7 +53,6 @@ const displayRoomSchedule = (roomId) => {
     roomScheduleBody.innerHTML = '';
 
     const room = rooms.find(r => r.id === roomId);
-    // تأكد من وجود القاعة ووجود جدول مجدول
     if (!room || Object.keys(schedule).length === 0 || doctors.length === 0 || courses.length === 0) {
         selectedRoomNameElem.textContent = 'الرجاء اختيار قاعة.';
         return;
@@ -60,13 +64,29 @@ const displayRoomSchedule = (roomId) => {
 
     const occupiedCells = new Set();
 
-    timeSlots.forEach(timeSlot => {
+    for (let i = 0; i < timeSlots.length; i++) {
+        const timeSlot = timeSlots[i];
+        const displayTime = timeSlot.endsWith(':00') ? convertTo12HourFormat(timeSlot) : '';
+
+        if (displayTime === '') {
+            const prevHourSlot = timeSlots[i-1];
+            let shouldSkipRow = false;
+            for (const day of days) {
+                const lecture = schedule[day] && schedule[day][prevHourSlot] ? schedule[day][prevHourSlot][roomId] : null;
+                if (lecture && lecture.startTime === prevHourSlot && lecture.slotsOccupied > 1) {
+                    shouldSkipRow = true;
+                    break;
+                }
+            }
+            if (shouldSkipRow) continue;
+        }
+
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td class="schedule-table-time-header">${convertTo12HourFormat(timeSlot)}</td>`;
+        tr.innerHTML = `<td class="schedule-table-time-header">${displayTime}</td>`;
 
         days.forEach(day => {
-            const cellId = `${roomId}-${day}-${timeSlot}`;
-            if (occupiedCells.has(cellId)) {
+            const cellKey = `${roomId}-${day}-${timeSlot}`;
+            if (occupiedCells.has(cellKey)) {
                 return;
             }
 
@@ -79,31 +99,33 @@ const displayRoomSchedule = (roomId) => {
                 lecture = schedule[day][timeSlot][roomId];
             }
 
-            if (lecture && lecture.startTime === timeSlot) { // Make sure it's the start of the lecture block
-                const lectureType = lecture.type;
-                const lectureDurationMinutes = lectureType === 'short' ? 50 : 100;
-                const slotsOccupied = Math.ceil(lectureDurationMinutes / 50);
+            if (lecture && lecture.startTime === timeSlot) {
+                const slotsOccupied = lecture.slotsOccupied;
 
                 if (slotsOccupied > 1) {
                     td.rowSpan = slotsOccupied;
-                    for (let i = 1; i < slotsOccupied; i++) {
-                        const nextTimeSlotIndex = timeSlots.indexOf(timeSlot) + i;
+                    for (let j = 1; j < slotsOccupied; j++) {
+                        const nextTimeSlotIndex = timeSlots.indexOf(timeSlot) + j;
                         if (nextTimeSlotIndex < timeSlots.length) {
                             occupiedCells.add(`${roomId}-${day}-${timeSlots[nextTimeSlotIndex]}`);
                         }
                     }
                 }
                 const courseColorClass = getCourseColorClass(lecture.courseId);
+                const labOrTheory = lecture.isLab ? 'عملي' : 'نظري';
+
                 td.innerHTML = `
                     <div class="schedule-slot colored-lecture ${courseColorClass}">
                         <div class="schedule-slot-subject">${lecture.courseName}</div>
                         <div class="schedule-slot-info">${lecture.sectionName}</div>
                         <div class="schedule-slot-info">د. ${lecture.doctorName}</div>
-                        <div class="schedule-slot-info">(${lectureType === 'short' ? 'قصيرة' : 'طويلة'})</div>
+                        <div class="schedule-slot-details">
+                            <span>${lecture.courseCode}</span> | <span>${labOrTheory}</span> | <span>(${lecture.type === 'short' ? '50 دقيقة' : '100 دقيقة'})</span>
+                        </div>
                     </div>
                 `;
                 td.classList.add('has-lecture');
-            } else if (!lecture && !occupiedCells.has(cellId)) {
+            } else if (!lecture) {
                 td.textContent = '';
             }
             tr.appendChild(td);
@@ -125,7 +147,6 @@ document.getElementById('room-select').addEventListener('change', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     populateRoomSelect();
 
-    // تأكد من تحديث متغيرات البيانات بعد التحميل
     rooms = getData('rooms');
     schedule = getData('generatedSchedule');
     doctors = getData('doctors');
