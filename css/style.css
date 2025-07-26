@@ -1,6 +1,7 @@
 /* css/style.css */
 
 /* Google Fonts Import */
+/* Noto Sans Arabic for Arabic text, Roboto for Latin text (numbers, fallback) */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap');
 
 /* Global Reset */
@@ -10,16 +11,30 @@
     box-sizing: border-box;
 }
 
+/* Custom Text Selection Highlight */
+::selection {
+    background: #4CAF50; /* Accent green highlight */
+    color: white;
+}
+::-moz-selection { /* For Firefox */
+    background: #4CAF50;
+    color: white;
+}
+
 /* Base Body Styles */
 body {
-    font-family: 'Noto Sans Arabic', 'Roboto', sans-serif;
+    font-family: 'Noto Sans Arabic', 'Roboto', sans-serif; /* Primary for Arabic, Roboto for Latin fallback */
+    /* Soft, professional background with subtle noise texture */
     background: linear-gradient(135deg, #f7f9fc 0%, #eef2f5 100%);
+    /* Adding subtle noise or texture overlay */
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e0e6f0' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 54v-4h-2v4H0v2h4v4h2v-4h4v-2H6zm0-20v-4h-2v4H0v2h4v4h2v-4h4v-2H6zM36 4v-4h-2v4h-4v2h4v4h2v-4h4V6h-4zM6 4v-4h-2v4H0v2h4v4h2v-4h4V6H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    
     min-height: 100vh;
-    color: #263238;
-    direction: rtl;
-    text-align: right;
-    overflow-x: hidden;
-    line-height: 1.6;
+    color: #263238; /* Dark Blue Gray 900 for main text */
+    direction: rtl; /* Right-to-left support */
+    text-align: right; /* Default text alignment for RTL */
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    line-height: 1.6; /* Better readability */
 }
 
 /* Custom Scrollbar for Webkit (Chrome, Safari, Edge) */
@@ -29,18 +44,18 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: #f0f4f7;
+    background: #f0f4f7; /* Lighter track */
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #90a4ae;
+    background: #90a4ae; /* Muted thumb color */
     border-radius: 10px;
     transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #78909c;
+    background: #78909c; /* Darker thumb on hover */
 }
 
 /* Custom Scrollbar for Firefox */
@@ -52,48 +67,48 @@ html {
 
 /* --- Navbar (Sleek and Professional) --- */
 .navbar {
-    background: rgba(255, 255, 255, 0.99);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.99); /* Almost opaque white */
+    backdrop-filter: blur(20px); /* Stronger frosted glass effect */
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1); /* Soft, prominent shadow */
     position: sticky;
     top: 0;
     z-index: 1000;
-    height: 75px;
-    transition: all 0.3s ease-in-out;
-    border-bottom: 1px solid #eceff1;
+    height: 75px; /* Elegant height */
+    transition: all 0.3s ease-in-out; /* Smooth transition for shrink */
+    border-bottom: 1px solid #eceff1; /* Subtle bottom border */
 }
 
 /* Navbar shrinking effect on scroll */
 .navbar.shrink {
-    height: 60px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    height: 60px; /* Smaller height on scroll */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Lighter shadow on shrink */
 }
 
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 35px;
+    padding: 0 35px; /* Generous horizontal padding */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 100%;
+    height: 100%; /* Occupy full navbar height */
 }
 
 .nav-brand {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #3f51b5;
+    gap: 12px; /* Good spacing */
+    font-size: 1.8rem; /* Impactful size */
+    font-weight: 700; /* Bold */
+    color: #3f51b5; /* Deeper blue for brand */
     text-decoration: none;
     transition: all 0.3s ease;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.5px; /* Slightly tighter letter spacing */
 }
 
 .nav-brand:hover {
-    color: #283593;
-    transform: translateY(-2px);
+    color: #283593; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift */
 }
 
 /* Adjust brand size on shrink */
@@ -102,8 +117,8 @@ html {
 }
 
 .nav-brand i {
-    font-size: 2.2rem;
-    color: #00796B;
+    font-size: 2.2rem; /* Larger icon */
+    color: #00796B; /* Dark Teal for icon */
     transition: all 0.3s ease;
 }
 
@@ -116,15 +131,15 @@ html {
 .nav-menu {
     display: flex;
     list-style: none;
-    gap: 20px;
+    gap: 20px; /* Generous spacing between links */
 }
 
 .nav-link {
     text-decoration: none;
-    color: #546E7A;
+    color: #546E7A; /* Muted Blue Gray for links */
     padding: 10px 18px;
-    border-radius: 10px;
-    transition: all 0.3s ease-in-out;
+    border-radius: 10px; /* Soft corners */
+    transition: all 0.3s ease-in-out; /* Smooth transition */
     display: flex;
     align-items: center;
     gap: 8px;
@@ -132,31 +147,31 @@ html {
     position: relative;
     font-weight: 500;
     font-size: 1rem;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.2px; /* Slightly spaced out letters */
 }
 
 .nav-link:hover {
-    background: #00796B;
+    background: #00796B; /* Dark Teal background on hover */
     color: white;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px); /* Pronounced lift */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* Soft shadow */
 }
 
 /* Underline effect on hover */
 .nav-link::after {
     content: '';
     position: absolute;
-    bottom: -6px;
+    bottom: -6px; /* Lower position for emphasis */
     right: 50%;
     width: 0;
-    height: 3px;
-    background-color: #4CAF50;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    height: 3px; /* Thicker underline */
+    background-color: #4CAF50; /* Accent Green underline */
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother animation */
     transform: translateX(50%);
 }
 
 .nav-link:hover::after {
-    width: calc(100% - 24px);
+    width: calc(100% - 24px); /* Fills most of the link width */
     right: 12px;
     transform: translateX(0);
 }
@@ -166,20 +181,20 @@ html {
 .main-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 50px 30px;
-    min-height: calc(100vh - 150px);
+    padding: 50px 30px; /* Generous top padding */
+    min-height: calc(100vh - 150px); /* Adjust based on navbar and footer height */
 }
 
 /* --- Hero Section (Homepage banner) --- */
 .hero-section {
     text-align: center;
-    padding: 90px 40px;
-    background: #ffffff;
-    border-radius: 30px;
-    margin-bottom: 70px;
-    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.1);
-    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-    border: 1px solid #e0e6f0;
+    padding: 90px 40px; /* More generous padding */
+    background: #ffffff; /* Pure white background */
+    border-radius: 30px; /* More rounded corners */
+    margin-bottom: 70px; /* More margin */
+    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.1); /* Prominent, soft shadow */
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); /* Elegant transition */
+    border: 1px solid #e0e6f0; /* Subtle border */
     position: relative;
     overflow: hidden;
 }
