@@ -828,7 +828,7 @@ document.getElementById('clear-all-available-times-btn').addEventListener('click
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("data-entry.js loaded and DOM content loaded"); // Debug log
+    console.log("data-entry.js loaded and DOM content loaded");
 
     displayDoctors();
     displayCourses();
@@ -838,9 +838,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const firstTabButton = document.querySelector('.tab-button.active');
     if (firstTabButton) {
-        console.log("Activating first tab on load."); // Debug log
+        console.log("Activating first tab on load.");
         firstTabButton.click();
     } else {
-        console.warn("No active tab button found on load."); // Debug log
+        console.warn("No active tab button found on load.");
     }
 });
