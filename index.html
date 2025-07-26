@@ -4,45 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام جدولة المحاضرات الجامعية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <nav class="navbar">
-        <div class="container">
-            <a href="index.html" class="navbar-brand">نظام جدولة المحاضرات</a>
-            <div class="nav-links">
-                <a href="index.html">الرئيسية</a>
-                <a href="data-entry.html">إدخال البيانات</a>
-                <a href="generate.html">توليد الجداول</a>
-                <a href="doctor-view.html">جداول الدكاترة</a>
-                <a href="help.html">المساعدة</a>
-            </div>
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-calendar-alt"></i> نظام جدولة المحاضرات
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="data-entry.html" class="nav-link"><i class="fas fa-plus-circle"></i> إدخال البيانات</a></li>
+                <li><a href="generate.html" class="nav-link"><i class="fas fa-cogs"></i> توليد الجداول</a></li>
+                <li><a href="doctor-view.html" class="nav-link"><i class="fas fa-user-md"></i> جداول الدكاترة</a></li>
+                <li><a href="help.html" class="nav-link"><i class="fas fa-question-circle"></i> المساعدة</a></li>
+            </ul>
         </div>
     </nav>
 
-    <main class="container">
-        <section class="main-section">
-            <h1>مرحبًا بك في نظام جدولة المحاضرات الجامعية</h1>
-            <p>
-                نظامك المتكامل لإدارة وتنظيم الجداول الدراسية للجامعة بذكاء وفعالية. صُمم هذا النظام لمساعدة مسؤولي الأقسام على إنشاء جداول دراسية معقدة بسهولة، مع مراعاة جميع المتغيرات والقيود الأكاديمية.
-            </p>
-            <p>
-                نظامنا يضمن لك:
-            </p>
-            <ul>
-                <li><strong>توليد جداول ذكي:</strong> يقوم بتوليد الجداول تلقائيًا مع مراعاة تعارضات المواعيد، أوقات الدكاترة المتاحة، وسعة القاعات.</li>
-                <li><strong>مرونة في الإدخال:</strong> واجهات سهلة الاستخدام لإدخال بيانات الدكاترة، المقررات، الشعب، والقاعات.</li>
-                <li><strong>تعديل يدوي:</strong> إمكانية التعديل على الجداول بعد توليدها عبر السحب والإفلات أو التحرير المباشر.</li>
-                <li><strong>متجاوب بالكامل:</strong> يعمل بسلاسة على جميع الأجهزة، من الحواسيب المكتبية إلى الهواتف الذكية.</li>
-                <li><strong>تصميم عصري:</strong> بواجهة مستخدم سهلة وجذابة لتجربة استخدام ممتعة ومنظمة.</li>
-            </ul>
-            <div class="cta-buttons">
-                <a href="data-entry.html" class="cta-button">
-                    ابدأ الآن بإدخال البيانات
+    <main class="main-content">
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>نظام جدولة المحاضرات الجامعية الذكي</h1>
+                <p>
+                    أداتك المتكاملة لإدارة وتنظيم الجداول الدراسية بكفاءة وفعالية عالية.
+                </p>
+            </div>
+        </section>
+
+        <section class="features-grid">
+            <div class="feature-card">
+                <a href="data-entry.html">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>إدخال بيانات شامل</h3>
+                    <p>أدخل معلومات الدكاترة، المقررات، الشعب، والقاعات بسهولة ودقة.</p>
                 </a>
-                <a href="help.html" class="cta-button secondary">
-                    كيف أستخدم النظام؟
+            </div>
+            <div class="feature-card">
+                <a href="generate.html">
+                    <i class="fas fa-magic"></i>
+                    <h3>توليد جداول ذكي</h3>
+                    <p>دع الخوارزمية تولد جداول متوازنة دون تعارضات، مع مراعاة القيود.</p>
                 </a>
+            </div>
+            <div class="feature-card">
+                <a href="generate.html">
+                    <i class="fas fa-hand-pointer"></i>
+                    <h3>تعديل بالسحب والإفلات</h3>
+                    <p>عدّل الجداول بعد توليدها بسهولة عن طريق السحب والإفلات.</p>
+                </a>
+            </div>
+            <div class="feature-card">
+                <a href="doctor-view.html">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>مراقبة وتقارير</h3>
+                    <p>عرض جداول الدكاترة الفردية والإبلاغ عن مشاكل القاعات.</p>
+                </a>
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <h2 class="page-header">
+                <h1>أرقام وإحصائيات</h1>
+                <p>نظرة سريعة على قدرات النظام.</p>
+            </h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <h3><span id="total-doctors">0</span>+</h3>
+                    <p>عدد الدكاترة المدخلين</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-book-open"></i>
+                    <h3><span id="total-courses">0</span>+</h3>
+                    <p>المقررات المدخلة</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <h3><span id="total-sections">0</span>+</h3>
+                    <p>الشُعب المدارة</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-building"></i>
+                    <h3><span id="total-rooms">0</span>+</h3>
+                    <p>القاعات المتوفرة</p>
+                </div>
             </div>
         </section>
     </main>
@@ -51,6 +98,7 @@
         <p>&copy; 2025 نظام جدولة المحاضرات الجامعية. جميع الحقوق محفوظة.</p>
     </footer>
 
+    <script src="js/utils.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
