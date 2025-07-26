@@ -1,11 +1,10 @@
 // js/doctor-view.js
 
-// جلب البيانات من LocalStorage
 let doctors = getData('doctors');
 let rooms = getData('rooms');
 let doctorSchedules = getData('doctorSchedules');
+let issueReports = getData('issueReports') || [];
 
-// أيام الأسبوع للواجهة
 const daysArabic = {
     sunday: "الأحد",
     monday: "الإثنين",
@@ -18,9 +17,14 @@ const timeSlots = [
 ];
 const days = ["sunday", "monday", "tuesday", "wednesday", "thursday"];
 
-/**
- * وظيفة لملء قائمة الدكاترة المنسدلة.
- */
+const getCourseColorClass = (courseId) => {
+    const colorClasses = [
+        'lecture-color-0', 'lecture-color-1', 'lecture-color-2', 'lecture-color-3',
+        'lecture-color-4', 'lecture-color-5', 'lecture-color-6'
+    ];
+    return colorClasses[courseId % colorClasses.length];
+};
+
 const populateDoctorSelect = () => {
     const doctorSelect = document.getElementById('doctor-select');
     doctorSelect.innerHTML = '<option value="">-- اختر دكتور --</option>';
@@ -33,10 +37,6 @@ const populateDoctorSelect = () => {
     });
 };
 
-/**
- * وظيفة لعرض جدول دكتور محدد.
- * @param {number} doctorId - معرف الدكتور المراد عرض جدوله.
- */
 const displayDoctorSchedule = (doctorId) => {
     const scheduleDisplayDiv = document.getElementById('doctor-schedule-display');
     const selectedDoctorNameElem = document.getElementById('selected-doctor-name');
@@ -44,7 +44,7 @@ const displayDoctorSchedule = (doctorId) => {
     const noDoctorSelectedMessage = document.getElementById('no-doctor-selected-message');
 
     scheduleDisplayDiv.classList.add('hidden');
-    noDoctorSelectedMessage.classList.remove('hidden'); // عرض رسالة "اختر دكتور" افتراضياً
+    noDoctorSelectedMessage.classList.remove('hidden');
     doctorScheduleBody.innerHTML = '';
 
     const doctor = doctors.find(d => d.id === doctorId);
@@ -55,13 +55,13 @@ const displayDoctorSchedule = (doctorId) => {
 
     selectedDoctorNameElem.textContent = `جدول الدكتور: ${doctor.name}`;
     scheduleDisplayDiv.classList.remove('hidden');
-    noDoctorSelectedMessage.classList.add('hidden'); // إخفاء رسالة "اختر دكتور"
+    noDoctorSelectedMessage.classList.add('hidden');
 
     const occupiedCells = new Set();
 
     timeSlots.forEach(timeSlot => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td class="schedule-table-time-header">${timeSlot}</td>`;
+        tr.innerHTML = `<td class="schedule-table-time-header">${convertTo12HourFormat(timeSlot)}</td>`;
 
         days.forEach(day => {
             const cellId = `${doctorId}-${day}-${timeSlot}`;
@@ -87,9 +87,9 @@ const displayDoctorSchedule = (doctorId) => {
                         }
                     }
                 }
-
+                const courseColorClass = getCourseColorClass(lecture.courseId);
                 td.innerHTML = `
-                    <div class="schedule-slot">
+                    <div class="schedule-slot colored-lecture ${courseColorClass}">
                         <div class="schedule-slot-subject">${lecture.courseName}</div>
                         <div class="schedule-slot-info">${lecture.sectionName}</div>
                         <div class="schedule-slot-info">${lecture.roomName}</div>
@@ -106,7 +106,6 @@ const displayDoctorSchedule = (doctorId) => {
     });
 };
 
-// معالج حدث عند تغيير اختيار الدكتور
 document.getElementById('doctor-select').addEventListener('change', (e) => {
     const selectedDoctorId = parseInt(e.target.value);
     if (!isNaN(selectedDoctorId) && selectedDoctorId > 0) {
@@ -117,9 +116,6 @@ document.getElementById('doctor-select').addEventListener('change', (e) => {
     }
 });
 
-/**
- * وظيفة لملء قائمة القاعات المنسدلة في نموذج بلاغ المشاكل.
- */
 const populateRoomIssueSelect = () => {
     const issueRoomSelect = document.getElementById('issue-room');
     issueRoomSelect.innerHTML = '<option value="">اختر قاعة</option>';
@@ -132,7 +128,6 @@ const populateRoomIssueSelect = () => {
     });
 };
 
-// معالج حدث لإرسال نموذج بلاغ مشاكل القاعات
 document.getElementById('room-issue-form').addEventListener('submit', (e) => {
     e.preventDefault();
 
@@ -147,9 +142,6 @@ document.getElementById('room-issue-form').addEventListener('submit', (e) => {
 
     const room = rooms.find(r => r.id === roomId);
     
-    // يمكن هنا تخزين البلاغات في localStorage أيضاً
-    // مثال بسيط جداً:
-    let issueReports = getData('issueReports') || [];
     issueReports.push({
         id: Date.now(),
         roomId: roomId,
@@ -157,16 +149,42 @@ document.getElementById('room-issue-form').addEventListener('submit', (e) => {
         issueType: issueType,
         description: issueDescription,
         timestamp: new Date().toLocaleString(),
-        status: 'pending' // حالة افتراضية
+        status: 'pending'
     });
     saveData('issueReports', issueReports);
 
     showMessage(`تم استلام بلاغك عن مشكلة "${issueType}" في القاعة "${room.name}" بنجاح!`, 'success');
 
-    e.target.reset(); // مسح حقول النموذج بعد الإرسال
+    e.target.reset();
 });
 
-// عند تحميل الصفحة، يتم ملء قوائم الاختيار وعرض أول جدول دكتور إذا كان موجوداً
+// زر الطباعة
+document.getElementById('print-doctor-schedule-btn').addEventListener('click', () => {
+    const doctorId = document.getElementById('doctor-select').value;
+    if (!doctorId) {
+        showMessage('الرجاء اختيار دكتور لطباعة جدوله.', 'warning');
+        return;
+    }
+
+    const scheduleToPrint = document.getElementById('doctor-schedule-display');
+    if (scheduleToPrint) {
+        // إنشاء نافذة طباعة مؤقتة
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>جدول الدكتور</title>');
+        printWindow.document.write('<link rel="stylesheet" href="css/style.css">'); // التنسيق الأساسي
+        printWindow.document.write('<link rel="stylesheet" href="css/print.css" media="print">'); // التنسيق للطباعة
+        printWindow.document.write('</head><body>');
+        printWindow.document.write('<div class="main-content">'); // Wrap in main-content for print styling
+        printWindow.document.write(scheduleToPrint.outerHTML);
+        printWindow.document.write('</div></body></html>');
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+        // printWindow.close(); // قد تسبب إغلاق النافذة قبل الطباعة في بعض المتصفحات
+    }
+});
+
+
 document.addEventListener('DOMContentLoaded', () => {
     populateDoctorSelect();
     populateRoomIssueSelect();
