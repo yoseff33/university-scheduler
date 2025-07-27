@@ -631,6 +631,44 @@ const displayGeneratedSchedules = () => {
     attachCellClickListenersForMove();
 };
 
+// --- وظائف التحرير (Edit Mode Functions) ---
+// (هذه الدوال تتحكم في تفعيل وإلغاء وضع التحرير)
+const enableEditMode = () => {
+    editMode = true;
+    document.getElementById('edit-schedule-btn').classList.add('btn-warning');
+    document.getElementById('edit-schedule-btn').innerHTML = '<i class="fas fa-save"></i> حفظ التغييرات';
+    document.getElementById('cancel-edit-btn').classList.remove('hidden');
+
+    displayGeneratedSchedules(); // إعادة عرض لتطبيق كلاسات وضع التحرير و contenteditable="true"
+    // بعد displayGeneratedSchedules()، يتم استدعاء attachMoveButtonListeners() و attachCellClickListenersForMove() تلقائياً
+
+    showMessage('وضع التحرير مفعل. انقر على زر النقل في المحاضرة لتغيير مكانها، أو عدّل النص مباشرة.', 'info', 7000);
+    console.log('[Edit Mode] Enabled.');
+};
+
+const disableEditMode = (saveChanges = true) => {
+    editMode = false;
+    document.getElementById('edit-schedule-btn').classList.remove('btn-warning');
+    document.getElementById('edit-schedule-btn').innerHTML = '<i class="fas fa-edit"></i> تحرير الجداول';
+    document.getElementById('cancel-edit-btn').classList.add('hidden');
+
+    // إزالة تلوين أي محاضرة محددة للنقل أو خلايا مستهدفة
+    if (isMoveModeActive) {
+        deactivateMoveMode(); // هذا سيقوم بمسح التمييزات
+    }
+    // لا نحتاج لإزالة مستمعات الأحداث يدوياً هنا لأن displayGeneratedSchedules() سيعيد إنشاء كل شيء وربط المستمعات من جديد
+
+    displayGeneratedSchedules(); // إعادة عرض لإزالة كلاسات وضع التحرير وإعادة ربط المستمعات بشكل نظيف
+
+    if (saveChanges) {
+        showMessage('تم الخروج من وضع التحرير.', 'info');
+    } else {
+        showMessage('تم إلغاء وضع التحرير.', 'info');
+    }
+    console.log(`[Edit Mode] Disabled. Save changes: ${saveChanges}`);
+};
+
+
 // --- وظائف خاصة بوضع النقل الجديد ---
 const activateMoveMode = (lectureElement, lectureFullData) => {
     // إذا كانت المحاضرة المصدر هي نفسها التي يتم تحديدها مرة أخرى، قم بإلغاء وضع النقل
