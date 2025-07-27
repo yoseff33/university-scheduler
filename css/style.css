@@ -1213,25 +1213,79 @@ html {
 }
 
 @media (max-width: 768px) {
-    .nav-container {
-        padding: 10px 15px; /* Further reduced padding */
+    .main-content {
+        padding: 30px 15px;
     }
-    .nav-menu {
-        gap: 10px; /* Smaller gap for very small screens */
+    .hero-section {
+        padding: 60px 15px;
     }
-    .nav-link {
-        font-size: 0.85rem;
-        padding: 6px 10px;
+    .hero-content h1 {
+        font-size: 2.8rem;
     }
-    .nav-brand {
-        font-size: 1.6rem;
+    .hero-content p {
+        font-size: 1.1rem;
     }
-    .nav-brand i {
-        font-size: 2rem;
+    .page-header {
+        padding: 50px 15px;
     }
-    /* Rest of the 768px media query unchanged as they are general layout rules */
+    .page-header h1 {
+        font-size: 2.5rem;
+    }
+    .features-grid, .stats-grid, .content-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    .control-buttons {
+        justify-content: center;
+        gap: 15px;
+    }
+    .checkbox-group {
+        grid-template-columns: 1fr;
+    }
+    .schedule-table th, .schedule-table td {
+        padding: 10px;
+        font-size: 0.75rem;
+    }
+    .schedule-slot {
+        padding: 8px;
+        font-size: 0.7rem;
+    }
+    .schedule-slot-info {
+        font-size: 0.65rem;
+    }
+    .schedule-table-time-header {
+        min-width: 60px;
+    }
+    .btn {
+        padding: 12px 25px;
+        font-size: 0.95rem;
+    }
+    .item-card {
+        padding: 18px;
+    }
+    .report-card {
+        padding: 18px;
+    }
+    .report-title {
+        font-size: 1.1rem;
+    }
+    /* Tabs specific adjustments */
+    .tabs-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .tab-button {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+    .tabs-container {
+        padding: 15px;
+    }
+    .tab-content {
+        padding: 5px;
+    }
 }
-
 
 @media (max-width: 480px) {
     .nav-container {
