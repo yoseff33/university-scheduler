@@ -1073,22 +1073,6 @@ document.getElementById('cancel-edit-btn').addEventListener('click', () => {
     disableEditMode(false); // إلغاء وضع التحرير بدون حفظ
 });
 
-// وظيفة لربط مستمعات الأحداث لأزرار النقل (تُستدعى عند عرض الجداول وفي وضع التحرير)
-const attachMoveButtonListeners = () => {
-    document.querySelectorAll('.move-lecture-btn').forEach(button => {
-        button.removeEventListener('click', handleMoveLectureButtonClick);
-        button.addEventListener('click', handleMoveLectureButtonClick);
-    });
-};
-
-// وظيفة لربط مستمعات أحداث النقر على خلايا الجدول لوضع النقل (تُستدعى عند عرض الجداول وفي وضع التحرير)
-const attachCellClickListenersForMove = () => {
-    document.querySelectorAll('.schedule-table-cell').forEach(cell => {
-        cell.removeEventListener('click', handleCellClickForMove);
-        cell.addEventListener('click', handleCellClickForMove);
-    });
-};
-
 
 document.addEventListener('DOMContentLoaded', () => {
     const statusMessageElem = document.getElementById('generation-status');
