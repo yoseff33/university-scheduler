@@ -632,10 +632,6 @@ const displayGeneratedSchedules = () => {
 };
 
 // --- وظائف خاصة بوضع النقل الجديد ---
-let isMoveModeActive = false;
-let lectureToMoveData = null; // بيانات المحاضرة التي يتم نقلها
-let sourceLectureElement = null; // عنصر DOM للمحاضرة المصدر
-
 const activateMoveMode = (lectureElement, lectureFullData) => {
     // إذا كانت المحاضرة المصدر هي نفسها التي يتم تحديدها مرة أخرى، قم بإلغاء وضع النقل
     if (sourceLectureElement === lectureElement && isMoveModeActive) {
@@ -1076,6 +1072,22 @@ document.getElementById('edit-schedule-btn').addEventListener('click', () => {
 document.getElementById('cancel-edit-btn').addEventListener('click', () => {
     disableEditMode(false); // إلغاء وضع التحرير بدون حفظ
 });
+
+// وظيفة لربط مستمعات الأحداث لأزرار النقل (تُستدعى عند عرض الجداول وفي وضع التحرير)
+const attachMoveButtonListeners = () => {
+    document.querySelectorAll('.move-lecture-btn').forEach(button => {
+        button.removeEventListener('click', handleMoveLectureButtonClick);
+        button.addEventListener('click', handleMoveLectureButtonClick);
+    });
+};
+
+// وظيفة لربط مستمعات أحداث النقر على خلايا الجدول لوضع النقل (تُستدعى عند عرض الجداول وفي وضع التحرير)
+const attachCellClickListenersForMove = () => {
+    document.querySelectorAll('.schedule-table-cell').forEach(cell => {
+        cell.removeEventListener('click', handleCellClickForMove);
+        cell.addEventListener('click', handleCellClickForMove);
+    });
+};
 
 
 document.addEventListener('DOMContentLoaded', () => {
