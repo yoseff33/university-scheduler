@@ -69,60 +69,6 @@
 
     <div class="message-toast-container"></div>
 
-    <div id="edit-lecture-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-arrows-alt"></i> تعديل/نقل المحاضرة</h2>
-                <button type="button" class="close-modal-btn" id="close-edit-modal-btn"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="modal-body">
-                <p class="current-lecture-info">
-                    المحاضرة الحالية: <strong id="modal-current-course"></strong> لـ <strong id="modal-current-section"></strong> مع د. <strong id="modal-current-doctor"></strong> في قاعة <strong id="modal-current-room"></strong> يوم <strong id="modal-current-day"></strong> الساعة <strong id="modal-current-time"></strong>
-                </p>
-
-                <form id="modal-edit-form">
-                    <div class="form-group">
-                        <label for="modal-new-day"><i class="fas fa-calendar-day"></i> اليوم الجديد:</label>
-                        <select id="modal-new-day" class="form-control" required>
-                            <option value="">اختر يومًا</option>
-                            <option value="sunday">الأحد</option>
-                            <option value="monday">الإثنين</option>
-                            <option value="tuesday">الثلاثاء</option>
-                            <option value="wednesday">الأربعاء</option>
-                            <option value="thursday">الخميس</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="modal-new-time"><i class="fas fa-clock"></i> الوقت الجديد:</label>
-                        <select id="modal-new-time" class="form-control" required>
-                            <option value="">اختر وقتًا</option>
-                            </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="modal-new-room"><i class="fas fa-door-open"></i> القاعة الجديدة:</label>
-                        <select id="modal-new-room" class="form-control" required>
-                            <option value="">اختر قاعة</option>
-                            </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="modal-new-doctor"><i class="fas fa-user-md"></i> الدكتور الجديد (اختياري - للنقل بين دكاترة):</label>
-                        <select id="modal-new-doctor" class="form-control">
-                            <option value="">نفس الدكتور</option>
-                            </select>
-                    </div>
-
-                    <div id="modal-validation-feedback" class="status-message info hidden" style="margin-top: 20px;">
-                        </div>
-
-                    <div class="modal-actions">
-                        <button type="submit" id="modal-save-btn" class="btn btn-success"><i class="fas fa-save"></i> حفظ التعديلات</button>
-                        <button type="button" id="modal-remove-btn" class="btn btn-danger"><i class="fas fa-trash"></i> إزالة المحاضرة</button>
-                        <button type="button" id="modal-cancel-btn" class="btn btn-warning"><i class="fas fa-times"></i> إلغاء</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/main.js"></script>
