@@ -321,7 +321,7 @@ const generateSchedules = () => {
 
     const sortedLectures = [...lecturesToSchedule].sort((a, b) => {
         // 1. الأولوية للمحاضرات الطويلة (100 دقيقة) قبل القصيرة (50 دقيقة) لنفس المقرر والشعبة
-        if (a.sectionId === b.sectionId && a.courseId === b.courseId) { // Changed to courseId for consistency
+        if (a.sectionId === b.sectionId && a.courseId === b.id) { // Changed to courseId for consistency
             if (a.durationMinutes === LECTURE_DURATION_LONG && b.durationMinutes === LECTURE_DURATION_SHORT) return -1; // a (100) comes before b (50)
             if (a.durationMinutes === LECTURE_DURATION_SHORT && b.durationMinutes === LECTURE_DURATION_LONG) return 1;  // b (100) comes before a (50)
         }
