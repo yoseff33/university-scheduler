@@ -1111,24 +1111,6 @@ document.getElementById('cancel-edit-btn').addEventListener('click', () => {
     disableEditMode(false); // إلغاء وضع التحرير بدون حفظ
 });
 
-// وظيفة لربط مستمعات الأحداث لأزرار النقل (تُستدعى عند عرض الجداول وفي وضع التحرير)
-function attachMoveButtonListeners() {
-    document.querySelectorAll('.move-lecture-btn').forEach(button => {
-        button.removeEventListener('click', handleMoveLectureButtonClick);
-        button.addEventListener('click', handleMoveLectureButtonClick);
-    });
-    console.log('[Move] Move button listeners attached.');
-};
-
-// وظيفة لربط مستمعات أحداث النقر على خلايا الجدول لوضع النقل (تُستدعى عند عرض الجداول وفي وضع التحرير)
-function attachCellClickListenersForMove() {
-    document.querySelectorAll('.schedule-table-cell').forEach(cell => {
-        cell.removeEventListener('click', handleCellClickForMove);
-        cell.addEventListener('click', handleCellClickForMove);
-    });
-    console.log('[Move] Cell click listeners for move attached.');
-};
-
 
 document.addEventListener('DOMContentLoaded', () => {
     const statusMessageElem = document.getElementById('generation-status');
