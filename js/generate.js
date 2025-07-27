@@ -633,7 +633,7 @@ const displayGeneratedSchedules = () => {
 
 // --- وظائف التحرير (Edit Mode Functions) ---
 // (هذه الدوال تتحكم في تفعيل وإلغاء وضع التحرير)
-const enableEditMode = () => {
+function enableEditMode() {
     editMode = true;
     document.getElementById('edit-schedule-btn').classList.add('btn-warning');
     document.getElementById('edit-schedule-btn').innerHTML = '<i class="fas fa-save"></i> حفظ التغييرات';
@@ -644,9 +644,9 @@ const enableEditMode = () => {
 
     showMessage('وضع التحرير مفعل. انقر على زر النقل في المحاضرة لتغيير مكانها، أو عدّل النص مباشرة.', 'info', 7000);
     console.log('[Edit Mode] Enabled.');
-};
+}
 
-const disableEditMode = (saveChanges = true) => {
+function disableEditMode(saveChanges = true) {
     editMode = false;
     document.getElementById('edit-schedule-btn').classList.remove('btn-warning');
     document.getElementById('edit-schedule-btn').innerHTML = '<i class="fas fa-edit"></i> تحرير الجداول';
@@ -1110,6 +1110,24 @@ document.getElementById('edit-schedule-btn').addEventListener('click', () => {
 document.getElementById('cancel-edit-btn').addEventListener('click', () => {
     disableEditMode(false); // إلغاء وضع التحرير بدون حفظ
 });
+
+// وظيفة لربط مستمعات الأحداث لأزرار النقل (تُستدعى عند عرض الجداول وفي وضع التحرير)
+function attachMoveButtonListeners() {
+    document.querySelectorAll('.move-lecture-btn').forEach(button => {
+        button.removeEventListener('click', handleMoveLectureButtonClick);
+        button.addEventListener('click', handleMoveLectureButtonClick);
+    });
+    console.log('[Move] Move button listeners attached.');
+};
+
+// وظيفة لربط مستمعات أحداث النقر على خلايا الجدول لوضع النقل (تُستدعى عند عرض الجداول وفي وضع التحرير)
+function attachCellClickListenersForMove() {
+    document.querySelectorAll('.schedule-table-cell').forEach(cell => {
+        cell.removeEventListener('click', handleCellClickForMove);
+        cell.addEventListener('click', handleCellClickForMove);
+    });
+    console.log('[Move] Cell click listeners for move attached.');
+};
 
 
 document.addEventListener('DOMContentLoaded', () => {
