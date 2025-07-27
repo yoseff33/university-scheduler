@@ -398,13 +398,18 @@ const resetFormToAddMode = (type) => {
         submitButton = document.getElementById('doctor-form-submit-btn');
         if (submitButton) submitButton.textContent = 'إضافة دكتور';
         populateDynamicTimeRanges([], 'doctor'); // Clear dynamic times
-    } else if (type === 'courses') {
+    }
+    else if (type === 'courses') {
         submitButton = document.getElementById('course-form-submit-btn');
         if (submitButton) submitButton.textContent = 'إضافة مقرر';
-    } else if (type === 'sections') {
+    }
+    else if (type === 'sections') {
         submitButton = document.getElementById('section-form-submit-btn');
         if (submitButton) submitButton.textContent = 'إضافة شعبة';
-    } else if (type === 'rooms') {
+        document.getElementById('section-name').value = ''; // مسح حقل اسم الشعبة الفردي
+        document.getElementById('num-sections-to-generate').value = '1'; // إعادة ضبط حقل توليد الشعب
+    }
+    else if (type === 'rooms') {
         submitButton = document.getElementById('room-form-submit-btn');
         if (submitButton) submitButton.textContent = 'إضافة قاعة';
         populateDynamicTimeRanges([], 'lab'); // Clear dynamic times
@@ -570,6 +575,50 @@ const addDynamicTimeRange = (type) => {
 };
 
 
+// --- وظيفة إنشاء شُعب متعددة تلقائياً ---
+const generateMultipleSections = () => {
+    let isValid = true;
+    clearValidationError('num-sections-to-generate'); // مسح أي أخطاء سابقة
+    
+    // التحقق من أن حقول المقرر والدكتور وعدد الطلاب مملوءة في نموذج الشعبة الرئيسي
+    const students = parseInt(document.getElementById('section-students').value);
+    const courseId = parseInt(document.getElementById('section-course').value);
+    const doctorId = parseInt(document.getElementById('section-doctor').value);
+    const numSectionsToGenerate = parseInt(document.getElementById('num-sections-to-generate').value);
+
+    if (isNaN(students) || students <= 0) { showValidationError('section-students', 'عدد الطلاب مطلوب.'); isValid = false; }
+    if (isNaN(courseId) || document.getElementById('section-course').value === '') { showValidationError('section-course', 'المقرر مطلوب.'); isValid = false; }
+    if (isNaN(doctorId) || document.getElementById('section-doctor').value === '') { showValidationError('section-doctor', 'الدكتور مطلوب.'); isValid = false; }
+    if (isNaN(numSectionsToGenerate) || numSectionsToGenerate <= 0) { showValidationError('num-sections-to-generate', 'عدد الشُعب يجب أن يكون رقماً موجباً.'); isValid = false; }
+
+    if (!isValid) {
+        showMessage('الرجاء تعبئة حقول "عدد الطلاب" و "المقرر" و "الدكتور" و "عدد الشُعب المراد إنشاؤها" بشكل صحيح.', 'error', 7000);
+        return;
+    }
+
+    let sectionsAddedCount = 0;
+    for (let i = 1; i <= numSectionsToGenerate; i++) {
+        const newSection = {
+            id: Date.now() + i, // استخدام Date.now() + i لضمان معرف فريد لكل شعبة
+            name: `الشعبة ${i}`,
+            students: students,
+            courseId: courseId,
+            doctorId: doctorId,
+            isScheduled: false
+        };
+        sections.push(newSection);
+        sectionsAddedCount++;
+    }
+    saveData('sections', sections);
+    displaySections();
+    populateSectionsSelects();
+    showMessage(`تمت إضافة ${sectionsAddedCount} شُعب جديدة بنجاح!`, 'success');
+
+    // إعادة ضبط حقل عدد الشعب فقط بعد الإنشاء التلقائي
+    document.getElementById('num-sections-to-generate').value = '1';
+};
+
+
 // --- معالجات الأحداث (Event Handlers) ---
 
 document.getElementById('doctor-form').addEventListener('submit', (e) => {
@@ -686,7 +735,13 @@ document.getElementById('section-form').addEventListener('submit', (e) => {
     document.querySelectorAll('#section-form .field-error').forEach(span => span.textContent = '');
     document.querySelectorAll('#section-form .input-error').forEach(el => el.classList.remove('input-error'));
 
-    if (document.getElementById('section-name').value.trim() === '') { showValidationError('section-name', 'اسم الشعبة مطلوب.'); isValid = false; }
+    // حقل اسم الشعبة أصبح اختيارياً إذا كنت تستخدم توليد الشعب المتعددة
+    const sectionNameInput = document.getElementById('section-name');
+    if (sectionNameInput.value.trim() === '' && !document.getElementById('generate-multiple-sections-btn').clicked) { 
+        showValidationError('section-name', 'اسم الشعبة مطلوب.'); 
+        isValid = false; 
+    }
+    
     const students = parseInt(document.getElementById('section-students').value);
     if (isNaN(students) || students <= 0) { showValidationError('section-students', 'عدد الطلاب يجب أن يكون رقماً موجباً.'); isValid = false; }
     if (document.getElementById('section-course').value === '') { showValidationError('section-course', 'الرجاء اختيار مقرر.'); isValid = false; }
@@ -881,6 +936,14 @@ if (clearAllAvailableTimesBtn) {
     });
 } else {
     console.warn("Element with ID 'clear-all-available-times-btn' not found.");
+}
+
+// Event listener لزر إنشاء شُعب تلقائياً
+const generateMultipleSectionsBtn = document.getElementById('generate-multiple-sections-btn');
+if (generateMultipleSectionsBtn) {
+    generateMultipleSectionsBtn.addEventListener('click', generateMultipleSections);
+} else {
+    console.warn("Element with ID 'generate-multiple-sections-btn' not found.");
 }
 
 
