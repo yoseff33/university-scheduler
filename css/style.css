@@ -843,12 +843,31 @@ html {
     min-width: 110px;
 }
 
+/* تحديث: إضافة div لرسالة النقل داخل الخلية */
 .schedule-table-cell {
     background: white;
     min-height: 90px;
     vertical-align: top;
-    position: relative;
+    position: relative; /* مهم لوضع زر النقل أو رسالة التغذية الراجعة */
     padding: 12px;
+}
+.schedule-table-cell .move-target-feedback {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 0, 0, 0.7); /* خلفية حمراء شفافة */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    pointer-events: none; /* لا يتداخل مع أحداث النقر */
+    opacity: 0; /* مخفي افتراضياً */
+    transition: opacity 0.3s ease;
+    width: 90%; /* عرض مناسب */
 }
 
 /* Hover effect for empty cells in edit mode */
@@ -862,6 +881,25 @@ html {
 .schedule-table-cell.selected-move-target {
     background-color: #e3f2fd;
     box-shadow: inset 0 0 0 4px #006064;
+}
+
+/* تحديث: أنماط للخلايا المستهدفة للنقل */
+.schedule-table-cell.valid-move-target {
+    background-color: rgba(139, 195, 74, 0.1); /* أخضر فاتح */
+    box-shadow: inset 0 0 0 3px #4CAF50; /* حدود خضراء */
+    cursor: pointer;
+}
+.schedule-table-cell.valid-move-target:hover {
+    background-color: rgba(139, 195, 74, 0.2);
+}
+
+.schedule-table-cell.invalid-move-target {
+    background-color: rgba(244, 67, 54, 0.1); /* أحمر فاتح */
+    box-shadow: inset 0 0 0 3px #F44336; /* حدود حمراء */
+    cursor: not-allowed;
+}
+.schedule-table-cell.invalid-move-target .move-target-feedback {
+    opacity: 1; /* إظهار الرسالة */
 }
 
 
@@ -885,14 +923,16 @@ html {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
 }
 
-/* Styles for the lecture currently selected for move */
-.schedule-slot.selected-for-move {
-    box-shadow: 0 0 0 4px #FFB300,
+/* تحديث: أنماط للمحاضرة المصدر أثناء وضع النقل */
+.schedule-slot.moving-source-lecture {
+    box-shadow: 0 0 0 4px #2196F3, /* إطار أزرق */
                 0 12px 35px rgba(0, 0, 0, 0.25);
     transform: scale(1.03);
-    opacity: 0.98;
+    opacity: 0.9; /* شفافة قليلاً */
     cursor: grabbing;
+    border-color: #2196F3;
 }
+
 
 /* Specific colors for lectures based on course ID (applied by JS) */
 .schedule-slot.colored-lecture {
@@ -969,6 +1009,38 @@ html {
     pointer-events: none;
 }
 
+/* تحديث: زر النقل الجديد */
+.schedule-slot .move-lecture-btn {
+    position: absolute;
+    top: 5px;
+    left: 5px; /* RTL */
+    background-color: rgba(0, 121, 107, 0.8);
+    color: white;
+    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    opacity: 0; /* مخفي افتراضيا */
+    transition: all 0.2s ease;
+    z-index: 5;
+    transform: scale(0.8);
+    border: none; /* إزالة الحدود الافتراضية للزر */
+    padding: 0;
+}
+.schedule-slot:hover .move-lecture-btn,
+.schedule-slot.moving-source-lecture .move-lecture-btn {
+    opacity: 1;
+    transform: scale(1);
+}
+/* إخفاء زر النقل إذا لم يكن وضع التحرير مفعلاً */
+.schedule-slot:not(.editable-lecture) .move-lecture-btn {
+    display: none;
+}
 
 /* --- Admin Reports --- */
 .admin-reports-section .stats-grid {
