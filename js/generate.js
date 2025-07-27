@@ -34,7 +34,7 @@ const DAY_END_MINUTES = timeToMinutes("17:00");   // 5:00 PM
 let editMode = false;
 // let selectedLectureForMove = null; // سيحتوي على بيانات المحاضرة التي تم النقر المزدوج عليها أول مرة (لم يعد مستخدماً)
 
-// --- متغيرات وضع النقل الجديدة ---
+// --- متغيرات وضع النقل الجديدة (تعريف واحد فقط) ---
 let isMoveModeActive = false;
 let lectureToMoveData = null; // تخزين بيانات المحاضرة المصدر
 let sourceLectureElement = null; // تخزين عنصر DOM للمحاضرة المصدر
@@ -626,7 +626,9 @@ const displayGeneratedSchedules = () => {
     }
 
     addContentEditableListeners();
-    // attachClickListenersForModal(); // تم إلغاء هذا الاستدعاء في هذا النهج
+    // يجب إعادة ربط مستمعات أحداث زر النقل لكل المحاضرات الجديدة
+    attachMoveButtonListeners(); 
+    attachCellClickListenersForMove();
 };
 
 // --- وظائف خاصة بوضع النقل الجديد ---
@@ -706,6 +708,7 @@ const prepareTargetCells = () => {
             cell.querySelector('.move-target-feedback').textContent = 'المكان الأصلي';
             return;
         }
+
 
         // --- إجراء التحقق من التوفر باستخدام نسخ مؤقتة من الجداول ---
         const tempDoctorSchedules = JSON.parse(JSON.stringify(doctorSchedules));
