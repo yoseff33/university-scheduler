@@ -32,7 +32,12 @@ const DAY_END_MINUTES = timeToMinutes("17:00");   // 5:00 PM
 
 // --- متغيرات وضع التحرير الجديد ---
 let editMode = false;
-let selectedLectureForMove = null; // سيحتوي على بيانات المحاضرة التي تم النقر المزدوج عليها أول مرة
+// let selectedLectureForMove = null; // سيحتوي على بيانات المحاضرة التي تم النقر المزدوج عليها أول مرة (لم يعد مستخدماً)
+
+// --- متغيرات وضع النقل الجديدة ---
+let isMoveModeActive = false;
+let lectureToMoveData = null; // تخزين بيانات المحاضرة المصدر
+let sourceLectureElement = null; // تخزين عنصر DOM للمحاضرة المصدر
 
 // وظيفة الحصول على لون عشوائي بناءً على ID المقرر
 const getCourseColorClass = (courseId) => {
@@ -562,9 +567,12 @@ const displayGeneratedSchedules = () => {
                 td.setAttribute('data-day', day);
                 td.setAttribute('data-timeslot', timeSlot); // Keep 24h for internal logic
                 td.setAttribute('data-doctorid', doctor.id);
+                // إضافة div لرسالة التغذية الراجعة
+                td.innerHTML += `<div class="move-target-feedback"></div>`;
 
-                const cellId = `${doctorId}-${day}-${timeSlot}`;
-                if (occupiedCells.has(cellId)) {
+
+                const cellKey = `${doctorId}-${day}-${timeSlot}`;
+                if (occupiedCells.has(cellKey)) {
                     return;
                 }
 
@@ -588,7 +596,7 @@ const displayGeneratedSchedules = () => {
                     lectureCard.setAttribute('data-lecture-id', `${doctor.id}-${day}-${timeSlot}-${lecture.sectionId}-${lecture.courseId}-${lecture.lectureIndex}`);
                     lectureCard.setAttribute('data-course-id', lecture.courseId);
                     lectureCard.setAttribute('data-section-id', lecture.sectionId);
-                    lectureCard.setAttribute('data-room-id', lecture.roomId);
+                    lectureCard.setAttribute('data-room-id', lecture.roomId); // حفظ roomId هنا
                     lectureCard.setAttribute('data-lecture-type', lecture.type);
                     lectureCard.setAttribute('data-original-day', day);
                     lectureCard.setAttribute('data-original-timeslot', timeSlot);
@@ -604,11 +612,12 @@ const displayGeneratedSchedules = () => {
                         <div class="schedule-slot-details">
                             <span>${lecture.courseCode}</span> | <span>${labOrTheory}</span> | <span>(${lecture.durationMinutes} دقيقة)</span>
                         </div>
+                        ${editMode ? `<button class="move-lecture-btn btn btn-sm btn-info" title="نقل المحاضرة"><i class="fas fa-arrows-alt"></i></button>` : ''}
                     `;
                     td.appendChild(lectureCard);
                     td.classList.add('has-lecture');
                 } else if (!lecture) {
-                    td.textContent = '';
+                    td.textContent = ''; // مسح المحتوى القديم للخلية الفارغة
                 }
                 tr.appendChild(td);
             });
@@ -617,69 +626,302 @@ const displayGeneratedSchedules = () => {
     }
 
     addContentEditableListeners();
-    // تم إلغاء استدعاء attachClickListenersForModal();
+    // attachClickListenersForModal(); // تم إلغاء هذا الاستدعاء في هذا النهج
 };
 
-// --- وظائف التحرير بالنافذة المنبثقة (Modal-Based Editing Functions) ---
-const enableEditMode = () => {
-    editMode = true;
-    document.getElementById('edit-schedule-btn').classList.add('btn-warning');
-    document.getElementById('edit-schedule-btn').innerHTML = '<i class="fas fa-save"></i> حفظ التغييرات';
-    document.getElementById('cancel-edit-btn').classList.remove('hidden');
+// --- وظائف خاصة بوضع النقل الجديد ---
+let isMoveModeActive = false;
+let lectureToMoveData = null; // بيانات المحاضرة التي يتم نقلها
+let sourceLectureElement = null; // عنصر DOM للمحاضرة المصدر
 
-    displayGeneratedSchedules(); // إعادة عرض لتطبيق كلاسات وضع التحرير و contenteditable="true"
-
-    showMessage('وضع التحرير مفعل. انقر على محاضرة لفتح نافذة التعديل.', 'info', 7000);
-    console.log('[Edit Mode] Enabled.');
-};
-
-const disableEditMode = (saveChanges = true) => {
-    editMode = false;
-    document.getElementById('edit-schedule-btn').classList.remove('btn-warning');
-    document.getElementById('edit-schedule-btn').innerHTML = '<i class="fas fa-edit"></i> تحرير الجداول';
-    document.getElementById('cancel-edit-btn').classList.add('hidden');
-
-    // إزالة تلوين أي محاضرة محددة للنقل
-    document.querySelectorAll('.selected-for-move').forEach(el => el.classList.remove('selected-for-move'));
-    // إزالة تلوين أي خلية مستهدفة
-    document.querySelectorAll('.selected-move-target').forEach(el => el.classList.remove('selected-move-target'));
-
-    displayGeneratedSchedules(); // إعادة عرض لإزالة كلاسات وضع التحرير و contenteditable="true"
-
-    if (saveChanges) {
-        showMessage('تم الخروج من وضع التحرير.', 'info');
-    } else {
-        showMessage('تم إلغاء وضع التحرير.', 'info');
+const activateMoveMode = (lectureElement, lectureFullData) => {
+    // إذا كانت المحاضرة المصدر هي نفسها التي يتم تحديدها مرة أخرى، قم بإلغاء وضع النقل
+    if (sourceLectureElement === lectureElement && isMoveModeActive) {
+        deactivateMoveMode();
+        return;
     }
-    selectedLectureForMove = null;
-    // تم إلغاء editingLectureId = null;
-    console.log(`[Edit Mode] Disabled. Save changes: ${saveChanges}`);
+    
+    // إلغاء أي وضع نقل سابق قبل تفعيل وضع نقل جديد
+    if (isMoveModeActive) {
+        deactivateMoveMode();
+    }
+
+    isMoveModeActive = true;
+    lectureToMoveData = lectureFullData;
+    sourceLectureElement = lectureElement;
+
+    sourceLectureElement.classList.add('moving-source-lecture'); // تمييز المحاضرة المصدر
+    showMessage(`وضع النقل مفعل للمحاضرة "${lectureFullData.courseName}". انقر على خلية فارغة لنقلها.`, 'info', 5000);
+    
+    prepareTargetCells(); // تمييز الخلايا المستهدفة
 };
 
+const deactivateMoveMode = () => {
+    isMoveModeActive = false;
+    lectureToMoveData = null;
+    if (sourceLectureElement) {
+        sourceLectureElement.classList.remove('moving-source-lecture');
+    }
+    sourceLectureElement = null;
+    
+    clearTargetCellHighlighting(); // إزالة التمييز من جميع الخلايا
+    showMessage('تم إلغاء وضع النقل.', 'info', 3000);
+};
 
-// تم إلغاء الدالة attachClickListenersForModal بالكامل
+const prepareTargetCells = () => {
+    clearTargetCellHighlighting(); // مسح أي تمييز سابق
 
-const handleLectureClickForModal = (e) => {
-    if (!editMode) return;
+    const allCells = document.querySelectorAll('.schedule-table-cell');
+    allCells.forEach(cell => {
+        const targetDay = cell.getAttribute('data-day');
+        const targetTimeSlot = cell.getAttribute('data-timeslot');
+        // يتم جلب doctorId من الأب المباشر (tbody) ثم الأب الذي يمثل جدول الدكتور (card)
+        const targetDoctorId = parseInt(cell.closest('.doctor-schedule-card').id.replace('doctor-schedule-', ''));
 
-    const lectureCard = e.currentTarget;
-    // تم إلغاء editingLectureId = lectureCard.getAttribute('data-lecture-id');
+        const targetDoctor = doctors.find(d => d.id === targetDoctorId);
+        // البحث عن القاعة بالاسم الموجود في بيانات المحاضرة التي سيتم نقلها
+        const targetRoom = rooms.find(r => r.name === lectureToMoveData.roomName); 
+        
+        // جلب div رسالة التغذية الراجعة
+        const feedbackDiv = cell.querySelector('.move-target-feedback');
+        if (!feedbackDiv) { // إذا لم يكن موجوداً، أضفه (للتأكد فقط، تم إضافة الهيكل في HTML)
+            const newFeedbackDiv = document.createElement('div');
+            newFeedbackDiv.className = 'move-target-feedback';
+            cell.appendChild(newFeedbackDiv);
+        }
 
+        // لا يمكن النقل إلى خلية تحتوي على محاضرة بالفعل
+        if (cell.classList.contains('has-lecture')) {
+            cell.classList.add('invalid-move-target');
+            cell.querySelector('.move-target-feedback').textContent = 'محجوزة';
+            return;
+        }
+
+        // لا يمكن النقل إلى نفس المكان
+        const sourceDay = lectureToMoveData.originalDay;
+        const sourceTimeSlot = lectureToMoveData.originalTimeSlot;
+        const sourceDoctorId = lectureToMoveData.doctorId;
+        if (targetDay === sourceDay && targetTimeSlot === sourceTimeSlot && targetDoctorId === sourceDoctorId) {
+            cell.classList.add('invalid-move-target');
+            cell.querySelector('.move-target-feedback').textContent = 'المكان الأصلي';
+            return;
+        }
+
+        // --- إجراء التحقق من التوفر باستخدام نسخ مؤقتة من الجداول ---
+        const tempDoctorSchedules = JSON.parse(JSON.stringify(doctorSchedules));
+        const tempRoomAvailability = JSON.parse(JSON.stringify(roomAvailability));
+        const tempDoctors = JSON.parse(JSON.stringify(doctors));
+
+        // محاكاة إزالة المحاضرة من مكانها الأصلي في النسخ المؤقتة
+        const originalLectureRoomId = lectureToMoveData.roomId; // يجب أن تكون roomId محفوظة
+        const originalDoctorObj = tempDoctors.find(d => d.id === lectureToMoveData.doctorId);
+        if (originalDoctorObj) {
+            originalDoctorObj.assignedHours -= lectureToMoveData.durationMinutes;
+            const originalLectureStartSlotIndex = timeSlots.indexOf(lectureToMoveData.originalTimeSlot);
+            for (let i = 0; i < lectureToMoveData.slotsOccupied; i++) {
+                const currentOriginalSlot = timeSlots[originalLectureStartSlotIndex + i];
+                if (currentOriginalSlot && tempDoctorSchedules[originalDoctorObj.id] && tempDoctorSchedules[originalDoctorObj.id][sourceDay]) {
+                    tempDoctorSchedules[originalDoctorObj.id][sourceDay][currentOriginalSlot] = null;
+                }
+            }
+        }
+        if (tempRoomAvailability[originalLectureRoomId] && tempRoomAvailability[originalLectureRoomId][sourceDay]) {
+             const originalLectureStartSlotIndex = timeSlots.indexOf(lectureToMoveData.originalTimeSlot);
+            for (let i = 0; i < lectureToMoveData.slotsOccupied; i++) {
+                const currentOriginalSlot = timeSlots[originalLectureStartSlotIndex + i];
+                if (currentOriginalSlot) {
+                    tempRoomAvailability[originalLectureRoomId][sourceDay][currentOriginalSlot] = true;
+                }
+            }
+        }
+
+        // محاكاة إضافة المحاضرة للمكان الجديد في النسخ المؤقتة (إذا كان الدكتور مختلفاً، يجب تعديل Assigned Hours في النسخة المؤقتة)
+        let doctorForValidation = targetDoctor;
+        // إذا كان النقل سيتم لدكتور مختلف، يجب ضبط ساعاته المجدولة مؤقتاً قبل التحقق
+        if (targetDoctor.id !== lectureToMoveData.doctorId) {
+            doctorForValidation = { ...targetDoctor }; // إنشاء نسخة لعدم تعديل الأصل
+            doctorForValidation.assignedHours += lectureToMoveData.durationMinutes;
+        }
+
+        const doctorAvailable = isDoctorAvailable(doctorForValidation, targetDay, targetTimeSlot, lectureToMoveData.durationMinutes, tempDoctorSchedules);
+        const roomAvailable = isRoomAvailable(targetRoom, targetDay, targetTimeSlot, lectureToMoveData.durationMinutes, tempRoomAvailability);
+
+        let reason = '';
+        if (!doctorAvailable) {
+            reason = 'الدكتور غير متاح';
+        } else if (!roomAvailable) {
+            reason = 'القاعة غير متاحة';
+        }
+
+        if (doctorAvailable && roomAvailable) {
+            // التحقق من أن الفترات الزمنية اللازمة متاحة في المكان الجديد
+            const startIndexInSlots = timeSlots.indexOf(targetTimeSlot);
+            const slotsNeeded = lectureToMoveData.slotsOccupied;
+            let targetSlotsClear = true;
+
+            for (let i = 0; i < slotsNeeded; i++) {
+                const currentCheckSlot = timeSlots[startIndexInSlots + i];
+                if (!currentCheckSlot || (tempDoctorSchedules[targetDoctorId] && tempDoctorSchedules[targetDoctorId][targetDay] && tempDoctorSchedules[targetDoctorId][targetDay][currentCheckSlot]) || (tempRoomAvailability[targetRoom.id] && tempRoomAvailability[targetRoom.id][targetDay] && !tempRoomAvailability[targetRoom.id][targetDay][currentCheckSlot])) {
+                    targetSlotsClear = false;
+                    reason = 'فترات زمنية محجوزة';
+                    break;
+                }
+            }
+
+            if (targetSlotsClear) {
+                cell.classList.add('valid-move-target');
+                cell.querySelector('.move-target-feedback').textContent = ''; // إخفاء الرسالة
+            } else {
+                cell.classList.add('invalid-move-target');
+                cell.querySelector('.move-target-feedback').textContent = 'لا يمكن النقل: ' + reason;
+            }
+        } else {
+            cell.classList.add('invalid-move-target');
+            cell.querySelector('.move-target-feedback').textContent = 'لا يمكن النقل: ' + reason;
+        }
+    });
+};
+
+const clearTargetCellHighlighting = () => {
+    document.querySelectorAll('.schedule-table-cell').forEach(cell => {
+        cell.classList.remove('valid-move-target', 'invalid-move-target');
+        const feedbackDiv = cell.querySelector('.move-target-feedback');
+        if (feedbackDiv) {
+            feedbackDiv.textContent = '';
+            feedbackDiv.style.opacity = 0; // إخفاء الرسالة
+        }
+    });
+};
+
+// وظيفة معالجة النقر على خلايا الجدول في وضع النقل
+const handleCellClickForMove = (event) => {
+    if (!isMoveModeActive) return; // تأكد أن وضع النقل مفعّل
+
+    const targetCell = event.currentTarget;
+    const feedbackDiv = targetCell.querySelector('.move-target-feedback');
+
+    if (targetCell.classList.contains('valid-move-target')) {
+        const targetDay = targetCell.getAttribute('data-day');
+        const targetTimeSlot = targetCell.getAttribute('data-timeslot');
+        const targetDoctorId = parseInt(targetCell.closest('.doctor-schedule-card').id.replace('doctor-schedule-', '')); // جلب ID الدكتور الجديد
+        const targetRoomName = lectureToMoveData.roomName; // القاعة تبقى كما هي، فقط تتغير الخلية (للتأكد)
+
+        // استدعاء دالة نقل المحاضرة الفعلية
+        performLectureMove(lectureToMoveData, targetDay, targetTimeSlot, targetDoctorId, targetRoomName);
+
+        deactivateMoveMode(); // إلغاء وضع النقل بعد النقل الناجح
+    } else if (targetCell.classList.contains('invalid-move-target')) {
+        // إذا كانت الخلية غير متاحة، أظهر الرسالة المحددة لها
+        if (feedbackDiv && feedbackDiv.textContent) {
+            showMessage(feedbackDiv.textContent, 'warning', 3000);
+        } else {
+            showMessage('لا يمكن نقل المحاضرة إلى هذه الخلية.', 'warning', 3000);
+        }
+    } else {
+        // إذا نقر المستخدم على خلية عادية ليست مصنفة (محتملة الخطأ)
+        showMessage('يرجى اختيار خلية متاحة للنقل.', 'info', 3000);
+    }
+};
+
+// وظيفة معالجة النقر على زر النقل
+const handleMoveLectureButtonClick = (event) => {
+    const lectureCard = event.currentTarget.closest('.schedule-slot'); // الحصول على بطاقة المحاضرة الأب
     const doctorId = parseInt(lectureCard.getAttribute('data-doctor-id'));
     const day = lectureCard.getAttribute('data-original-day');
     const timeSlot = lectureCard.getAttribute('data-original-timeslot');
 
     const lectureData = doctorSchedules[doctorId][day][timeSlot];
     if (lectureData) {
-        // تم إلغاء استدعاء openEditModal(lectureData);
+        activateMoveMode(lectureCard, lectureData); // تفعيل وضع النقل
     } else {
-        showMessage('خطأ: لم يتم العثور على بيانات المحاضرة.', 'error');
-        console.error('Lecture data not found for clicked card:', lectureCard);
+        showMessage('خطأ: لم يتم العثور على بيانات المحاضرة للنقل.', 'error');
+        console.error('Lecture data not found for move button click:', lectureCard);
     }
+    event.stopPropagation(); // منع انتشار النقر إلى الخلية (TD) الأب
 };
 
+// وظيفة تنفيذ النقل الفعلي للمحاضرة في البيانات
+const performLectureMove = (lectureData, targetDay, targetTimeSlot, targetDoctorId, targetRoomName) => {
+    // بيانات المحاضرة القديمة
+    const originalDoctorId = lectureData.doctorId;
+    const originalDay = lectureData.originalDay;
+    const originalTimeSlot = lectureData.originalTimeSlot;
+    const originalLectureRoomId = lectureData.roomId; // تأكد أن roomId موجود في lectureData
 
-// تم إلغاء جميع وظائف المودال والمتغيرات المتعلقة به (بدءًا من const editModal إلى نهاية removeLectureFromSchedule)
+    // العثور على عنصر الغرفة الجديدة (يجب أن يكون موجوداً)
+    const newRoomObj = rooms.find(r => r.name === targetRoomName);
+    if (!newRoomObj) {
+        showMessage('خطأ: لم يتم العثور على بيانات الغرفة المستهدفة.', 'error');
+        console.error('Target room object not found by name:', targetRoomName);
+        return;
+    }
+    const newRoomId = newRoomObj.id; // استخراج ID الغرفة الجديدة
+
+    // تحديث assignedHours للدكاترة القديم والجديد
+    const oldDoctorGlobal = doctors.find(d => d.id === originalDoctorId);
+    if (oldDoctorGlobal) {
+        oldDoctorGlobal.assignedHours -= lectureData.durationMinutes;
+    }
+    const newDoctorGlobal = doctors.find(d => d.id === targetDoctorId);
+    if (newDoctorGlobal) {
+        newDoctorGlobal.assignedHours += lectureData.durationMinutes;
+    }
+
+    // إزالة المحاضرة من مكانها الأصلي في الجداول الدائمة
+    const originalLectureStartSlotIndex = timeSlots.indexOf(originalTimeSlot);
+    for (let i = 0; i < lectureData.slotsOccupied; i++) {
+        const currentOriginalSlot = timeSlots[originalLectureStartSlotIndex + i];
+        if (currentOriginalSlot) {
+            if (schedule[originalDay] && schedule[originalDay][currentOriginalSlot] && schedule[originalDay][currentOriginalSlot][originalLectureRoomId]) {
+                delete schedule[originalDay][currentOriginalSlot][originalLectureRoomId];
+            }
+            if (roomAvailability[originalLectureRoomId] && roomAvailability[originalLectureRoomId][originalDay]) {
+                roomAvailability[originalLectureRoomId][originalDay][currentOriginalSlot] = true;
+            }
+            if (doctorSchedules[originalDoctorId] && doctorSchedules[originalDoctorId][originalDay]) {
+                doctorSchedules[originalDoctorId][originalDay][currentOriginalSlot] = null;
+            }
+        }
+    }
+
+    // إضافة المحاضرة إلى المكان الجديد في الجداول الدائمة
+    const newLectureData = {
+        ...lectureData, // نسخ البيانات الأصلية
+        doctorId: targetDoctorId,
+        doctorName: newDoctorGlobal.name, // تحديث اسم الدكتور
+        roomName: newRoomObj.name, // تحديث اسم القاعة
+        roomId: newRoomId, // تحديث ID القاعة
+        originalDay: targetDay, // تحديث اليوم الأصلي ليعكس الموقع الجديد
+        originalTimeSlot: targetTimeSlot, // تحديث الوقت الأصلي ليعكس الموقع الجديد
+        startTime: targetTimeSlot // وقت بداية المحاضرة الجديد
+    };
+
+    const targetLectureStartSlotIndex = timeSlots.indexOf(targetTimeSlot);
+    for (let i = 0; i < lectureData.slotsOccupied; i++) {
+        const currentTargetSlot = timeSlots[targetLectureStartSlotIndex + i];
+        if (currentTargetSlot) {
+            if (!schedule[targetDay]) schedule[targetDay] = {};
+            if (!schedule[targetDay][currentTargetSlot]) schedule[targetDay][currentTargetSlot] = {};
+            schedule[targetDay][currentTargetSlot][newRoomId] = newLectureData; // استخدام newRoomId
+
+            if (!roomAvailability[newRoomId]) roomAvailability[newRoomId] = {};
+            if (!roomAvailability[newRoomId][targetDay]) roomAvailability[newRoomId][targetDay] = {};
+            roomAvailability[newRoomId][targetDay][currentTargetSlot] = false;
+
+            if (!doctorSchedules[targetDoctorId]) doctorSchedules[targetDoctorId] = {};
+            if (!doctorSchedules[targetDoctorId][targetDay]) doctorSchedules[targetDoctorId][targetDay] = {};
+            doctorSchedules[targetDoctorId][targetDay][currentTargetSlot] = newLectureData;
+        }
+    }
+
+    saveData('generatedSchedule', schedule);
+    saveData('doctorSchedules', doctorSchedules);
+    saveData('doctors', doctors);
+    saveData('rooms', rooms); // حفظ تحديثات أسماء الغرف إذا حدثت (أقل أهمية هنا)
+
+    showMessage('تم نقل المحاضرة بنجاح!', 'success');
+    displayGeneratedSchedules(); // إعادة عرض الجداول لتعكس التغييرات
+};
 
 
 const addContentEditableListeners = () => {
