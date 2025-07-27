@@ -180,7 +180,7 @@
                         <form id="section-form">
                             <div class="form-group">
                                 <label for="section-name">اسم الشعبة:</label>
-                                <input type="text" id="section-name" class="form-control" required>
+                                <input type="text" id="section-name" class="form-control" placeholder="مثال: الشعبة أ">
                             </div>
                             <div class="form-group">
                                 <label for="section-students">عدد الطلاب:</label>
@@ -200,6 +200,21 @@
                             </div>
                             <button type="submit" id="section-form-submit-btn" class="btn btn-primary"><i class="fas fa-user-friends"></i> إضافة شعبة</button>
                         </form>
+
+                        <div class="card-header" style="margin-top: 40px;">
+                            <h2 style="font-size: 1.2rem;"><i class="fas fa-plus-circle"></i> إنشاء شُعب متعددة تلقائياً</h2>
+                        </div>
+                        <div class="card-body" style="padding-top: 20px;">
+                            <div class="form-group">
+                                <p>سيتم إنشاء الشعب تلقائيًا باستخدام **المقرر و الدكتور و عدد الطلاب** المحددين أعلاه.</p>
+                                <label for="num-sections-to-generate">عدد الشُعب المراد إنشاؤها (مثال: 5):</label>
+                                <input type="number" id="num-sections-to-generate" class="form-control" min="1" value="1">
+                                <div id="num-sections-to-generate-error" class="field-error"></div>
+                            </div>
+                            <button type="button" id="generate-multiple-sections-btn" class="btn btn-success"><i class="fas fa-magic"></i> إنشاء شُعب تلقائياً</button>
+                        </div>
+
+
                         <div class="items-list-container" style="margin-top: 30px;">
                             <h3>الشُعب المسجلة:</h3>
                             <div id="sections-list" class="items-list">
