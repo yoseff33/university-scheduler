@@ -9,7 +9,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    scroll-behavior: smooth;
+    scroll-behavior: smooth; /* لتحريك سلس عند التنقل */
 }
 
 /* تعريف لوحة الألوان الجديدة كمتغيرات CSS مع درجات إضافية وقيم RGB */
@@ -90,7 +90,7 @@
 /* Base Body Styles */
 html {
     /* الحل لمشكلة اهتزاز الشاشة: اجعل شريط التمرير العمودي يظهر دائمًا */
-    overflow-y: scroll;
+    overflow-y: scroll; 
     /* تعيين حجم الخط الأساسي لكل الـ rem units */
     font-size: 100%; /* يعادل 16px افتراضياً، سيتم تعديله في نقاط التوقف */
 }
@@ -130,6 +130,7 @@ body {
 }
 
 /* Custom Scrollbar for Firefox */
+/* تمت إضافة overflow-y: scroll; في الـ html الأعلى */
 html {
     scrollbar-width: thin;
     scrollbar-color: #90A4AE var(--bg-medium);
@@ -169,13 +170,15 @@ html {
 .nav-brand {
     display: flex;
     align-items: center;
-    gap: 15px;
-    font-size: 2rem;
+    gap: 10px; /* تقليل المسافة بين الأيقونة والنص لتوفير مساحة */
+    /* تصغير حجم الخط للشعار في الحالة الافتراضية (للشاشات الكبيرة) */
+    font-size: 1.6rem; /* تم تصغيره من 1.8rem */
     font-weight: 800;
     color: var(--primary-dark);
     text-decoration: none;
     transition: all var(--transition-speed) ease;
-    letter-spacing: -0.8px;
+    white-space: nowrap; /* منع انقسام النص إلى سطرين */
+    letter-spacing: -0.5px; /* تقليل التباعد بين الحروف قليلاً */
     text-shadow: 1px 1px 2px rgba(var(--black-rgb),0.05);
 }
 
@@ -186,11 +189,12 @@ html {
 
 /* Adjust brand size on shrink */
 .navbar.shrink .nav-brand {
-    font-size: 1.7rem;
+    font-size: 1.3rem; /* حجم أصغر للشعار عند الانكماش (كان 1.5rem) */
 }
 
 .nav-brand i {
-    font-size: 2.5rem;
+    /* تصغير حجم الأيقونة في الحالة الافتراضية */
+    font-size: 1.9rem; /* تم تصغيره من 2.1rem */
     background: linear-gradient(45deg, var(--accent-color), var(--accent-dark));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -202,7 +206,7 @@ html {
 
 /* Adjust brand icon size on shrink */
 .navbar.shrink .nav-brand i {
-    font-size: 2.1rem;
+    font-size: 1.6rem; /* حجم أصغر لأيقونة الشعار عند الانكماش (كان 1.8rem) */
 }
 
 /* Mobile Navigation Toggle (Hamburger Icon) */
@@ -1394,97 +1398,10 @@ html {
 /* --- Responsive Design --- */
 
 /* Mobile-first approach: General styles apply to small screens first */
-/* Base html font-size for mobile devices */
-html {
-    font-size: 87.5%; /* 14px for smaller screens (14/16 = 0.875) */
-    overflow-y: scroll; /* Fix: Ensure scrollbar is always visible */
-}
-
-/* Tablet (Portrait & Landscape) and smaller Desktops */
-@media (min-width: 481px) and (max-width: 992px) {
-    html {
-        font-size: 93.75%; /* 15px for tablets */
-    }
-    .main-content {
-        padding: 30px 20px;
-    }
-    .nav-container {
-        padding: 0 20px;
-    }
-    .nav-menu {
-        gap: 15px;
-    }
-    /* Keep Navbar horizontal on tablets, but refine sizes */
-    .nav-brand {
-        font-size: 1.7rem;
-    }
-    .nav-brand i {
-        font-size: 2.1rem;
-    }
-    .nav-link {
-        font-size: 1rem;
-        padding: 10px 18px;
-    }
-    .hero-content h1 {
-        font-size: clamp(2.2rem, 5vw, 3.5rem);
-    }
-    .hero-content p {
-        font-size: clamp(1rem, 2vw, 1.3rem);
-    }
-    .page-header h1 {
-        font-size: clamp(2rem, 4.5vw, 3.2rem);
-    }
-    .page-header p {
-        font-size: clamp(1.1rem, 2.2vw, 1.3rem);
-    }
-    .features-grid, .stats-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 30px;
-    }
-    .item-card, .report-card {
-        padding: 20px;
-    }
-    .schedule-table th, .schedule-table td {
-        padding: 12px;
-        font-size: 0.85rem;
-    }
-    .schedule-slot {
-        padding: 10px;
-        font-size: 0.8rem;
-    }
-}
-
-
-/* Desktops and larger screens */
-@media (min-width: 993px) {
-    html {
-        font-size: 100%; /* Default 16px for desktops */
-    }
-    /* Ensure Navbar menu is displayed horizontally on larger screens */
-    .nav-toggle-button {
-        display: none;
-    }
-    .nav-menu {
-        display: flex !important; /* Override 'display: none' from mobile-first approach if JS fails */
-        flex-direction: row;
-        position: static;
-        top: auto;
-        right: auto;
-        width: auto;
-        background: none;
-        backdrop-filter: none;
-        box-shadow: none;
-        padding: 0;
-        border-top: none;
-        animation: none;
-    }
-}
-
-
-/* Mobile Devices (max-width: 480px) - التعديلات الرئيسية هنا */
+/* Base html font-size for mobile devices (480px and below) */
 @media (max-width: 480px) {
     html {
-        font-size: 81.25%; /* 13px for very small screens (13/16 = 0.8125) */
+        font-size: 81.25%; /* 13px */
     }
     .main-content {
         padding: 20px 10px;
@@ -1542,53 +1459,129 @@ html {
 
     /* Mobile Navbar Specifics - تحسينات الـ Navbar للجوالات الصغيرة */
     .nav-container {
-        flex-direction: row; /* الشعار وزر الهامبرغر بجانب بعضهما */
+        flex-direction: row;
         justify-content: space-between;
         padding: 10px;
-        height: 60px; /* ارتفاع ثابت للـ Navbar على الجوال */
+        height: 60px;
     }
     .nav-brand {
-        font-size: 1.2rem; /* تصغير حجم الشعار بشكل ملحوظ */
-        gap: 8px;
+        font-size: 1.1rem; /* تم تصغيره لـ 1.1rem */
+        gap: 5px;
     }
     .nav-brand i {
-        font-size: 1.5rem; /* تصغير حجم أيقونة الشعار */
+        font-size: 1.3rem; /* تم تصغيره لـ 1.3rem */
     }
     .nav-menu {
-        /* سيتم التحكم بها بواسطة JavaScript للإظهار/الإخفاء */
-        display: none; /* مخفية افتراضياً */
-        position: absolute; /* لجعلها تظهر فوق المحتوى */
-        top: 60px; /* تحت الـ Navbar مباشرة */
+        display: none;
+        position: absolute;
+        top: 60px;
         right: 0;
         width: 100%;
         box-shadow: var(--shadow-md);
-        background: rgba(var(--white-rgb), 0.98); /* خلفية متطابقة مع الـ Navbar */
+        background: rgba(var(--white-rgb), 0.98);
         backdrop-filter: blur(20px);
-        flex-direction: column; /* الروابط عمودية */
-        padding: 15px 0; /* تباعد رأسي */
-        border-radius: 0; /* لا يوجد زوايا للتبويبات المنبثقة */
+        flex-direction: column;
+        padding: 15px 0;
+        border-radius: 0;
     }
     .nav-menu li {
-        width: 100%; /* الروابط تأخذ عرض 100% */
+        width: 100%;
     }
     .nav-link {
         width: 100%;
-        text-align: right; /* محاذاة لليمين */
-        padding: 10px 20px; /* تباعد أكبر للروابط في القائمة المنبثقة */
-        font-size: 0.9rem; /* حجم خط مناسب للروابط */
-        justify-content: flex-end; /* لترتيب الأيقونة والنص إلى اليمين في RTL */
+        text-align: right;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        justify-content: flex-end;
     }
-    .nav-link::after { /* إزالة أو تعديل تأثير التسطير في القائمة المنبثقة إذا كان مزعجاً */
-        display: none; /* إخفاء التسطير للروابط في القائمة المنبثقة */
+    .nav-link::after {
+        display: none;
     }
     .nav-toggle-button {
-        display: block; /* إظهار زر الهامبرغر */
+        display: block;
         font-size: 1.8rem;
     }
     .navbar.shrink {
-        height: 60px; /* الارتفاع يبقى ثابت على الجوال حتى عند التمرير */
+        height: 60px;
         padding-top: 0;
         padding-bottom: 0;
+    }
+}
+
+/* Tablet (Portrait & Landscape) and smaller Desktops (481px to 992px) */
+@media (min-width: 481px) and (max-width: 992px) {
+    html {
+        font-size: 93.75%; /* 15px */
+    }
+    .main-content {
+        padding: 30px 20px;
+    }
+    .nav-container {
+        padding: 0 20px;
+    }
+    .nav-brand {
+        font-size: 1.4rem; /* تم تصغيره لـ 1.4rem */
+        gap: 8px;
+    }
+    .nav-brand i {
+        font-size: 1.7rem; /* تم تصغيره لـ 1.7rem */
+    }
+    .nav-link {
+        font-size: 1rem;
+        padding: 10px 18px;
+    }
+    .hero-content h1 {
+        font-size: clamp(2.2rem, 5vw, 3.5rem);
+    }
+    .hero-content p {
+        font-size: clamp(1rem, 2vw, 1.3rem);
+    }
+    .page-header h1 {
+        font-size: clamp(2rem, 4.5vw, 3.2rem);
+    }
+    .page-header p {
+        font-size: clamp(1.1rem, 2.2vw, 1.3rem);
+    }
+    .features-grid, .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+    }
+    .item-card, .report-card {
+        padding: 20px;
+    }
+    .schedule-table th, .schedule-table td {
+        padding: 12px;
+        font-size: 0.85rem;
+    }
+    .schedule-slot {
+        padding: 10px;
+        font-size: 0.8rem;
+    }
+}
+
+
+/* Desktops and larger screens (min-width: 993px) */
+@media (min-width: 993px) {
+    html {
+        font-size: 100%; /* Default 16px */
+    }
+    /* هنا لا حاجة لتصغير إضافي للشعار لأن القيم الافتراضية أصبحت أصغر */
+    .nav-toggle-button {
+        display: none;
+    }
+    .nav-menu {
+        display: flex !important;
+        flex-direction: row;
+        position: static;
+        top: auto;
+        right: auto;
+        width: auto;
+        background: none;
+        backdrop-filter: none;
+        box-shadow: none;
+        padding: 0;
+        border-top: none;
+        animation: none;
     }
 }
 
