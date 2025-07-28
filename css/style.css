@@ -61,7 +61,7 @@ body {
     background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-medium) 100%);
     /* تم تغيير نمط الخلفية أو إزالته إذا كان مزعجًا، يمكن تخصيصها لاحقًا */
     /* background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e0e0e0' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 54v-4h-2v4H0v2h4v4h2v-4h4v-2H6zM6-20v4h-2v-4H0v-2h4v-4h2v4h4v2H6zM36-20v4h-2v-4h-4v-2h4v-4h2v4h4v2h-4zM6 4v-4h-2v4H0v2h4v4h2v-4h4V6H6z'/%3E%3C/g%3E%3C/g%3E%3Csvg%3E"); */
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B0BEC5' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 54v-4h-2v4H0v2h4v4h2v-4h4v-2H6zM6-20v4h-2v-4H0v-2h4v-4h2v4h4v2H6zM36-20v4h-2v-4h-4v-2h4v-4h2v4h4v2h-4zM6 4v-4h-2v4H0v2h4v4h2v-4h4V6H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B0BEC5' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 54v-4h-2v4H0v2h4v4h2v-4h4v-2H6zM6-20v4h-2v-4H0v-2h4v-4h2v4h4v2H6zM36-20v4h-2v-4h-4v-2h4v-4h2v4h4v2h-4zM6 4v-4h-2v4H0v2h4v4h2v-4h4V6H6z'/%3E%3C/g%3E%3C/g%3E%3Csvg%3E");
     
     min-height: 100vh;
     color: var(--text-medium);
@@ -101,9 +101,9 @@ html {
 
 /* --- Navbar (Sleek and Professional) --- */
 .navbar {
-    background: rgba(255, 255, 255, 0.99);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.99); /* خلفية بيضاء شبه شفافة */
+    backdrop-filter: blur(20px); /* تأثير ضبابي */
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1); /* ظل كبير وأنيق */
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -115,7 +115,7 @@ html {
 /* Navbar shrinking effect on scroll */
 .navbar.shrink {
     height: 60px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08); /* ظل أصغر عند الانكماش */
 }
 
 .nav-container {
@@ -134,7 +134,7 @@ html {
     gap: 15px;
     font-size: 2rem;
     font-weight: 800;
-    color: var(--primary-dark);
+    color: var(--primary-dark); /* لون العلامة التجارية من اللوحة الجديدة */
     text-decoration: none;
     transition: all 0.3s ease;
     letter-spacing: -0.8px;
@@ -142,7 +142,7 @@ html {
 }
 
 .nav-brand:hover {
-    color: var(--primary-color);
+    color: var(--primary-color); /* يتغير للون الأساسي عند التمرير */
     transform: translateY(-3px);
 }
 
@@ -153,7 +153,7 @@ html {
 
 .nav-brand i {
     font-size: 2.5rem;
-    color: var(--accent-color);
+    color: var(--accent-color); /* أيقونة بلون مميز */
     transition: all 0.3s ease;
     filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.1));
 }
@@ -172,7 +172,7 @@ html {
 
 .nav-link {
     text-decoration: none;
-    color: var(--text-light);
+    color: var(--text-light); /* لون نص الروابط */
     padding: 12px 22px;
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -187,8 +187,8 @@ html {
 }
 
 .nav-link:hover {
-    background: var(--primary-dark);
-    color: var(--white);
+    background: var(--primary-dark); /* خلفية داكنة عند التمرير */
+    color: var(--white); /* نص أبيض عند التمرير */
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
@@ -201,7 +201,7 @@ html {
     right: 50%;
     width: 0;
     height: 4px;
-    background-color: var(--success-color);
+    background-color: var(--success-color); /* لون خط التسطير من اللوحة الجديدة */
     border-radius: 2px;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transform: translateX(50%);
@@ -971,7 +971,7 @@ html {
 /* استخدام ألوان متناسقة مع اللوحة الجديدة */
 .lecture-color-0 { --lecture-bg-color: #E0F2F7; --lecture-border-color: #99D9F0; } /* Light Blue/Cyan */
 .lecture-color-1 { --lecture-bg-color: #FFF8E6; --lecture-border-color: #FFD25B; } /* Light Yellow/Amber */
-.lecture-color-2 { --lecture-bg-color: #E6F8E6; --lecture-border-color: #A3D9A3; } /* Light Green */
+.lecture-color-2 { --lecture-bg-color: #E6F8E9; --lecture-border-color: #A3D9A3; } /* Light Green */
 .lecture-color-3 { --lecture-bg-color: #FFEEEC; --lecture-border-color: #FFB3A6; } /* Light Red/Coral */
 .lecture-color-4 { --lecture-bg-color: #F0E6F7; --lecture-border-color: #C39BE0; } /* Light Purple */
 .lecture-color-5 { --lecture-bg-color: #E6F3F7; --lecture-border-color: #8FD8ED; } /* Lighter Cyan */
@@ -1509,4 +1509,5 @@ html {
 
 .tab-content.active {
     display: block;
+}
 }
