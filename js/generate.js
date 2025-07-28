@@ -500,8 +500,6 @@ const generateSchedules = () => {
     }
     statusMessageElem.style.display = 'flex';
     displayGeneratedSchedules();
-    // تمرير الصفحة إلى أعلى منطقة المحتوى الرئيسي بعد توليد الجداول
-    document.querySelector('.main-content').scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
 // وظيفة لربط مستمعات الأحداث لأزرار النقل (تُستدعى عند عرض الجداول وفي وضع التحرير)
