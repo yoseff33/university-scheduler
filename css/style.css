@@ -67,6 +67,10 @@
     --radius-md: 12px;
     --radius-lg: 20px;
     --radius-xl: 30px;
+
+    /* متغيرات لسرعة الانتقال والحركة */
+    --transition-speed: 0.3s;
+    --transition-bezier: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* Custom Text Selection Highlight */
@@ -108,7 +112,7 @@ body {
 ::-webkit-scrollbar-thumb {
     background: #90A4AE; /* A soft blue-gray for thumb */
     border-radius: 10px;
-    transition: background 0.3s ease;
+    transition: background var(--transition-speed) ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -131,7 +135,7 @@ html {
     top: 0;
     z-index: 1000;
     height: 75px;
-    transition: all 0.3s ease-in-out;
+    transition: all var(--transition-speed) ease-in-out;
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -139,6 +143,8 @@ html {
 .navbar.shrink {
     height: 60px;
     box-shadow: var(--shadow-md); /* ظل أصغر عند الانكماش */
+    /* تغيير طفيف في الخلفية عند الانكماش */
+    background: rgba(var(--white-rgb), 0.95);
 }
 
 .nav-container {
@@ -159,7 +165,7 @@ html {
     font-weight: 800;
     color: var(--primary-dark); /* لون العلامة التجارية من اللوحة الجديدة */
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
     letter-spacing: -0.8px;
     text-shadow: 1px 1px 2px rgba(var(--black-rgb),0.05); /* استخدام متغير RGB */
 }
@@ -176,8 +182,13 @@ html {
 
 .nav-brand i {
     font-size: 2.5rem;
-    color: var(--accent-color); /* أيقونة بلون مميز */
-    transition: all 0.3s ease;
+    /* تطبيق تدرج لوني على أيقونة العلامة التجارية */
+    background: linear-gradient(45deg, var(--accent-color), var(--accent-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    transition: all var(--transition-speed) ease;
     filter: drop-shadow(1px 1px 1px rgba(var(--black-rgb),0.1)); /* استخدام متغير RGB */
 }
 
@@ -198,7 +209,7 @@ html {
     color: var(--text-light); /* لون نص الروابط */
     padding: 12px 22px;
     border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: all var(--transition-speed) var(--transition-bezier);
     display: flex;
     align-items: center;
     gap: 10px;
@@ -207,12 +218,14 @@ html {
     font-weight: 600;
     font-size: 1.05rem;
     letter-spacing: 0.3px;
+    /* إضافة لمسة انحراف بسيطة على النص */
+    transform: skewX(-2deg);
 }
 
 .nav-link:hover {
     background: var(--primary-dark); /* خلفية داكنة عند التمرير */
     color: var(--white); /* نص أبيض عند التمرير */
-    transform: translateY(-4px) scale(1.02); /* تأثير تحريك وتكبير بسيط */
+    transform: translateY(-4px) scale(1.02) skewX(0deg); /* تأثير تحريك وتكبير مع إزالة الانحراف */
     box-shadow: var(--shadow-md); /* ظل أنيق عند التحويم */
 }
 
@@ -226,7 +239,7 @@ html {
     height: 4px;
     background-color: var(--success-color); /* لون خط التسطير من اللوحة الجديدة */
     border-radius: 2px;
-    transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1); /* تغيير نوع الانتقال لجعلها أنعم */
+    transition: all var(--transition-speed) cubic-bezier(0.075, 0.82, 0.165, 1); /* تغيير نوع الانتقال لجعلها أنعم */
     transform: translateX(50%);
 }
 
@@ -234,6 +247,21 @@ html {
     width: calc(100% - 28px);
     right: 14px;
     transform: translateX(0);
+}
+
+/* Active Nav Link Style */
+.nav-link.active {
+    color: var(--primary-color);
+    background: var(--primary-bg-light);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px) scale(1.01) skewX(0deg); /* تكبير طفيف ومسح الانحراف */
+}
+
+.nav-link.active::after {
+    width: calc(100% - 28px);
+    right: 14px;
+    transform: translateX(0);
+    background-color: var(--primary-color); /* لون متناسق مع Active */
 }
 
 
@@ -321,7 +349,7 @@ html {
     border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
     overflow: hidden;
     box-shadow: var(--shadow-md); /* استخدام نظام الظلال الجديد */
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: all var(--transition-speed) var(--transition-bezier);
     border: 1px solid var(--border-color);
     position: relative;
     will-change: transform, box-shadow; /* تحسين أداء التحريكات */
@@ -336,7 +364,7 @@ html {
     height: 100%;
     background: linear-gradient(45deg, rgba(var(--primary-rgb), 0.05), rgba(var(--accent-rgb), 0.03));
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--transition-speed) ease;
     pointer-events: none; /* لمنع التداخل مع تفاعل الماوس */
 }
 
@@ -362,15 +390,25 @@ html {
 
 .feature-card i {
     font-size: 4.5rem;
-    color: var(--primary-color);
+    /* تطبيق تدرج لوني على أيقونة البطاقة */
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
     margin-bottom: 35px;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: all var(--transition-speed) var(--transition-bezier);
     filter: drop-shadow(2px 2px 3px rgba(var(--black-rgb),0.1)); /* استخدام متغير RGB */
 }
 
 .feature-card:hover i {
     transform: scale(1.25) rotate(20deg);
-    color: var(--accent-color);
+    /* تغيير لون التدرج عند التحويم */
+    background: linear-gradient(45deg, var(--accent-color), var(--accent-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
 }
 
 .feature-card h3 {
@@ -378,18 +416,30 @@ html {
     margin-bottom: 25px;
     color: var(--text-dark);
     font-weight: 700;
-    transition: color 0.3s ease;
+    transition: color var(--transition-speed) ease;
+    /* إضافة تأثير دخول بسيط للعناوين */
+    transform: translateY(0);
+    opacity: 1;
 }
 
 .feature-card:hover h3 {
     color: var(--primary-color);
+    transform: translateY(-5px); /* تحريك العنوان للأعلى عند التحويم */
 }
 
 .feature-card p {
     color: var(--text-medium);
     line-height: 1.7;
     font-size: 1.05rem;
+    /* إضافة تأثير دخول بسيط للفقرات */
+    transform: translateY(0);
+    opacity: 1;
 }
+
+.feature-card:hover p {
+    transform: translateY(-5px); /* تحريك الفقرة للأعلى عند التحويم */
+}
+
 
 /* --- Stats Section --- */
 .stats-section {
@@ -408,7 +458,7 @@ html {
     border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
     text-align: center;
     box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
     border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
@@ -441,15 +491,25 @@ html {
 
 .stat-card i {
     font-size: 3.5rem;
-    color: var(--primary-color);
+    /* تطبيق تدرج لوني على أيقونة الإحصائيات */
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
     margin-bottom: 30px;
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
     position: relative;
     z-index: 1;
     filter: drop-shadow(1px 1px 1px rgba(var(--black-rgb),0.1)); /* استخدام متغير RGB */
 }
 .stat-card:hover i {
-    color: var(--success-color);
+    /* تغيير لون التدرج عند التحويم */
+    background: linear-gradient(45deg, var(--success-color), #388E3C);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
     transform: rotate(7deg) scale(1.15);
 }
 
@@ -527,7 +587,7 @@ html {
     border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
     box-shadow: var(--shadow-md); /* استخدام نظام الظلال الجديد */
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
     border: 1px solid var(--border-color);
     margin-bottom: 40px;
     will-change: box-shadow; /* تحسين أداء التحريكات */
@@ -582,7 +642,7 @@ html {
     border: 2px solid var(--border-color);
     border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
     font-size: 1.1rem;
-    transition: all 0.3s ease-in-out;
+    transition: all var(--transition-speed) ease-in-out;
     background: var(--white);
     color: var(--text-dark);
     box-shadow: inset 0 1px 3px rgba(var(--black-rgb),0.08); /* استخدام متغير RGB */
@@ -602,7 +662,7 @@ html {
     color: var(--text-light);
     opacity: 0.7; /* Make placeholder slightly transparent */
     font-size: 1.05rem; /* Slightly larger for better readability */
-    transition: opacity 0.3s ease;
+    transition: opacity var(--transition-speed) ease;
 }
 
 .form-group input:focus::placeholder,
@@ -691,8 +751,7 @@ html {
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
-    /* transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); */ /* Transition adjusted below */
-    transition: all 0.3s ease-in-out; /* استخدام انتقال أسهل وأكثر سلاسة */
+    transition: all var(--transition-speed) ease-in-out; /* استخدام انتقال أسهل وأكثر سلاسة */
     display: inline-flex;
     align-items: center;
     gap: 12px;
@@ -835,7 +894,7 @@ html {
     margin-bottom: 25px;
     position: relative;
     box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: all var(--transition-speed) var(--transition-bezier);
     will-change: transform, box-shadow, border-color; /* تحسين أداء التحريكات */
 }
 
@@ -1016,7 +1075,7 @@ html {
     margin: 6px;
     font-size: 0.95rem;
     line-height: 1.5;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: all var(--transition-speed) var(--transition-bezier);
     cursor: pointer;
     box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
     position: relative;
@@ -1124,7 +1183,7 @@ html {
     display: flex;
     gap: 8px; /* المسافة بين الأزرار */
     opacity: 0; /* مخفية افتراضياً */
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
     z-index: 5;
     transform: translateY(-5px); /* تأثير بسيط عند الظهور */
 }
@@ -1183,7 +1242,7 @@ html {
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
     background: var(--white);
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
 }
 .filter-controls select:focus,
 .filter-controls input[type="text"]:focus {
@@ -1208,7 +1267,7 @@ html {
     margin-bottom: 20px;
     position: relative;
     box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
     will-change: transform, box-shadow, border-color; /* تحسين أداء التحريكات */
 }
 
@@ -1323,6 +1382,12 @@ html {
     }
     .nav-brand i {
         font-size: 2.2rem;
+    }
+    /* Navbar shrinking effect on smaller screens */
+    .navbar.shrink {
+        height: auto; /* Allow height to adjust if menu is vertical */
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 }
 
@@ -1563,7 +1628,7 @@ html {
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
     display: flex;
     align-items: center;
     gap: 10px;
