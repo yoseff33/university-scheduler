@@ -95,7 +95,7 @@ const hasEnoughBreakTime = (doctorId, day, currentStartTimeMinutes, currentDocto
         if (lectureAtPrevSlot) {
             const lectureStartInPrevSlot = lectureAtPrevSlot.startTime;
             const lectureDurationInPrevSlot = (lectureAtPrevSlot.type === 'long' ? LECTURE_DURATION_LONG : LECTURE_DURATION_SHORT);
-            prevLectureEndTimeMinutes = timeToMinutes(lectureStartInPrevSlot) + lectureDurationInPrev Slot;
+                prevLectureEndTimeMinutes = timeToMinutes(lectureStartInPrevSlot) + lectureDurationInPrevSlot;
             console.log(`[hasEnoughBreakTime] Found previous lecture for doctor ${doctorId} at ${prevSlotToCheck}, ends at ${minutesToTime(prevLectureEndTimeMinutes)}`);
             break;
         }
