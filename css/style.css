@@ -160,7 +160,7 @@ html {
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px; /* تقليل الـ padding الأفقي بشكل أكبر (من 30px إلى 20px) */
+    padding: 0 15px; /* تقليل الـ padding الأفقي بشكل أكبر (من 20px إلى 15px) */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -170,9 +170,9 @@ html {
 .nav-brand {
     display: flex;
     align-items: center;
-    gap: 5px; /* تقليل المسافة بين الأيقونة والنص (من 8px إلى 5px) */
+    gap: 5px;
     /* تصغير حجم الخط للشعار في الحالة الافتراضية (للشاشات الكبيرة) */
-    font-size: 1.4rem; /* تم تصغيره من 1.5rem */
+    font-size: 1.3rem; /* تم تصغيره من 1.4rem */
     font-weight: 800;
     color: var(--primary-dark);
     text-decoration: none;
@@ -189,12 +189,12 @@ html {
 
 /* Adjust brand size on shrink */
 .navbar.shrink .nav-brand {
-    font-size: 1.1rem; /* حجم أصغر للشعار عند الانكماش (كان 1.2rem) */
+    font-size: 1.05rem; /* حجم أصغر للشعار عند الانكماش (كان 1.1rem) */
 }
 
 .nav-brand i {
     /* تصغير حجم الأيقونة في الحالة الافتراضية */
-    font-size: 1.7rem; /* تم تصغيره من 1.8rem */
+    font-size: 1.6rem; /* تم تصغيره من 1.7rem */
     background: linear-gradient(45deg, var(--accent-color), var(--accent-dark));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -206,7 +206,7 @@ html {
 
 /* Adjust brand icon size on shrink */
 .navbar.shrink .nav-brand i {
-    font-size: 1.4rem; /* حجم أصغر لأيقونة الشعار عند الانكماش (كان 1.5rem) */
+    font-size: 1.35rem; /* حجم أصغر لأيقونة الشعار عند الانكماش (كان 1.4rem) */
 }
 
 /* Mobile Navigation Toggle (Hamburger Icon) */
@@ -227,7 +227,7 @@ html {
 .nav-menu {
     display: flex; /* افتراضي للشاشات الكبيرة */
     list-style: none;
-    gap: 15px; /* تقليل الـ gap بين عناصر القائمة (من 20px إلى 15px) */
+    gap: 10px; /* تقليل الـ gap بين عناصر القائمة (من 15px إلى 10px) */
 }
 
 /* حالة فتح القائمة على الجوال */
@@ -252,16 +252,16 @@ html {
 .nav-link {
     text-decoration: none;
     color: var(--text-light);
-    padding: 0.4rem 0.8rem; /* تقليل الـ padding للروابط (من 0.6rem 1rem إلى 0.4rem 0.8rem) */
+    padding: 0.3rem 0.6rem; /* تقليل الـ padding للروابط (من 0.4rem 0.8rem إلى 0.3rem 0.6rem) */
     border-radius: var(--radius-md);
     transition: all var(--transition-speed) var(--transition-bezier);
     display: flex;
     align-items: center;
-    gap: 0.4rem; /* 6px */
+    gap: 0.3rem; /* 5px */
     white-space: nowrap;
     position: relative;
     font-weight: 600;
-    font-size: 0.95rem; /* تم تصغيره من 1rem */
+    font-size: 0.9rem; /* تم تصغيره من 0.95rem */
     letter-spacing: 0.3px;
     transform: skewX(-2deg);
 }
@@ -1457,7 +1457,7 @@ html {
         font-size: 0.65rem;
     }
 
-    /* Mobile Navbar Specifics - تحسينات الـ Navbar للجوالات الصغيرة */
+    /* Mobile Navbar Specifics */
     .nav-container {
         flex-direction: row;
         justify-content: space-between;
@@ -1509,29 +1509,30 @@ html {
 }
 
 /* Tablet (Portrait & Landscape) and smaller Desktops (481px to 992px) */
+/* هذا النطاق يغطي الشاشات التي ذكرت أنها لا تزال تظهر فيها المشكلة (950px مثلاً) */
 @media (min-width: 481px) and (max-width: 992px) {
     html {
-        font-size: 93.75%; /* 15px */
+        font-size: 87.5%; /* تقليل حجم الخط الأساسي (من 93.75% إلى 87.5% - أي من 15px إلى 14px) */
     }
     .main-content {
         padding: 30px 20px;
     }
     .nav-container {
-        padding: 0 20px;
+        padding: 0 15px; /* تقليل الـ padding ليطابق الأنماط الافتراضية الجديدة تقريباً */
     }
     .nav-brand {
-        font-size: 1.3rem; /* تصغيره من 1.4rem */
-        gap: 6px; /* تقليل الـ gap */
+        font-size: 1.2rem; /* تصغيره أكثر (من 1.3rem إلى 1.2rem) */
+        gap: 5px;
     }
     .nav-brand i {
-        font-size: 1.6rem; /* تصغيره من 1.7rem */
+        font-size: 1.5rem; /* تصغيره أكثر (من 1.6rem إلى 1.5rem) */
     }
     .nav-menu {
-        gap: 12px; /* تقليل الـ gap بين عناصر القائمة */
+        gap: 10px; /* تقليل الـ gap بين عناصر القائمة (من 12px إلى 10px) */
     }
     .nav-link {
-        font-size: 0.9rem; /* تصغير حجم خط الروابط (من 0.95rem إلى 0.9rem) */
-        padding: 0.4rem 0.7rem; /* تقليل الـ padding للروابط */
+        font-size: 0.85rem; /* تصغير حجم خط الروابط (من 0.9rem إلى 0.85rem) */
+        padding: 0.3rem 0.6rem; /* تقليل الـ padding للروابط */
     }
     .hero-content h1 {
         font-size: clamp(2.2rem, 5vw, 3.5rem);
@@ -1564,10 +1565,14 @@ html {
 
 
 /* Desktops and larger screens (min-width: 993px) */
-@media (min-width: 950px) {
+/* هذا النطاق هو ما كان يسبب المشكلة الرئيسية في الشاشات الكبيرة جداً */
+@media (min-width: 993px) {
     html {
-        font-size: 100%; /* Default 16px */
+        font-size: 93.75%; /* تقليل حجم الخط الأساسي للشاشات الكبيرة جداً (من 100% إلى 93.75% - أي من 16px إلى 15px) */
     }
+    /* الأنماط الافتراضية (بدون media query) ستطبق هنا أيضاً، ولكن بما أن الـ html font-size
+       قد تم تصغيره هنا، فإن جميع قيم الـ rem ستكون أصغر. */
+
     .nav-toggle-button {
         display: none;
     }
