@@ -526,7 +526,7 @@ function attachCellClickListenersForMove() {
 const displayGeneratedSchedules = () => {
     const scheduleOutput = document.getElementById('schedule-output');
     const noSchedulesMessage = document.getElementById('no-schedules-message');
-    scheduleOutput.innerHTML = '';
+    scheduleOutput.innerHTML = ''; // تأكد من مسح المحتوى بالكامل قبل إعادة الرسم
     noSchedulesMessage.classList.add('hidden');
 
     const daysArabic = {
@@ -978,6 +978,14 @@ const performLectureMove = (lectureData, targetDay, targetTimeSlot, targetDoctor
     saveData('rooms', rooms); // حفظ تحديثات أسماء الغرف إذا حدثت (أقل أهمية هنا)
 
     showMessage('تم نقل المحاضرة بنجاح!', 'success');
+    
+    // الحل لمشكلة التكرار: إزالة العنصر المرئي القديم يدوياً قبل إعادة الرسم
+    // (هذه الخطوة ضرورية لأن innerHTML = '' قد لا يكون كافياً دائماً في بعض المتصفحات للحالة المعقدة)
+    if (sourceLectureElement && sourceLectureElement.parentNode) {
+        sourceLectureElement.parentNode.innerHTML = `<div class="move-target-feedback"></div>`; // مسح محتوى الخلية الأصلية وإعادة عنصر التغذية الراجعة
+        sourceLectureElement.parentNode.classList.remove('has-lecture'); // إزالة فئة has-lecture من الخلية الأصلية
+    }
+
     displayGeneratedSchedules(); // إعادة عرض الجداول لتعكس التغييرات
 };
 
