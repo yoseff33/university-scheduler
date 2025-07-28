@@ -434,7 +434,7 @@ const generateSchedules = () => {
                                         startTime: timeSlot,
                                         durationMinutes: lectureLengthMinutes,
                                         slotsOccupied: slotsNeeded,
-                                        lectureIndex: lectureUnit.lectureIndex,
+                                        lectureIndex: lectureCounter++,
                                         courseCode: course.code,
                                         isLab: course.requiresLab
                                     };
@@ -920,20 +920,6 @@ const performLectureMove = (lectureData, targetDay, targetTimeSlot, targetDoctor
         }
     }
 
-    // **التعديل الجديد لحل مشكلة التكرار البصري:**
-    // قم بمسح المحتوى المرئي في الخلايا الأصلية مباشرة بعد تحديث البيانات
-    // هذا سيعالج أي مشاكل بصرية محتملة قبل إعادة الرسم الكامل
-    const originalStartSlotIndexForClear = timeSlots.indexOf(originalTimeSlot);
-    for (let i = 0; i < lectureData.slotsOccupied; i++) {
-        const currentOriginalSlot = timeSlots[originalStartSlotIndexForClear + i];
-        const cellToClear = document.querySelector(`.schedule-table-cell[data-day="${originalDay}"][data-timeslot="${currentOriginalSlot}"][data-doctorid="${originalDoctorId}"]`);
-        if (cellToClear) {
-            cellToClear.innerHTML = '';
-            cellToClear.classList.remove('has-lecture');
-            cellToClear.removeAttribute('rowspan');
-        }
-    }
-
     const newLectureData = {
         ...lectureData, 
         doctorId: targetDoctorId,
@@ -970,6 +956,29 @@ const performLectureMove = (lectureData, targetDay, targetTimeSlot, targetDoctor
 
     showMessage('تم نقل المحاضرة بنجاح!', 'success');
     
+    // الحل لمشكلة التكرار: إزالة العنصر المرئي القديم يدوياً قبل إعادة الرسم
+    // (هذه الخطوة ضرورية لأن innerHTML = '' قد لا يكون كافياً دائماً في بعض المتصفحات للحالة المعقدة)
+    if (sourceLectureElement && sourceLectureElement.parentNode) {
+        // نجد الخلية (td) الأصلية للمحاضرة
+        const originalCell = sourceLectureElement.parentNode;
+        // نحدد جميع الخلايا التي كانت المحاضرة الأصلية تشغلها (إذا كانت المحاضرة تمتد لأكثر من خانة زمنية)
+        const originalStartSlotIndex = timeSlots.indexOf(originalTimeSlot);
+        for (let i = 0; i < lectureData.slotsOccupied; i++) {
+            const currentOriginalSlot = timeSlots[originalStartSlotIndex + i];
+            // نبحث عن الخلية المطابقة في DOM لليوم والدكتور والقاعة الأصلية
+            const cellToClear = document.querySelector(`.schedule-table-cell[data-day="${originalDay}"][data-timeslot="${currentOriginalSlot}"][data-doctorid="${originalDoctorId}"]`);
+            if (cellToClear) {
+                cellToClear.innerHTML = `<div class="move-target-feedback"></div>`; // مسح المحتوى وإعادة div التغذية الراجعة
+                cellToClear.classList.remove('has-lecture'); // إزالة فئة has-lecture
+                // إذا كانت الخلية الأصلية لديها rowspan، يجب إزالة rowspan من الخلية الأولى وجعل الخلايا التالية مرئية مرة أخرى
+                if (i === 0 && lectureData.slotsOccupied > 1) {
+                    cellToClear.removeAttribute('rowspan');
+                    // ولكن بما أننا سنستدعي displayGeneratedSchedules() لاحقاً، فإنها ستقوم بإعادة بناء الجدول بالكامل
+                }
+            }
+        }
+    }
+
     displayGeneratedSchedules(); 
 };
 
