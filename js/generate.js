@@ -657,7 +657,7 @@ function enableEditMode() {
 
     displayGeneratedSchedules(); 
 
-    // أضف هذا السطر: قم بتمرير الشاشة إلى قسم الجداول المجدولة لضمان ثباتها
+    // **التعديل الجديد لمنع قفز الشاشة:**
     document.getElementById('schedule-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     showMessage('وضع التحرير مفعل. انقر على زر النقل في المحاضرة لتغيير مكانها، أو عدّل النص مباشرة.', 'info', 7000);
@@ -920,16 +920,17 @@ const performLectureMove = (lectureData, targetDay, targetTimeSlot, targetDoctor
         }
     }
 
-    // تصحيح: قم بمسح المحتوى المرئي في الخلايا الأصلية مباشرة بعد تحديث البيانات
+    // **التعديل الجديد لحل مشكلة التكرار البصري:**
+    // قم بمسح المحتوى المرئي في الخلايا الأصلية مباشرة بعد تحديث البيانات
     // هذا سيعالج أي مشاكل بصرية محتملة قبل إعادة الرسم الكامل
     const originalStartSlotIndexForClear = timeSlots.indexOf(originalTimeSlot);
     for (let i = 0; i < lectureData.slotsOccupied; i++) {
         const currentOriginalSlot = timeSlots[originalStartSlotIndexForClear + i];
         const cellToClear = document.querySelector(`.schedule-table-cell[data-day="${originalDay}"][data-timeslot="${currentOriginalSlot}"][data-doctorid="${originalDoctorId}"]`);
         if (cellToClear) {
-            cellToClear.innerHTML = ''; 
-            cellToClear.classList.remove('has-lecture'); 
-            cellToClear.removeAttribute('rowspan'); 
+            cellToClear.innerHTML = '';
+            cellToClear.classList.remove('has-lecture');
+            cellToClear.removeAttribute('rowspan');
         }
     }
 
@@ -1028,4 +1029,143 @@ const handleContentEditableBlur = function() {
             console.log(`[Edit] Lecture data updated: ${field} to "${newText}" for lecture at ${day} ${timeSlot}.`);
         } else {
             showMessage('فشل تحديث بيانات المحاضرة.', 'error');
-            console.error('[Edit
+            console.error('[Edit] Failed to update lecture data: lectureData not found.');
+        }
+    }
+};
+
+
+// --- مستمعات الأحداث للأزرار والتحميل ---
+document.getElementById('generate-schedule-btn').addEventListener('click', generateSchedules);
+
+document.getElementById('export-schedules-btn').addEventListener('click', () => {
+    const doctorScheduleCards = document.querySelectorAll('.doctor-schedule-card');
+    if (doctorScheduleCards.length === 0) {
+        showMessage('لا توجد جداول لتصديرها. الرجاء توليد الجداول أولاً.', 'warning');
+        return;
+    }
+
+    showMessage('جاري تصدير الجداول كصور...', 'info', 5000);
+    console.log('[Export] Starting schedule export.');
+
+    doctorScheduleCards.forEach(card => {
+        html2canvas(card, {
+            scale: 2,
+            logging: false,
+            useCORS: true
+        }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = imgData;
+            const doctorName = card.querySelector('.card-header h2').textContent.replace(' جدول الدكتور: ', '').trim();
+            link.download = `جدول-الدكتور-${doctorName}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            console.log(`[Export] Successfully exported ${doctorName}.`);
+        }).catch(error => {
+            console.error('Error exporting schedule as image for card:', card.id, error);
+            showMessage('حدث خطأ أثناء تصدير الجداول كصور.', 'error');
+        });
+    });
+});
+
+document.getElementById('print-all-schedules-btn').addEventListener('click', () => {
+    const schedulesToPrint = document.getElementById('schedule-output');
+    if (schedulesToPrint && schedulesToPrint.children.length === 0 || schedulesToPrint && document.getElementById('no-schedules-message') && !document.getElementById('no-schedules-message').classList.contains('hidden')) {
+         showMessage('لا توجد جداول لطباعتها. الرجاء توليد الجداول أولاً.', 'warning');
+         return;
+    }
+    
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write('<html><head><title>جداول الدكاترة</title>');
+    printWindow.document.write('<link rel="stylesheet" href="css/style.css">');
+    printWindow.document.write('<link rel="stylesheet" href="css/print.css" media="print">');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write('<div class="main-content">');
+    printWindow.document.write('<h1 style="text-align: center; margin-bottom: 20px;">جداول الدكاترة</h1>');
+    printWindow.document.write(schedulesToPrint.outerHTML);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    console.log('[Print] Initiated print for all schedules.');
+});
+
+
+document.getElementById('clear-schedules-btn').addEventListener('click', () => {
+    if (confirm('هل أنت متأكد من بدء فصل جديد؟ سيتم مسح جميع الجداول المجدولة حالياً! لن يتم مسح بيانات الدكاترة والمقررات والشعب والقاعات.')) {
+        clearData('generatedSchedule');
+        clearData('doctorSchedules');
+        doctors.forEach(doc => doc.assignedHours = 0);
+        saveData('doctors', doctors);
+        sections.forEach(sec => sec.isScheduled = false);
+        saveData('sections', sections);
+
+        displayGeneratedSchedules();
+        showMessage('تم مسح الجداول بنجاح. يمكنك الآن البدء بجدولة فصل جديد.', 'info');
+        document.getElementById('generation-status').innerHTML = '<i class="fas fa-exclamation-triangle"></i> تم مسح الجداول. يمكنك الآن توليد جداول جديدة.';
+        document.getElementById('generation-status').className = 'status-message info';
+        document.getElementById('generation-status').style.display = 'flex';
+        console.log('[Clear] All schedules cleared.');
+    }
+});
+
+
+// زر التبديل لوضع التحرير (Edit Mode Toggle)
+document.getElementById('edit-schedule-btn').addEventListener('click', () => {
+    if (editMode) {
+        disableEditMode(true); // حفظ التغييرات والخروج
+    } else {
+        enableEditMode(); // تفعيل وضع التحرير
+    }
+});
+
+document.getElementById('cancel-edit-btn').addEventListener('click', () => {
+    disableEditMode(false); // إلغاء وضع التحرير بدون حفظ
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const statusMessageElem = document.getElementById('generation-status');
+    const noSchedulesMessage = document.getElementById('no-schedules-message');
+
+    const storedSchedule = getData('generatedSchedule');
+    const storedDoctorSchedules = getData('doctorSchedules');
+    const storedDoctors = getData('doctors');
+    const storedSections = getData('sections');
+
+    if (storedSchedule && Object.keys(storedSchedule).length > 0 &&
+        storedDoctorSchedules && Object.keys(storedDoctorSchedules).length > 0 &&
+        storedDoctors && storedDoctors.length > 0) {
+        
+        Object.assign(schedule, storedSchedule);
+        Object.assign(doctorSchedules, storedDoctorSchedules);
+        doctors = storedDoctors;
+        sections = storedSections;
+
+        rooms.forEach(room => {
+            roomAvailability[room.id] = {};
+            days.forEach(day => {
+                roomAvailability[room.id][day] = {};
+                timeSlots.forEach(slot => {
+                    roomAvailability[room.id][day][slot] = true;
+                    if (schedule[day] && schedule[day][slot] && schedule[day][slot][room.id]) {
+                        roomAvailability[room.id][day][slot] = false;
+                    }
+                });
+            });
+        });
+
+        statusMessageElem.innerHTML = '<i class="fas fa-info-circle"></i> تم تحميل الجداول السابقة.';
+        statusMessageElem.className = 'status-message info';
+        statusMessageElem.style.display = 'flex';
+        displayGeneratedSchedules();
+        console.log('[Load] Previous schedules loaded successfully.');
+    } else {
+        statusMessageElem.innerHTML = '<i class="fas fa-exclamation-triangle"></i> لا توجد جداول سابقة. الرجاء إدخال البيانات وتوليد الجداول.';
+        statusMessageElem.className = 'status-message warning';
+        statusMessageElem.style.display = 'flex';
+        noSchedulesMessage.classList.remove('hidden');
+        console.log('[Load] No previous schedules found.');
+    }
+});
