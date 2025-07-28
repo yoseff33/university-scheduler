@@ -846,9 +846,9 @@ html {
 /* تحديث: إضافة div لرسالة النقل داخل الخلية */
 .schedule-table-cell {
     background: white;
-    min-height: 90px;
+    height: 90px; /* تحديد ارتفاع ثابت للخلايا */
     vertical-align: top;
-    position: relative; /* مهم لوضع زر النقل أو رسالة التغذية الراجعة */
+    position: relative;
     padding: 12px;
 }
 .schedule-table-cell .move-target-feedback {
@@ -916,6 +916,7 @@ html {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     position: relative;
     z-index: 1;
+    height: 80px; /* تحديد ارتفاع ثابت للمحاضرات في الجدول */
 }
 
 .schedule-slot:hover {
