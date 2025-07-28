@@ -47,7 +47,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px; /* تقليل المسافة بين الأيقونة والنص لتوفير مساحة */
-    font-size: 1.8rem; /* تصغير حجم الخط للشعار في الحالة الافتراضية (للشاشات الكبيرة) */
+    font-size: 1.5rem; /* تصغير حجم الخط للشعار في الحالة الافتراضية (للشاشات الكبيرة) */
     font-weight: 800;
     color: var(--primary-dark);
     text-decoration: none;
@@ -64,11 +64,11 @@ body {
 
 /* Adjust brand size on shrink */
 .navbar.shrink .nav-brand {
-    font-size: 1.5rem; /* حجم أصغر للشعار عند الانكماش */
+    font-size: 1.3rem; /* حجم أصغر للشعار عند الانكماش */
 }
 
 .nav-brand i {
-    font-size: 2.1rem; /* تصغير حجم الأيقونة في الحالة الافتراضية */
+    font-size: 1.9rem; /* تصغير حجم الأيقونة في الحالة الافتراضية */
     background: linear-gradient(45deg, var(--accent-color), var(--accent-dark));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
