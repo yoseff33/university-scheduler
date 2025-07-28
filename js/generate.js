@@ -329,7 +329,7 @@ const generateSchedules = () => {
             if (a.durationMinutes === LECTURE_DURATION_SHORT && b.durationMinutes === LECTURE_DURATION_LONG) return 1;  // b (100) comes before a (50)
         }
 
-        // 2. ثم، الأولوية للمقررات التي تتطلب معمل ( لتجد قاعة معمل مبكراً)
+        // 2. ثم، الأولوية للمقررات التي تتطلب معمل (لتجد قاعة معمل مبكراً)
         const courseA = courses.find(c => c.id === a.courseId);
         const courseB = courses.find(c => c.id === b.courseId);
         if (courseA && courseB) {
