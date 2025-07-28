@@ -1,135 +1,125 @@
-/* css/style.css */
+// js/main.js
 
-/* Global Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
-}
-
-/* ... بقية متغيرات الـ :root ... */
-
-/* Base Body Styles */
-html {
-    overflow-y: scroll;
-    font-size: 100%; /* Default 16px */
-}
-
-body {
-    font-family: 'Tajawal', 'Inter', sans-serif;
-    /* ... بقية الأنماط ... */
-}
-
-/* ... بقية أنماط Scrollbar ... */
-
-
-/* --- Navbar (Sleek and Professional) --- */
-.navbar {
-    /* ... أنماط موجودة ... */
-}
-
-.navbar.shrink {
-    /* ... أنماط موجودة ... */
-}
-
-.nav-container {
-    max-width: 1200px; /* يمكن زيادة هذا قليلاً إذا لم ينفع التصغير */
-    margin: 0 auto;
-    padding: 0 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
-}
-
-.nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* تقليل المسافة بين الأيقونة والنص لتوفير مساحة */
-    font-size: 1.5rem; /* تصغير حجم الخط للشعار في الحالة الافتراضية (للشاشات الكبيرة) */
-    font-weight: 800;
-    color: var(--primary-dark);
-    text-decoration: none;
-    transition: all var(--transition-speed) ease;
-    white-space: nowrap; /* منع انقسام النص إلى سطرين */
-    letter-spacing: -0.5px; /* تقليل التباعد بين الحروف قليلاً */
-    text-shadow: 1px 1px 2px rgba(var(--black-rgb),0.05);
-}
-
-.nav-brand:hover {
-    color: var(--primary-color);
-    transform: translateY(-3px) scale(1.02);
-}
-
-/* Adjust brand size on shrink */
-.navbar.shrink .nav-brand {
-    font-size: 1.3rem; /* حجم أصغر للشعار عند الانكماش */
-}
-
-.nav-brand i {
-    font-size: 1.9rem; /* تصغير حجم الأيقونة في الحالة الافتراضية */
-    background: linear-gradient(45deg, var(--accent-color), var(--accent-dark));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-fill-color: transparent;
-    transition: all var(--transition-speed) ease;
-    filter: drop-shadow(1px 1px 1px rgba(var(--black-rgb),0.1));
-}
-
-/* Adjust brand icon size on shrink */
-.navbar.shrink .nav-brand i {
-    font-size: 1.8rem; /* حجم أصغر لأيقونة الشعار عند الانكماش */
-}
-
-/* ... بقية أنماط Navbar ... */
-
-/* --- Responsive Design --- */
-
-/* Mobile-first approach: General styles apply to small screens first */
-/* Base html font-size for mobile devices (480px and below) */
-@media (max-width: 480px) {
-    html {
-        font-size: 81.25%; /* 13px */
+/**
+ * يعرض رسالة توست مؤقتة للمستخدم.
+ * @param {string} message - نص الرسالة.
+ * @param {string} type - نوع الرسالة ('success', 'error', 'warning', 'info').
+ * @param {number} duration - مدة عرض الرسالة بالمللي ثانية (افتراضي 3000).
+ */
+function showMessage(message, type = 'info', duration = 3000) {
+    let toastContainer = document.querySelector('.message-toast-container');
+    if (!toastContainer) {
+        // إذا لم يتم العثور على الحاوية في الـ DOM، قم بإنشائها
+        toastContainer = document.createElement('div');
+        toastContainer.className = 'message-toast-container';
+        document.body.appendChild(toastContainer);
     }
-    .nav-container {
-        padding: 0 10px; /* تباعد أقل جداً على الجوالات */
-        height: 60px;
+
+    const toast = document.createElement('div');
+    // إضافة فئة 'slideInLeft' لبدء الحركة من اليسار (لأن الـ RTL)
+    toast.className = `message-toast ${type} slideInLeft`; 
+    
+    // تحديد الأيقونة بناءً على نوع الرسالة
+    let iconClass = 'fas fa-info-circle'; // افتراضي
+    if (type === 'success') {
+        iconClass = 'fas fa-check-circle';
+    } else if (type === 'error') {
+        iconClass = 'fas fa-times-circle';
+    } else if (type === 'warning') {
+        iconClass = 'fas fa-exclamation-triangle';
     }
-    .nav-brand {
-        font-size: 1.1rem; /* حجم أصغر بكثير للشعار على أصغر الجوالات */
-        gap: 5px; /* مسافة أصغر */
-    }
-    .nav-brand i {
-        font-size: 1.3rem; /* أيقونة أصغر بكثير */
-    }
-    /* ... بقية أنماط الجوال ... */
+    
+    toast.innerHTML = `<div class="message-content"><i class="${iconClass}"></i><span>${message}</span></div>`;
+
+    toastContainer.appendChild(toast); // استخدام toastContainer الذي تم التأكد من وجوده
+
+    // إزالة الرسالة بعد المدة المحددة
+    setTimeout(() => {
+        // إضافة فئة 'slideOutLeft' لتشغيل حركة الاختفاء لليسار (لأن الـ RTL)
+        toast.classList.remove('slideInLeft'); // إزالة حركة الدخول قبل تشغيل الخروج
+        toast.classList.add('slideOutLeft');
+        toast.addEventListener('animationend', () => {
+            toast.remove();
+        }, { once: true }); // استخدام { once: true } لضمان تنفيذ المستمع مرة واحدة فقط
+    }, duration);
 }
 
-/* Tablet (Portrait & Landscape) and smaller Desktops (481px to 992px) */
-@media (min-width: 481px) and (max-width: 992px) {
-    html {
-        font-size: 93.75%; /* 15px */
-    }
-    .nav-container {
-        padding: 0 20px;
-    }
-    .nav-brand {
-        font-size: 1.4rem; /* حجم مناسب للتابلت */
-        gap: 8px;
-    }
-    .nav-brand i {
-        font-size: 1.7rem; /* أيقونة مناسبة للتابلت */
-    }
-    /* ... بقية أنماط التابلت ... */
+/**
+ * يحول الوقت من تنسيق 24 ساعة (HH:MM) إلى تنسيق 12 ساعة (HH:MM AM/PM).
+ * @param {string} time24h - الوقت بتنسيق 24 ساعة (مثال: "13:30").
+ * @returns {string} الوقت بتنسيق 12 ساعة (مثال: "01:30 PM").
+ */
+function convertTo12HourFormat(time24h) {
+    if (!time24h) return '';
+    const [hours, minutes] = time24h.split(':').map(Number);
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const hour12 = hours % 12 || 12; // Converts 0 to 12 for midnight/noon
+    return `${String(hour12).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
 }
 
+// Navbar shrink on scroll logic
+let lastScrollTop = 0; // To track scroll direction for future features
 
-/* Desktops and larger screens (min-width: 993px) */
-@media (min-width: 993px) {
-    html {
-        font-size: 100%; /* Default 16px */
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Main JavaScript loaded.');
+
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        window.addEventListener('scroll', () => {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > 50) { // Shrink after scrolling 50px
+                navbar.classList.add('shrink');
+            } else {
+                navbar.classList.remove('shrink');
+            }
+            lastScrollTop = scrollTop;
+        });
     }
-    /* هنا لا حاجة لتصغير إضافي للشعار لأن القيم الافتراضية أصبحت أصغر */
-}
+
+    // --- كود تفعيل زر الهامبرغر وقائمة التنقل ---
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+
+    if (navToggle && navMenu) { // التأكد من وجود العناصر
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('open'); // تبديل فئة 'open' لإظهار/إخفاء القائمة
+        });
+
+        // إغلاق القائمة عند النقر على رابط (اختياري، ولكن يحسن تجربة المستخدم)
+        navMenu.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('open'); // إزالة فئة 'open' لإغلاق القائمة
+            });
+        });
+    }
+    // --- نهاية كود تفعيل زر الهامبرغر ---
+
+
+    const updateHomepageStats = () => {
+        // تأكد أن دالة getData موجودة في utils.js ويتم تحميلها قبله
+        // إذا لم تكن موجودة بعد، ستحتاج إلى جلبها من مكانها أو تعريفها هنا
+        const doctors = typeof getData !== 'undefined' ? getData('doctors') : [];
+        const courses = typeof getData !== 'undefined' ? getData('courses') : [];
+        const sections = typeof getData !== 'undefined' ? getData('sections') : [];
+        const rooms = typeof getData !== 'undefined' ? getData('rooms') : [];
+        const issueReports = typeof getData !== 'undefined' ? (getData('issueReports') || []) : [];
+
+        const totalDoctorsElement = document.getElementById('total-doctors');
+        const totalCoursesElement = document.getElementById('total-courses');
+        const totalSectionsElement = document.getElementById('total-sections');
+        const totalRoomsElement = document.getElementById('total-rooms');
+        const totalReportsElement = document.getElementById('total-reports');
+        const pendingReportsElement = document.getElementById('pending-reports');
+
+        if (totalDoctorsElement) totalDoctorsElement.textContent = doctors.length;
+        if (totalCoursesElement) totalCoursesElement.textContent = courses.length;
+        if (totalSectionsElement) totalSectionsElement.textContent = sections.length;
+        if (totalRoomsElement) totalRoomsElement.textContent = rooms.length;
+        if (totalReportsElement) totalReportsElement.textContent = issueReports.length;
+        if (pendingReportsElement) pendingReportsElement.textContent = issueReports.filter(r => r.status === 'pending').length;
+    };
+
+    if (document.body.classList.contains('homepage')) {
+        updateHomepageStats();
+    }
+});
