@@ -4,49 +4,50 @@
 @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 
-/* Global Reset */
+/* Global Reset - أساس نظيف ومرن */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    scroll-behavior: smooth; /* لتحريك سلس عند التنقل */
 }
 
-/* تعريف لوحة الألوان الجديدة كمتغيرات CSS مع درجات إضافية وقيم RGB */
+/* تعريف لوحة الألوان الاحترافية كمتغيرات CSS مع درجات RGB لمرونة الشفافية */
 :root {
-    /* ألوان أساسية (Primary) */
-    --primary-color: #00796B; /* Teal - لون أساسي عميق */
-    --primary-dark: #004D40; /* Dark Teal - للعلامة التجارية/النصوص الهامة */
+    /* ألوان أساسية (Primary) - تركيز على الدرجات الهادئة والعميقة */
+    --primary-color: #00796B; /* Teal - لون أساسي غني */
+    --primary-dark: #004D40; /* Dark Teal - للعناوين والأبرز */
     --primary-light: #4DB6AC; /* Light Teal - للتظليل الخفيف */
-    --primary-rgb: 0, 121, 107; /* قيم RGB للتحكم بالشفافية */
-    --primary-bg-light: #E0F2F1; /* خلفية خفيفة جدًا من اللون الأساسي */
-    --primary-bg-medium: #B2DFDB; /* خلفية متوسطة من اللون الأساسي */
+    --primary-rgb: 0, 121, 107; /* قيم RGB للشفافية */
+    --primary-bg-light: #E0F2F1; /* خلفية ناعمة من اللون الأساسي */
+    --primary-bg-medium: #B2DFDB; /* خلفية متوسطة */
 
-    /* ألوان ثانوية/مميزة (Accent) */
+    /* ألوان ثانوية/مميزة (Accent) - لإضافة حيوية وتباين */
     --accent-color: #FFB300; /* Amber - للتركيز والتمييز */
     --accent-dark: #FF8F00; /* Dark Amber */
     --accent-light: #FFD54F; /* Light Amber */
-    --accent-rgb: 255, 179, 0; /* قيم RGB للتحكم بالشفافية */
-    --accent-bg-light: #FFF8E1; /* خلفية خفيفة جدًا من اللون الثانوي */
+    --accent-rgb: 255, 179, 0; /* قيم RGB للشفافية */
+    --accent-bg-light: #FFF8E1; /* خلفية ناعمة من اللون الثانوي */
 
-    /* ألوان النجاح/التحذير/الخطأ والمعلومات */
+    /* ألوان حالات النظام (Success, Warning, Error, Info) - واضحة ومحددة */
     --success-color: #4CAF50; /* Green - للنجاح */
     --success-rgb: 76, 175, 80;
-    --success-light-bg: #E8F5E9; /* Light Green background */
+    --success-light-bg: #E8F5E9; 
     --warning-color: #FF9800; /* Orange - للتحذير */
     --warning-rgb: 255, 152, 0;
-    --warning-light-bg: #FFF3E0; /* Light Orange background */
+    --warning-light-bg: #FFF3E0; 
     --error-color: #F44336; /* Red - للخطأ */
     --error-rgb: 244, 67, 54;
-    --error-light-bg: #FFEBEE; /* Light Red background */
+    --error-light-bg: #FFEBEE; 
     --info-color: #2196F3; /* Blue - للمعلومات */
     --info-rgb: 33, 150, 243;
-    --info-light-bg: #E3F2FD; /* Light Blue background */
+    --info-light-bg: #E3F2FD; 
 
-    /* ألوان النص والرماديات (Neutrals) */
+    /* ألوان النص والرماديات (Neutrals) - أساس محايد للتصميم */
     --text-dark: #212121; /* Dark Gray - للعناوين والنصوص الرئيسية */
     --text-medium: #424242; /* Medium Gray - للنصوص الفرعية */
     --text-light: #757575; /* Light Gray - للتفاصيل والوصف */
-    --bg-light: #F8F9FA; /* Very Light Gray - للخلفيات الخفيفة */
+    --bg-light: #F8F9FA; /* Very Light Gray - للخلفيات الفاتحة */
     --bg-medium: #EFF3F6; /* Slightly darker light gray */
     --border-color: #E0E0E0; /* Light Gray - للحدود والفواصل */
     --white: #FFFFFF; /* Pure White */
@@ -54,26 +55,28 @@
     --black-rgb: 0, 0, 0; /* قيم RGB للأسود */
     --white-rgb: 255, 255, 255; /* قيم RGB للأبيض */
 
-
-    /* متغيرات الظلال الجديدة - لإضفاء إحساس بالعمق والاحترافية */
+    /* متغيرات الظلال الجديدة - لإضفاء إحساس بالعمق والاحترافية (نظام طبقات) */
     --shadow-xs: 0 1px 4px rgba(var(--black-rgb), 0.04), 0 2px 8px rgba(var(--black-rgb), 0.06);
     --shadow-sm: 0 2px 8px rgba(var(--black-rgb), 0.05), 0 4px 12px rgba(var(--black-rgb), 0.08);
     --shadow-md: 0 5px 15px rgba(var(--black-rgb), 0.07), 0 10px 25px rgba(var(--black-rgb), 0.1);
     --shadow-lg: 0 10px 30px rgba(var(--black-rgb), 0.08), 0 20px 45px rgba(var(--black-rgb), 0.12);
     --shadow-xl: 0 15px 45px rgba(var(--black-rgb), 0.1), 0 30px 60px rgba(var(--black-rgb), 0.15);
 
-    /* متغيرات لنصف قطر الزوايا (Border Radius) لتناسق التصميم */
+    /* متغيرات لنصف قطر الزوايا (Border Radius) - لتوحيد التناسق البصري */
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 20px;
     --radius-xl: 30px;
 
-    /* متغيرات لسرعة الانتقال والحركة */
+    /* متغيرات لسرعة ونوع الانتقال والحركة - للتحكم الشامل في التفاعلات */
     --transition-speed: 0.3s;
     --transition-bezier: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    /* حجم الخط الأساسي للمتصفح لتحديد الـ rem */
+    font-size: 16px; /* هذه قيمة افتراضية يمكن تغييرها لضبط حجم الخط الأساسي */
 }
 
-/* Custom Text Selection Highlight */
+/* Custom Text Selection Highlight - لمسة شخصية أنيقة */
 ::selection {
     background: var(--accent-color);
     color: var(--text-dark);
@@ -83,10 +86,16 @@
     color: var(--text-dark);
 }
 
-/* Base Body Styles */
+/* Base Body Styles - أساس تصميم الصفحة */
+html {
+    /* الحل لمشكلة اهتزاز الشاشة: اجعل شريط التمرير العمودي يظهر دائمًا */
+    overflow-y: scroll;
+    /* تعيين حجم الخط الأساسي لكل الـ rem units */
+    font-size: 100%; /* يعادل 16px افتراضياً، سيتم تعديله في نقاط التوقف */
+}
+
 body {
-    font-family: 'Tajawal', 'Inter', sans-serif; /* استخدام Inter كخط ثانوي للإنجليزية */
-    /* خلفية متدرجة أنيقة مع نقش خفيف جدًا لعمق إضافي */
+    font-family: 'Tajawal', 'Inter', sans-serif;
     background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-medium) 100%);
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B0BEC5' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 54v-4h-2v4H0v2h4v4h2v-4h4v-2H6zM6-20v4h-2v-4H0v-2h4v-4h2v4h4v2H6zM36-20v4h-2v-4h-4v-2h4v-4h2v4h4v2h-4zM6 4v-4h-2v4H0v2h4v4h2v-4h4V6H6z'/%3E%3C/g%3E%3C/g%3E%3Csvg%3E");
     
@@ -94,7 +103,7 @@ body {
     color: var(--text-medium);
     direction: rtl;
     text-align: right;
-    overflow-x: hidden;
+    overflow-x: hidden; /* لمنع التمرير الأفقي */
     line-height: 1.7;
 }
 
@@ -110,29 +119,28 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #90A4AE; /* A soft blue-gray for thumb */
+    background: #90A4AE;
     border-radius: 10px;
     transition: background var(--transition-speed) ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #78909C; /* Darker on hover */
+    background: #78909C;
 }
 
 /* Custom Scrollbar for Firefox */
+/* تمت إضافة overflow-y: scroll; في الـ html الأعلى */
 html {
     scrollbar-width: thin;
     scrollbar-color: #90A4AE var(--bg-medium);
-    /* الحل لمشكلة اهتزاز الشاشة: اجعل شريط التمرير العمودي يظهر دائمًا */
-    overflow-y: scroll; 
 }
 
 
-/* --- Navbar (Sleek and Professional) --- */
+/* --- Navbar (Sleek and Professional) - قلب التصميم التفاعلي --- */
 .navbar {
-    background: rgba(var(--white-rgb), 0.98); /* خلفية بيضاء شبه شفافة مع متغير RGB */
-    backdrop-filter: blur(25px); /* تأثير ضبابي أقوى لعمق أكبر */
-    box-shadow: var(--shadow-lg); /* استخدام نظام الظلال الجديد */
+    background: rgba(var(--white-rgb), 0.98);
+    backdrop-filter: blur(25px);
+    box-shadow: var(--shadow-lg);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -141,11 +149,10 @@ html {
     border-bottom: 1px solid var(--border-color);
 }
 
-/* Navbar shrinking effect on scroll */
+/* Navbar shrinking effect on scroll - لمسة ديناميكية عند التمرير */
 .navbar.shrink {
     height: 60px;
-    box-shadow: var(--shadow-md); /* ظل أصغر عند الانكماش */
-    /* تغيير طفيف في الخلفية عند الانكماش */
+    box-shadow: var(--shadow-md);
     background: rgba(var(--white-rgb), 0.95);
 }
 
@@ -163,18 +170,18 @@ html {
     display: flex;
     align-items: center;
     gap: 15px;
-    font-size: 2rem;
+    font-size: 2rem; /* تم تغيير حجم الخط ليتجاوب مع الـ rem في الـ media queries */
     font-weight: 800;
-    color: var(--primary-dark); /* لون العلامة التجارية من اللوحة الجديدة */
+    color: var(--primary-dark);
     text-decoration: none;
     transition: all var(--transition-speed) ease;
     letter-spacing: -0.8px;
-    text-shadow: 1px 1px 2px rgba(var(--black-rgb),0.05); /* استخدام متغير RGB */
+    text-shadow: 1px 1px 2px rgba(var(--black-rgb),0.05);
 }
 
 .nav-brand:hover {
-    color: var(--primary-color); /* يتغير للون الأساسي عند التمرير */
-    transform: translateY(-3px) scale(1.02); /* تأثير تحريك وتكبير بسيط */
+    color: var(--primary-color);
+    transform: translateY(-3px) scale(1.02);
 }
 
 /* Adjust brand size on shrink */
@@ -183,15 +190,14 @@ html {
 }
 
 .nav-brand i {
-    font-size: 2.5rem;
-    /* تطبيق تدرج لوني على أيقونة العلامة التجارية */
+    font-size: 2.5rem; /* تم تغيير حجم الخط ليتجاوب مع الـ rem في الـ media queries */
     background: linear-gradient(45deg, var(--accent-color), var(--accent-dark));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-fill-color: transparent;
     transition: all var(--transition-speed) ease;
-    filter: drop-shadow(1px 1px 1px rgba(var(--black-rgb),0.1)); /* استخدام متغير RGB */
+    filter: drop-shadow(1px 1px 1px rgba(var(--black-rgb),0.1));
 }
 
 /* Adjust brand icon size on shrink */
@@ -199,36 +205,68 @@ html {
     font-size: 2.1rem;
 }
 
+/* Mobile Navigation Toggle (Hamburger Icon) */
+.nav-toggle-button {
+    display: none; /* مخفي افتراضياً على الشاشات الكبيرة، سيظهر في الـ media query */
+    font-size: 2rem;
+    color: var(--primary-dark);
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1001; /* فوق الـ Navbar */
+    transition: color var(--transition-speed) ease;
+}
+.nav-toggle-button:hover {
+    color: var(--primary-color);
+}
 
 .nav-menu {
-    display: flex;
+    display: flex; /* افتراضي للشاشات الكبيرة */
     list-style: none;
     gap: 25px;
 }
 
+/* حالة فتح القائمة على الجوال */
+.nav-menu.open {
+    display: flex; /* إظهار القائمة */
+    flex-direction: column;
+    position: absolute;
+    top: 75px; /* تحت الـ Navbar */
+    right: 0; /* لليمين في RTL */
+    width: 100%;
+    background: rgba(var(--white-rgb), 0.98);
+    backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-md);
+    padding: 20px;
+    border-radius: var(--radius-md);
+    border-top: 1px solid var(--border-color);
+    animation: fadeInDown 0.4s ease-out; /* تأثير ظهور ناعم */
+    z-index: 999; /* أقل من زر التبديل */
+}
+
+
 .nav-link {
     text-decoration: none;
-    color: var(--text-light); /* لون نص الروابط */
-    padding: 12px 22px;
-    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
+    color: var(--text-light);
+    padding: 0.75rem 1.375rem; /* استخدام rem للتباعد */
+    border-radius: var(--radius-md);
     transition: all var(--transition-speed) var(--transition-bezier);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.625rem; /* 10px */
     white-space: nowrap;
     position: relative;
     font-weight: 600;
-    font-size: 1.05rem;
+    font-size: 1.05rem; /* سيتغير مع حجم الـ html font-size */
     letter-spacing: 0.3px;
-    /* إضافة لمسة انحراف بسيطة على النص */
     transform: skewX(-2deg);
 }
 
 .nav-link:hover {
-    background: var(--primary-dark); /* خلفية داكنة عند التمرير */
-    color: var(--white); /* نص أبيض عند التمرير */
-    transform: translateY(-4px) scale(1.02) skewX(0deg); /* تأثير تحريك وتكبير مع إزالة الانحراف */
-    box-shadow: var(--shadow-md); /* ظل أنيق عند التحويم */
+    background: var(--primary-dark);
+    color: var(--white);
+    transform: translateY(-4px) scale(1.02) skewX(0deg);
+    box-shadow: var(--shadow-md);
 }
 
 /* Underline effect on hover */
@@ -239,9 +277,9 @@ html {
     right: 50%;
     width: 0;
     height: 4px;
-    background-color: var(--success-color); /* لون خط التسطير من اللوحة الجديدة */
+    background-color: var(--success-color);
     border-radius: 2px;
-    transition: all var(--transition-speed) cubic-bezier(0.075, 0.82, 0.165, 1); /* تغيير نوع الانتقال لجعلها أنعم */
+    transition: all var(--transition-speed) cubic-bezier(0.075, 0.82, 0.165, 1);
     transform: translateX(50%);
 }
 
@@ -256,14 +294,14 @@ html {
     color: var(--primary-color);
     background: var(--primary-bg-light);
     box-shadow: var(--shadow-sm);
-    transform: translateY(-2px) scale(1.01) skewX(0deg); /* تكبير طفيف ومسح الانحراف */
+    transform: translateY(-2px) scale(1.01) skewX(0deg);
 }
 
 .nav-link.active::after {
     width: calc(100% - 28px);
     right: 14px;
     transform: translateX(0);
-    background-color: var(--primary-color); /* لون متناسق مع Active */
+    background-color: var(--primary-color);
 }
 
 
@@ -271,7 +309,7 @@ html {
 .main-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 50px 30px;
+    padding: 50px 30px; /* استخدام px هنا مناسب للـ padding الخارجي */
     min-height: calc(100vh - 170px);
 }
 
@@ -280,9 +318,9 @@ html {
     text-align: center;
     padding: 100px 50px;
     background: var(--white);
-    border-radius: var(--radius-xl); /* استخدام متغير لنصف قطر الزوايا */
+    border-radius: var(--radius-xl);
     margin-bottom: 70px;
-    box-shadow: var(--shadow-xl); /* استخدام نظام الظلال الجديد */
+    box-shadow: var(--shadow-xl);
     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     border: 1px solid var(--border-color);
     position: relative;
@@ -297,7 +335,6 @@ html {
     left: -50%;
     width: 200%;
     height: 200%;
-    /* استخدام قيم RGB لمرونة الشفافية */
     background: linear-gradient(45deg, rgba(var(--primary-rgb), 0.05), rgba(var(--accent-rgb), 0.03), rgba(var(--primary-rgb), 0.01));
     animation: rotateGradient 25s linear infinite;
     opacity: 0.7;
@@ -311,8 +348,8 @@ html {
 }
 
 .hero-section:hover {
-    transform: translateY(-8px) scale(1.005); /* تأثير تحريك وتكبير بسيط */
-    box-shadow: var(--shadow-xl); /* الحفاظ على ظل كبير وواضح عند التحويم */
+    transform: translateY(-8px) scale(1.005);
+    box-shadow: var(--shadow-xl);
 }
 
 .hero-content {
@@ -321,17 +358,17 @@ html {
 }
 
 .hero-content h1 {
-    font-size: clamp(2.8rem, 7vw, 4.5rem); /* استخدام clamp لتجاوبية أفضل لحجم الخط */
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
     color: var(--text-dark);
-    margin-bottom: 30px;
-    text-shadow: 2px 3px 10px rgba(var(--black-rgb), 0.08); /* استخدام متغير RGB */
+    margin-bottom: 1.875rem; /* 30px */
+    text-shadow: 2px 3px 10px rgba(var(--black-rgb), 0.08);
     font-weight: 900;
     line-height: 1.2;
     letter-spacing: -0.5px;
 }
 
 .hero-content p {
-    font-size: clamp(1.1rem, 2.5vw, 1.6rem); /* استخدام clamp لتجاوبية أفضل لحجم الخط */
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
     color: var(--text-medium);
     max-width: 850px;
     margin: 0 auto;
@@ -342,19 +379,19 @@ html {
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-    gap: 50px;
-    margin-bottom: 80px;
+    gap: 3.125rem; /* 50px */
+    margin-bottom: 5rem; /* 80px */
 }
 
 .feature-card {
     background: var(--white);
-    border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: var(--shadow-md); /* استخدام نظام الظلال الجديد */
+    box-shadow: var(--shadow-md);
     transition: all var(--transition-speed) var(--transition-bezier);
     border: 1px solid var(--border-color);
     position: relative;
-    will-change: transform, box-shadow; /* تحسين أداء التحريكات */
+    will-change: transform, box-shadow;
 }
 
 .feature-card::before {
@@ -367,7 +404,7 @@ html {
     background: linear-gradient(45deg, rgba(var(--primary-rgb), 0.05), rgba(var(--accent-rgb), 0.03));
     opacity: 0;
     transition: opacity var(--transition-speed) ease;
-    pointer-events: none; /* لمنع التداخل مع تفاعل الماوس */
+    pointer-events: none;
 }
 
 .feature-card:hover::before {
@@ -375,15 +412,15 @@ html {
 }
 
 .feature-card:hover {
-    transform: translateY(-20px) scale(1.02); /* تأثير تحريك وتكبير واضح */
-    box-shadow: var(--shadow-lg); /* ظل أكبر عند التحويم */
+    transform: translateY(-1.25rem) scale(1.02); /* 20px */
+    box-shadow: var(--shadow-lg);
     border-color: var(--primary-color);
 }
 
 .feature-card a {
     text-decoration: none;
     color: inherit;
-    padding: 50px;
+    padding: 3.125rem; /* 50px */
     display: block;
     text-align: center;
     position: relative;
@@ -392,20 +429,18 @@ html {
 
 .feature-card i {
     font-size: 4.5rem;
-    /* تطبيق تدرج لوني على أيقونة البطاقة */
     background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-fill-color: transparent;
-    margin-bottom: 35px;
+    margin-bottom: 2.1875rem; /* 35px */
     transition: all var(--transition-speed) var(--transition-bezier);
-    filter: drop-shadow(2px 2px 3px rgba(var(--black-rgb),0.1)); /* استخدام متغير RGB */
+    filter: drop-shadow(2px 2px 3px rgba(var(--black-rgb),0.1));
 }
 
 .feature-card:hover i {
     transform: scale(1.25) rotate(20deg);
-    /* تغيير لون التدرج عند التحويم */
     background: linear-gradient(45deg, var(--accent-color), var(--accent-dark));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -415,66 +450,65 @@ html {
 
 .feature-card h3 {
     font-size: 1.8rem;
-    margin-bottom: 25px;
+    margin-bottom: 1.5625rem; /* 25px */
     color: var(--text-dark);
     font-weight: 700;
-    transition: color var(--transition-speed) ease;
-    /* إضافة تأثير دخول بسيط للعناوين */
+    transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
     transform: translateY(0);
     opacity: 1;
 }
 
 .feature-card:hover h3 {
     color: var(--primary-color);
-    transform: translateY(-5px); /* تحريك العنوان للأعلى عند التحويم */
+    transform: translateY(-0.3125rem); /* 5px */
 }
 
 .feature-card p {
     color: var(--text-medium);
     line-height: 1.7;
     font-size: 1.05rem;
-    /* إضافة تأثير دخول بسيط للفقرات */
+    transition: transform var(--transition-speed) ease;
     transform: translateY(0);
     opacity: 1;
 }
 
 .feature-card:hover p {
-    transform: translateY(-5px); /* تحريك الفقرة للأعلى عند التحويم */
+    transform: translateY(-0.3125rem); /* 5px */
 }
 
 
 /* --- Stats Section --- */
 .stats-section {
-    margin-top: 70px;
+    margin-top: 4.375rem; /* 70px */
 }
 
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 35px;
+    gap: 2.1875rem; /* 35px */
 }
 
 .stat-card {
     background: var(--white);
-    padding: 40px;
-    border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
+    padding: 2.5rem; /* 40px */
+    border-radius: var(--radius-lg);
     text-align: center;
-    box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
+    box-shadow: var(--shadow-sm);
     transition: all var(--transition-speed) ease;
     border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
-    will-change: transform, box-shadow; /* تحسين أداء التحريكات */
+    will-change: transform, box-shadow;
 }
 
 .stat-card::after {
     content: '';
     position: absolute;
-    bottom: -20px;
+    bottom: -1.25rem; /* -20px */
     left: 0;
     width: 100%;
-    height: 40px;
-    background-color: rgba(var(--success-rgb), 0.1); /* استخدام متغير RGB */
+    height: 2.5rem; /* 40px */
+    background-color: rgba(var(--success-rgb), 0.1);
     transform: skewX(-20deg) scale(0);
     transition: all 0.4s ease;
     border-radius: 50%;
@@ -486,27 +520,25 @@ html {
 }
 
 .stat-card:hover {
-    transform: translateY(-10px) scale(1.02); /* تأثير تحريك وتكبير بسيط */
-    box-shadow: var(--shadow-md); /* ظل أكبر عند التحويم */
+    transform: translateY(-0.625rem) scale(1.02); /* 10px */
+    box-shadow: var(--shadow-md);
     border-color: var(--success-color);
 }
 
 .stat-card i {
     font-size: 3.5rem;
-    /* تطبيق تدرج لوني على أيقونة الإحصائيات */
     background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-fill-color: transparent;
-    margin-bottom: 30px;
+    margin-bottom: 1.875rem; /* 30px */
     transition: all var(--transition-speed) ease;
     position: relative;
     z-index: 1;
-    filter: drop-shadow(1px 1px 1px rgba(var(--black-rgb),0.1)); /* استخدام متغير RGB */
+    filter: drop-shadow(1px 1px 1px rgba(var(--black-rgb),0.1));
 }
 .stat-card:hover i {
-    /* تغيير لون التدرج عند التحويم */
     background: linear-gradient(45deg, var(--success-color), #388E3C);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -518,7 +550,7 @@ html {
 .stat-card h3 {
     font-size: 3.2rem;
     color: var(--text-dark);
-    margin-bottom: 18px;
+    margin-bottom: 1.125rem; /* 18px */
     font-weight: 800;
 }
 
@@ -532,11 +564,11 @@ html {
 /* --- Page Header (for other pages) --- */
 .page-header {
     text-align: center;
-    margin-bottom: 60px;
-    padding: 60px 40px;
+    margin-bottom: 3.75rem; /* 60px */
+    padding: 3.75rem 2.5rem; /* 60px 40px */
     background: var(--white);
-    border-radius: var(--radius-xl); /* استخدام متغير لنصف قطر الزوايا */
-    box-shadow: var(--shadow-lg); /* استخدام نظام الظلال الجديد */
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
     border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
@@ -545,38 +577,38 @@ html {
 .page-header::before {
     content: '';
     position: absolute;
-    bottom: -60px;
-    right: -60px;
-    width: 180px;
-    height: 180px;
-    background-color: rgba(var(--primary-rgb), 0.08); /* استخدام متغير RGB */
+    bottom: -3.75rem; /* -60px */
+    right: -3.75rem; /* -60px */
+    width: 11.25rem; /* 180px */
+    height: 11.25rem; /* 180px */
+    background-color: rgba(var(--primary-rgb), 0.08);
     border-radius: 50%;
     transform: rotate(45deg);
 }
 .page-header::after {
     content: '';
     position: absolute;
-    top: -40px;
-    left: -40px;
-    width: 100px;
-    height: 100px;
-    background-color: rgba(63, 81, 181, 0.03); /* A subtle blue tint */
+    top: -2.5rem; /* -40px */
+    left: -2.5rem; /* -40px */
+    width: 6.25rem; /* 100px */
+    height: 6.25rem; /* 100px */
+    background-color: rgba(63, 81, 181, 0.03);
     border-radius: 50%;
 }
 
 
 .page-header h1 {
-    font-size: clamp(2.5rem, 6vw, 4rem); /* استخدام clamp لتجاوبية أفضل */
+    font-size: clamp(2.5rem, 6vw, 4rem);
     color: var(--text-dark);
-    margin-bottom: 25px;
-    text-shadow: 2px 4px 12px rgba(var(--black-rgb), 0.1); /* استخدام متغير RGB */
+    margin-bottom: 1.5625rem; /* 25px */
+    text-shadow: 2px 4px 12px rgba(var(--black-rgb), 0.1);
     font-weight: 800;
     position: relative;
     z-index: 1;
 }
 
 .page-header p {
-    font-size: clamp(1.2rem, 2.5vw, 1.5rem); /* استخدام clamp لتجاوبية أفضل */
+    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
     color: var(--text-medium);
     line-height: 1.8;
     position: relative;
@@ -586,51 +618,51 @@ html {
 /* --- General Card Style --- */
 .card {
     background: var(--white);
-    border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
-    box-shadow: var(--shadow-md); /* استخدام نظام الظلال الجديد */
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
     overflow: hidden;
     transition: all var(--transition-speed) ease;
     border: 1px solid var(--border-color);
-    margin-bottom: 40px;
-    will-change: box-shadow; /* تحسين أداء التحريكات */
+    margin-bottom: 2.5rem; /* 40px */
+    will-change: box-shadow;
 }
 
 .card:hover {
-    box-shadow: var(--shadow-lg); /* ظل أكبر عند التحويم */
+    box-shadow: var(--shadow-lg);
 }
 
 .card-header {
     background: var(--primary-color);
     color: var(--white);
-    padding: 28px 40px;
+    padding: 1.75rem 2.5rem; /* 28px 40px */
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-weight: 700;
     font-size: 1.6rem;
-    border-bottom: 1px solid rgba(var(--white-rgb), 0.2); /* استخدام متغير RGB */
+    border-bottom: 1px solid rgba(var(--white-rgb), 0.2);
 }
 
 .card-header h2 {
     font-size: 1.6rem;
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 0.9375rem; /* 15px */
 }
 
 .card-body {
-    padding: 40px;
+    padding: 2.5rem; /* 40px */
 }
 
 /* --- Form Elements --- */
 .form-group {
-    margin-bottom: 30px;
+    margin-bottom: 1.875rem; /* 30px */
     position: relative;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 12px;
+    margin-bottom: 0.75rem; /* 12px */
     font-weight: 600;
     color: var(--text-medium);
     font-size: 1.1rem;
@@ -640,14 +672,14 @@ html {
 .form-group select,
 .form-group textarea {
     width: 100%;
-    padding: 16px 22px;
+    padding: 1rem 1.375rem; /* 16px 22px */
     border: 2px solid var(--border-color);
-    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
+    border-radius: var(--radius-md);
     font-size: 1.1rem;
     transition: all var(--transition-speed) ease-in-out;
     background: var(--white);
     color: var(--text-dark);
-    box-shadow: inset 0 1px 3px rgba(var(--black-rgb),0.08); /* استخدام متغير RGB */
+    box-shadow: inset 0 1px 3px rgba(var(--black-rgb),0.08);
 }
 
 .form-group input:focus,
@@ -655,21 +687,21 @@ html {
 .form-group textarea:focus {
     outline: none;
     border-color: var(--success-color);
-    box-shadow: 0 0 0 5px rgba(var(--success-rgb), 0.25); /* استخدام متغير RGB لظل التركيز */
+    box-shadow: 0 0 0 0.3125rem rgba(var(--success-rgb), 0.25); /* 5px */
 }
 
 /* Placeholder styling for a modern look */
 .form-group input::placeholder,
 .form-group textarea::placeholder {
     color: var(--text-light);
-    opacity: 0.7; /* Make placeholder slightly transparent */
-    font-size: 1.05rem; /* Slightly larger for better readability */
+    opacity: 0.7;
+    font-size: 1.05rem;
     transition: opacity var(--transition-speed) ease;
 }
 
 .form-group input:focus::placeholder,
 .form-group textarea:focus::placeholder {
-    opacity: 0.4; /* Dim placeholder further on focus */
+    opacity: 0.4;
 }
 
 
@@ -681,7 +713,7 @@ html {
 .field-error {
     color: var(--error-color);
     font-size: 0.9rem;
-    margin-top: 10px;
+    margin-top: 0.625rem; /* 10px */
     text-align: right;
     display: block;
     font-weight: 500;
@@ -692,14 +724,14 @@ html {
 .checkbox-group {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
+    gap: 1.25rem; /* 20px */
+    margin-top: 1.25rem; /* 20px */
 }
 
 .checkbox-item {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 0.75rem; /* 12px */
     font-weight: normal;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -711,24 +743,24 @@ html {
 }
 
 .checkbox-item input[type="checkbox"] {
-    width: 22px;
-    height: 22px;
+    width: 1.375rem; /* 22px */
+    height: 1.375rem; /* 22px */
     margin: 0;
     flex-shrink: 0;
     appearance: none;
     border: 2px solid var(--text-light);
-    border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
+    border-radius: var(--radius-sm);
     background-color: var(--white);
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
-    box-shadow: inset 0 1px 4px rgba(var(--black-rgb),0.12); /* استخدام متغير RGB */
+    box-shadow: inset 0 1px 4px rgba(var(--black-rgb),0.12);
 }
 
 .checkbox-item input[type="checkbox"]:checked {
     background-color: var(--success-color);
     border-color: var(--success-color);
-    box-shadow: inset 0 1px 4px rgba(var(--black-rgb),0.12), 0 0 0 5px rgba(var(--success-rgb), 0.25); /* استخدام متغير RGB */
+    box-shadow: inset 0 1px 4px rgba(var(--black-rgb),0.12), 0 0 0 0.3125rem rgba(var(--success-rgb), 0.25); /* 5px */
 }
 
 /* Checkmark for custom checkbox */
@@ -739,7 +771,7 @@ html {
     left: 50%;
     transform: translate(-50%, -50%);
     color: var(--white);
-    font-size: 15px;
+    font-size: 0.9375rem; /* 15px */
     line-height: 1;
     font-weight: bold;
 }
@@ -747,28 +779,29 @@ html {
 
 /* --- Buttons --- */
 .btn {
-    padding: 18px 38px;
+    padding: 1.125rem 2.375rem; /* 18px 38px */
     border: none;
-    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
+    border-radius: var(--radius-md);
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all var(--transition-speed) ease-in-out; /* استخدام انتقال أسهل وأكثر سلاسة */
+    transition: all var(--transition-speed) ease-in-out;
     display: inline-flex;
     align-items: center;
-    gap: 12px;
+    gap: 0.75rem; /* 12px */
     text-decoration: none;
-    box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
+    box-shadow: var(--shadow-sm);
     text-transform: capitalize;
     letter-spacing: 0.8px;
-    position: relative; /* للمساعدة في تأثيرات الإضاءة */
-    overflow: hidden; /* لضمان أن تأثيرات الشimmer لا تتجاوز الحدود */
-    will-change: transform, box-shadow, background; /* تحسين أداء التحريكات */
+    position: relative;
+    overflow: hidden;
+    z-index: 1; /* لتجنب تداخل الـ ::before مع النص */
+    will-change: transform, box-shadow, background;
 }
 
 .btn:hover {
-    transform: translateY(-8px) scale(1.02); /* تأثير تحريك وتكبير بسيط */
-    box-shadow: var(--shadow-md); /* ظل أكبر عند التحويم */
+    transform: translateY(-0.5rem) scale(1.02); /* 8px */
+    box-shadow: var(--shadow-md);
 }
 
 /* Subtle gradient for buttons to add depth */
@@ -778,7 +811,7 @@ html {
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, var(--primary-dark) 0%, #00382E 100%); /* درجة أغمق عند التحويم */
+    background: linear-gradient(135deg, var(--primary-dark) 0%, #00382E 100%);
 }
 
 /* Button glow effect on hover/focus */
@@ -789,7 +822,7 @@ html {
     left: 50%;
     width: 0;
     height: 0;
-    background: rgba(var(--white-rgb), 0.2); /* تأثير ضوء أبيض شفاف */
+    background: rgba(var(--white-rgb), 0.2);
     border-radius: 50%;
     transform: translate(-50%, -50%);
     opacity: 0;
@@ -798,8 +831,8 @@ html {
 }
 
 .btn:hover::before {
-    width: 200px;
-    height: 200px;
+    width: 12.5rem; /* 200px */
+    height: 12.5rem; /* 200px */
     opacity: 1;
 }
 
@@ -809,16 +842,16 @@ html {
     background: transparent;
     color: var(--primary-color);
     border: 2px solid var(--primary-color);
-    box-shadow: none; /* لا ظل مبدئياً */
+    box-shadow: none;
+    z-index: auto; /* إعادة تعيين z-index */
 }
 
 .btn-outline-primary:hover {
     background: var(--primary-color);
     color: var(--white);
-    box-shadow: var(--shadow-sm); /* ظل خفيف عند التحويم */
-    transform: translateY(-4px); /* حركة أخف قليلاً */
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-0.25rem); /* 4px */
 }
-/* End of Outline Buttons */
 
 
 .btn-danger {
@@ -859,15 +892,15 @@ html {
 
 /* Small button variant */
 .btn-sm {
-    padding: 12px 25px; /* Adjust padding slightly for consistency */
+    padding: 0.75rem 1.5625rem; /* 12px 25px */
     font-size: 0.95rem;
-    gap: 10px;
-    border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
-    box-shadow: var(--shadow-xs); /* ظل أصغر للأزرار الصغيرة */
+    gap: 0.625rem; /* 10px */
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-xs);
 }
 .btn-sm:hover {
-    transform: translateY(-4px) scale(1.01); /* تأثير تحريك وتكبير بسيط */
-    box-shadow: var(--shadow-sm); /* ظل أكبر عند التحويم */
+    transform: translateY(-0.25rem) scale(1.01); /* 4px */
+    box-shadow: var(--shadow-sm);
 }
 
 
@@ -875,34 +908,34 @@ html {
 .items-list-container h3 {
     font-size: 1.6rem;
     color: var(--text-dark);
-    margin-bottom: 30px;
-    padding-bottom: 15px;
+    margin-bottom: 1.875rem; /* 30px */
+    padding-bottom: 0.9375rem; /* 15px */
     border-bottom: 1px solid var(--border-color);
     font-weight: 600;
 }
 
 .items-list {
-    max-height: 600px;
+    max-height: 37.5rem; /* 600px */
     overflow-y: auto;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 0.9375rem; /* 15px */
+    padding-right: 0.9375rem; /* 15px */
 }
 
 .item-card {
     background: var(--white);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
-    padding: 28px;
-    margin-bottom: 25px;
+    border-radius: var(--radius-lg);
+    padding: 1.75rem; /* 28px */
+    margin-bottom: 1.5625rem; /* 25px */
     position: relative;
-    box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
+    box-shadow: var(--shadow-sm);
     transition: all var(--transition-speed) var(--transition-bezier);
-    will-change: transform, box-shadow, border-color; /* تحسين أداء التحريكات */
+    will-change: transform, box-shadow, border-color;
 }
 
 .item-card:hover {
-    transform: translateX(10px) scale(1.01); /* تأثير تحريك وتكبير بسيط */
-    box-shadow: var(--shadow-md); /* ظل أكبر عند التحويم */
+    transform: translateX(0.625rem) scale(1.01); /* 10px */
+    box-shadow: var(--shadow-md);
     border-color: var(--primary-color);
 }
 
@@ -910,7 +943,7 @@ html {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 18px;
+    margin-bottom: 1.125rem; /* 18px */
 }
 
 .item-title {
@@ -922,7 +955,7 @@ html {
 
 .item-actions {
     display: flex;
-    gap: 12px;
+    gap: 0.75rem; /* 12px */
 }
 
 .item-details {
@@ -932,33 +965,33 @@ html {
 }
 
 .item-detail {
-    margin-bottom: 10px;
+    margin-bottom: 0.625rem; /* 10px */
 }
 
 /* --- Schedule specific styles --- */
 .schedule-controls {
-    margin-bottom: 60px;
+    margin-bottom: 3.75rem; /* 60px */
 }
 
 .control-buttons {
     display: flex;
-    gap: 25px;
+    gap: 1.5625rem; /* 25px */
     flex-wrap: wrap;
-    margin-bottom: 30px;
+    margin-bottom: 1.875rem; /* 30px */
 }
 
 .status-message {
-    padding: 22px;
-    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
-    margin-top: 30px;
+    padding: 1.375rem; /* 22px */
+    border-radius: var(--radius-md);
+    margin-top: 1.875rem; /* 30px */
     display: none;
     font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 1.125rem; /* 18px */
     font-size: 1.1rem;
-    box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
-    animation: slideInLeft 0.5s ease-out forwards; /* إضافة تأثير ظهور */
+    box-shadow: var(--shadow-sm);
+    animation: slideInLeft 0.5s ease-out forwards;
 }
 
 .status-message i {
@@ -991,23 +1024,23 @@ html {
 
 .table-container {
     overflow-x: auto;
-    margin-bottom: 50px;
-    border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
-    box-shadow: var(--shadow-md); /* استخدام نظام الظلال الجديد */
+    margin-bottom: 3.125rem; /* 50px */
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
 }
 
 .schedule-table {
     width: 100%;
     border-collapse: collapse;
     background: var(--white);
-    border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    min-width: 900px;
+    min-width: 56.25rem; /* 900px */
 }
 
 .schedule-table th,
 .schedule-table td {
-    padding: 18px;
+    padding: 1.125rem; /* 18px */
     text-align: center;
     border: 1px solid var(--border-color);
 }
@@ -1025,34 +1058,34 @@ html {
     font-weight: 700;
     color: var(--text-dark);
     font-size: 1rem;
-    min-width: 110px;
+    min-width: 6.875rem; /* 110px */
 }
 
 .schedule-table-cell {
     background: var(--white);
-    min-height: 90px; /* تم التعديل مرة أخرى إلى min-height */
+    min-height: 5.625rem; /* 90px */
     vertical-align: top;
     position: relative;
-    padding: 12px;
+    padding: 0.75rem; /* 12px */
 }
 
 /* Hover effect for empty cells in edit mode */
 .schedule-table-cell.edit-mode-active:not(.has-lecture):hover {
-    background-color: var(--info-light-bg); /* Using info-light-bg tint */
+    background-color: var(--info-light-bg);
     cursor: pointer;
-    box-shadow: inset 0 0 0 3px var(--primary-color);
+    box-shadow: inset 0 0 0 0.1875rem var(--primary-color); /* 3px */
 }
 
 /* Styles for cells selected for move destination */
 .schedule-table-cell.selected-move-target {
     background-color: var(--info-light-bg);
-    box-shadow: inset 0 0 0 4px var(--primary-dark);
+    box-shadow: inset 0 0 0 0.25rem var(--primary-dark); /* 4px */
 }
 
 /* تحديث: أنماط للخلايا المستهدفة للنقل */
 .schedule-table-cell.valid-move-target {
-    background-color: rgba(var(--success-rgb), 0.1); /* أخضر فاتح من success-color */
-    box-shadow: inset 0 0 0 3px var(--success-color); /* حدود خضراء */
+    background-color: rgba(var(--success-rgb), 0.1);
+    box-shadow: inset 0 0 0 0.1875rem var(--success-color); /* 3px */
     cursor: pointer;
 }
 .schedule-table-cell.valid-move-target:hover {
@@ -1060,42 +1093,42 @@ html {
 }
 
 .schedule-table-cell.invalid-move-target {
-    background-color: rgba(var(--error-rgb), 0.1); /* أحمر فاتح من error-color */
-    box-shadow: inset  0 0 0 3px var(--error-color); /* حدود حمراء */
+    background-color: rgba(var(--error-rgb), 0.1);
+    box-shadow: inset  0 0 0 0.1875rem var(--error-color); /* 3px */
     cursor: not-allowed;
 }
 .schedule-table-cell.invalid-move-target .move-target-feedback {
-    opacity: 1; /* إظهار الرسالة */
+    opacity: 1;
 }
 
 
 .schedule-slot {
     background: var(--bg-light);
     border: 2px solid var(--border-color);
-    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
-    padding: 14px;
-    margin: 6px;
+    border-radius: var(--radius-md);
+    padding: 0.875rem; /* 14px */
+    margin: 0.375rem; /* 6px */
     font-size: 0.95rem;
     line-height: 1.5;
     transition: all var(--transition-speed) var(--transition-bezier);
     cursor: pointer;
-    box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
+    box-shadow: var(--shadow-sm);
     position: relative;
     z-index: 1;
-    will-change: transform, box-shadow; /* تحسين أداء التحريكات */
+    will-change: transform, box-shadow;
 }
 
 .schedule-slot:hover {
-    transform: translateY(-4px) scale(1.01); /* تأثير تحريك وتكبير بسيط */
-    box-shadow: var(--shadow-md); /* ظل أكبر عند التحويم */
+    transform: translateY(-0.25rem) scale(1.01); /* 4px */
+    box-shadow: var(--shadow-md);
 }
 
 /* تحديث: أنماط للمحاضرة المصدر أثناء وضع النقل */
 .schedule-slot.moving-source-lecture {
-    box-shadow: 0 0 0 4px var(--info-color), /* إطار أزرق */
-                var(--shadow-lg); /* ظل كبير وواضح */
+    box-shadow: 0 0 0 0.25rem var(--info-color), /* 4px */
+                var(--shadow-lg);
     transform: scale(1.03);
-    opacity: 0.9; /* شفافة قليلاً */
+    opacity: 0.9;
     cursor: grabbing;
     border-color: var(--info-color);
 }
@@ -1116,20 +1149,19 @@ html {
 }
 
 /* Color Palette for Lectures (more refined and modern) */
-/* استخدام ألوان متناسقة مع اللوحة الجديدة مع درجات أفتح وأكثر حيوية */
 .lecture-color-0 { --lecture-bg-color: var(--info-light-bg); --lecture-border-color: var(--info-color); }
 .lecture-color-1 { --lecture-bg-color: var(--accent-bg-light); --lecture-border-color: var(--accent-color); }
-.lecture-color-2 { --lecture-bg-color: var(--primary-bg-light); --lecture-border-color: var(--primary-color); } /* Changed to primary light */
+.lecture-color-2 { --lecture-bg-color: var(--primary-bg-light); --lecture-border-color: var(--primary-color); }
 .lecture-color-3 { --lecture-bg-color: var(--error-light-bg); --lecture-border-color: var(--error-color); }
-.lecture-color-4 { --lecture-bg-color: #F0E6F7; --lecture-border-color: #C39BE0; } /* Light Purple */
-.lecture-color-5 { --lecture-bg-color: #E6F3F7; --lecture-border-color: #8FD8ED; } /* Lighter Cyan */
-.lecture-color-6 { --lecture-bg-color: #F7E6E6; --lecture-border-color: #F0B3B3; } /* Light Rose */
+.lecture-color-4 { --lecture-bg-color: #F0E6F7; --lecture-border-color: #C39BE0; }
+.lecture-color-5 { --lecture-bg-color: #E6F3F7; --lecture-border-color: #8FD8ED; }
+.lecture-color-6 { --lecture-bg-color: #F7E6E6; --lecture-border-color: #F0B3B3; }
 
 
 .schedule-slot-subject {
     font-weight: 700;
     color: var(--text-dark);
-    margin-bottom: 5px;
+    margin-bottom: 0.3125rem; /* 5px */
     font-size: 1rem;
     line-height: 1.3;
 }
@@ -1143,29 +1175,29 @@ html {
 .schedule-slot-details {
     font-size: 0.75rem;
     color: var(--text-light);
-    margin-top: 5px;
+    margin-top: 0.3125rem; /* 5px */
     line-height: 1.3;
 }
 .schedule-slot-details span {
     display: inline-block;
-    margin: 0 2px;
+    margin: 0 0.125rem; /* 2px */
 }
 
 
 /* Styles for contenteditable elements */
 .schedule-slot [contenteditable="true"] {
     outline: none;
-    padding: 3px 6px;
-    border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
+    padding: 0.1875rem 0.375rem; /* 3px 6px */
+    border-radius: var(--radius-sm);
     transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    min-width: 60px;
+    min-width: 3.75rem; /* 60px */
     cursor: text;
     border: 1px dashed transparent;
 }
 
 .schedule-slot [contenteditable="true"]:focus {
     background-color: rgba(var(--white-rgb), 0.95);
-    box-shadow: 0 0 0 2px rgba(var(--success-rgb), 0.4);
+    box-shadow: 0 0 0 0.125rem rgba(var(--success-rgb), 0.4); /* 2px */
     border-color: var(--success-color);
 }
 
@@ -1180,14 +1212,14 @@ html {
 /* تحديث: أزرار النقل والحذف الجديدة ضمن المحاضرة */
 .lecture-actions-buttons {
     position: absolute;
-    top: 8px;
-    left: 8px; /* RTL - لتظهر الأزرار على اليسار */
+    top: 0.5rem; /* 8px */
+    left: 0.5rem; /* 8px */
     display: flex;
-    gap: 8px; /* المسافة بين الأزرار */
-    opacity: 0; /* مخفية افتراضياً */
+    gap: 0.5rem; /* 8px */
+    opacity: 0;
     transition: all var(--transition-speed) ease;
     z-index: 5;
-    transform: translateY(-5px); /* تأثير بسيط عند الظهور */
+    transform: translateY(-0.3125rem); /* 5px */
 }
 
 .schedule-slot:hover .lecture-actions-buttons,
@@ -1202,47 +1234,47 @@ html {
 }
 
 .lecture-actions-buttons .btn {
-    padding: 6px 10px; /* تصغير الأزرار أكثر لتناسب المساحة */
-    font-size: 0.75rem; /* حجم الخط أصغر */
-    gap: 5px; /* مسافة أقل بين الأيقونة والنص */
-    border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
-    box-shadow: var(--shadow-xs); /* ظل خفيف جدًا */
-    white-space: nowrap; /* منع انقسام النص */
+    padding: 0.375rem 0.625rem; /* 6px 10px */
+    font-size: 0.75rem;
+    gap: 0.3125rem; /* 5px */
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-xs);
+    white-space: nowrap;
 }
 .lecture-actions-buttons .btn:hover {
-    transform: translateY(-2px); /* تأثير تحريك بسيط عند التمرير */
-    box-shadow: var(--shadow-sm); /* ظل أكبر عند التحويم */
+    transform: translateY(-0.125rem); /* 2px */
+    box-shadow: var(--shadow-sm);
 }
 
 
 /* --- Admin Reports --- */
 .admin-reports-section .stats-grid {
-    margin-bottom: 30px;
+    margin-bottom: 1.875rem; /* 30px */
 }
 .admin-stats .stat-card.pending {
-    border-left: 4px solid var(--warning-color);
+    border-left: 0.25rem solid var(--warning-color); /* 4px */
 }
 
 .admin-stats .stat-card.resolved {
-    border-left: 4px solid var(--success-color);
+    border-left: 0.25rem solid var(--success-color); /* 4px */
 }
 
 .admin-stats .stat-card.total {
-    border-left: 4px solid var(--primary-color);
+    border-left: 0.25rem solid var(--primary-color); /* 4px */
 }
 
 .filter-controls {
     display: flex;
-    gap: 15px;
-    margin-bottom: 30px;
+    gap: 0.9375rem; /* 15px */
+    margin-bottom: 1.875rem; /* 30px */
     flex-wrap: wrap;
 }
 
 .filter-controls select,
 .filter-controls input[type="text"] {
-    padding: 10px 15px;
+    padding: 0.625rem 0.9375rem; /* 10px 15px */
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
+    border-radius: var(--radius-sm);
     background: var(--white);
     transition: all var(--transition-speed) ease;
 }
@@ -1250,48 +1282,48 @@ html {
 .filter-controls input[type="text"]:focus {
     outline: none;
     border-color: var(--success-color);
-    box-shadow: 0 0 0 3px rgba(var(--success-rgb), 0.2); /* استخدام متغير RGB */
+    box-shadow: 0 0 0 0.1875rem rgba(var(--success-rgb), 0.2); /* 3px */
 }
 
 
 .admin-reports-list {
-    max-height: 650px;
+    max-height: 40.625rem; /* 650px */
     overflow-y: auto;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 0.625rem; /* 10px */
+    padding-right: 0.625rem; /* 10px */
 }
 
 .report-card {
     background: var(--white);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
-    padding: 25px;
-    margin-bottom: 20px;
+    border-radius: var(--radius-md);
+    padding: 1.5625rem; /* 25px */
+    margin-bottom: 1.25rem; /* 20px */
     position: relative;
-    box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
+    box-shadow: var(--shadow-sm);
     transition: all var(--transition-speed) ease;
-    will-change: transform, box-shadow, border-color; /* تحسين أداء التحريكات */
+    will-change: transform, box-shadow, border-color;
 }
 
 .report-card:hover {
-    transform: translateX(10px) scale(1.005); /* تأثير تحريك وتكبير بسيط */
-    box-shadow: var(--shadow-md); /* ظل أكبر عند التحويم */
+    transform: translateX(0.625rem) scale(1.005); /* 10px */
+    box-shadow: var(--shadow-md);
     border-color: var(--primary-color);
 }
 
 .report-card.pending {
-    border-left: 5px solid var(--warning-color);
+    border-left: 0.3125rem solid var(--warning-color); /* 5px */
 }
 
 .report-card.resolved {
-    border-left: 5px solid var(--success-color);
+    border-left: 0.3125rem solid var(--success-color); /* 5px */
 }
 
 .report-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 18px;
+    margin-bottom: 1.125rem; /* 18px */
 }
 
 .report-title {
@@ -1301,7 +1333,7 @@ html {
 }
 
 .report-status {
-    padding: 6px 14px;
+    padding: 0.375rem 0.875rem; /* 6px 14px */
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 600;
@@ -1327,156 +1359,213 @@ html {
 .report-meta {
     font-size: 0.95rem;
     color: var(--text-light);
-    margin-top: 12px;
+    margin-top: 0.75rem; /* 12px */
     display: block;
 }
 
 .report-actions {
-    margin-top: 20px;
-    padding-top: 20px;
+    margin-top: 1.25rem; /* 20px */
+    padding-top: 1.25rem; /* 20px */
     border-top: 1px solid var(--border-color);
     display: flex;
-    gap: 12px;
+    gap: 0.75rem; /* 12px */
     justify-content: flex-end;
 }
 .report-actions .btn {
     box-shadow: none;
 }
 .report-actions .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(var(--black-rgb), 0.1); /* استخدام متغير RGB */
+    transform: translateY(-0.125rem); /* 2px */
+    box-shadow: 0 0.25rem 0.625rem rgba(var(--black-rgb), 0.1); /* 4px 10px */
 }
 
 
 /* --- Footer --- */
 .footer {
-    background: var(--text-dark); /* Using text-dark for a consistent dark footer */
+    background: var(--text-dark);
     color: var(--white);
     text-align: center;
-    padding: 30px;
-    margin-top: 60px;
+    padding: 1.875rem; /* 30px */
+    margin-top: 3.75rem; /* 60px */
     font-size: 0.95rem;
-    box-shadow: 0 -8px 30px rgba(var(--black-rgb), 0.1); /* استخدام متغير RGB */
+    box-shadow: 0 -0.5rem 1.875rem rgba(var(--black-rgb), 0.1); /* -8px 30px */
     letter-spacing: 0.2px;
 }
 
 /* --- Responsive Design --- */
-@media (max-width: 992px) {
+
+/* Mobile-first approach: General styles apply to small screens first */
+/* Base html font-size for mobile devices */
+html {
+    font-size: 87.5%; /* 14px for smaller screens (14/16 = 0.875) */
+    overflow-y: scroll; /* Fix: Ensure scrollbar is always visible */
+}
+
+/* Tablet (Portrait & Landscape) and smaller Desktops */
+@media (min-width: 481px) and (max-width: 992px) {
+    html {
+        font-size: 93.75%; /* 15px for tablets */
+    }
+    .main-content {
+        padding: 30px 20px; /* Adjust padding for tablets */
+    }
     .nav-container {
-        flex-direction: column;
-        height: auto;
-        padding: 15px 20px; /* Reduced horizontal padding */
-        justify-content: center; /* Center items vertically if flex-direction is column */
-        align-items: center; /* Center items horizontally if flex-direction is column */
+        padding: 0 20px;
     }
     .nav-menu {
-        margin-top: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px; /* Ensure a defined gap for wrapping */
+        gap: 15px; /* Adjust gap for tablets */
     }
-    .nav-link {
-        padding: 8px 12px;
-        font-size: 0.9rem;
-    }
+    /* Keep Navbar horizontal on tablets, but refine sizes */
     .nav-brand {
-        font-size: 1.8rem; /* Slightly smaller for tablets */
-    }
-    .nav-brand i {
-        font-size: 2.2rem;
-    }
-    /* Navbar shrinking effect on smaller screens */
-    .navbar.shrink {
-        height: auto; /* Allow height to adjust if menu is vertical */
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-}
-
-@media (max-width: 768px) {
-    .main-content {
-        padding: 30px 15px;
-    }
-    .hero-section {
-        padding: 60px 15px;
-        border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
-    }
-    .hero-content h1 {
-        font-size: 2.8rem;
-    }
-    .hero-content p {
-        font-size: 1.1rem;
-    }
-    .page-header {
-        padding: 50px 15px;
-        border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
-    }
-    .page-header h1 {
-        font-size: 2.5rem;
-    }
-    .features-grid, .stats-grid, .content-grid {
-        grid-template-columns: 1fr;
-        gap: 25px;
-    }
-    .control-buttons {
-        justify-content: center;
-        gap: 15px;
-    }
-    .checkbox-group {
-        grid-template-columns: 1fr;
-    }
-    .schedule-table th, .schedule-table td {
-        padding: 10px;
-        font-size: 0.75rem;
-    }
-    .schedule-slot {
-        padding: 8px;
-        font-size: 0.7rem;
-    }
-    .schedule-slot-info {
-        font-size: 0.65rem;
-    }
-    .schedule-table-time-header {
-        min-width: 60px;
-    }
-    .btn {
-        padding: 12px 25px;
-        font-size: 0.95rem;
-    }
-    .item-card {
-        padding: 18px;
-        border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
-    }
-    .report-card {
-        padding: 18px;
-        border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
-    }
-    .report-title {
-        font-size: 1.1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .nav-container {
-        padding: 10px; /* Even smaller padding */
-    }
-    .nav-brand {
-        font-size: 1.4rem; /* Smallest font size for brand */
-        gap: 10px; /* Smaller gap */
-    }
-    .nav-brand i {
         font-size: 1.7rem;
     }
-    .nav-menu {
-        flex-direction: column;
-        align-items: stretch; /* Stretches items to full width */
-        gap: 5px; /* Minimal gap */
+    .nav-brand i {
+        font-size: 2.1rem;
     }
     .nav-link {
-        font-size: 0.8rem; /* Smallest font size for links */
-        padding: 6px 8px;
-        text-align: center;
-        justify-content: center;
+        font-size: 1rem;
+        padding: 10px 18px;
+    }
+    .hero-content h1 {
+        font-size: clamp(2.2rem, 5vw, 3.5rem); /* Adjust clamp range for tablets */
+    }
+    .hero-content p {
+        font-size: clamp(1rem, 2vw, 1.3rem);
+    }
+    .page-header h1 {
+        font-size: clamp(2rem, 4.5vw, 3.2rem);
+    }
+    .page-header p {
+        font-size: clamp(1.1rem, 2.2vw, 1.3rem);
+    }
+    .features-grid, .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjust grid columns */
+        gap: 30px;
+    }
+    .item-card, .report-card {
+        padding: 20px;
+    }
+    .schedule-table th, .schedule-table td {
+        padding: 12px;
+        font-size: 0.85rem;
+    }
+    .schedule-slot {
+        padding: 10px;
+        font-size: 0.8rem;
+    }
+}
+
+
+/* Desktops and larger screens */
+@media (min-width: 993px) {
+    html {
+        font-size: 100%; /* Default 16px for desktops */
+    }
+    /* Ensure Navbar menu is displayed horizontally on larger screens */
+    .nav-toggle-button {
+        display: none;
+    }
+    .nav-menu {
+        display: flex !important; /* Override 'display: none' from mobile-first approach if JS fails */
+        flex-direction: row;
+        position: static;
+        top: auto;
+        right: auto;
+        width: auto;
+        background: none;
+        backdrop-filter: none;
+        box-shadow: none;
+        padding: 0;
+        border-top: none;
+        animation: none;
+    }
+}
+
+
+/* Mobile Devices (max-width: 480px) */
+@media (max-width: 480px) {
+    html {
+        font-size: 81.25%; /* 13px for very small screens (13/16 = 0.8125) */
+    }
+    .main-content {
+        padding: 20px 10px; /* Reduced padding for smallest screens */
+    }
+    .hero-section {
+        padding: 40px 15px;
+    }
+    .hero-content h1 {
+        font-size: 2.2rem; /* Smaller font for hero heading */
+    }
+    .hero-content p {
+        font-size: 0.95rem; /* Smaller font for hero paragraph */
+    }
+    .page-header {
+        padding: 30px 15px;
+    }
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
+    .page-header p {
+        font-size: 1rem;
+    }
+    .features-grid, .stats-grid {
+        grid-template-columns: 1fr; /* Force single column on smallest screens */
+        gap: 20px;
+    }
+    .card-body {
+        padding: 20px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 12px 15px; /* Smaller padding for inputs */
+        font-size: 0.9rem;
+    }
+    .btn {
+        padding: 12px 20px; /* Smaller buttons */
+        font-size: 0.9rem;
+        width: 100%; /* Full width buttons */
+    }
+    .btn-sm {
+        width: auto; /* Small buttons can retain auto width */
+    }
+    .schedule-table {
+        min-width: 100%; /* Allow table to scroll horizontally if needed */
+    }
+    .schedule-table th, .schedule-table td {
+        padding: 8px; /* Even smaller padding */
+        font-size: 0.7rem;
+    }
+    .schedule-slot {
+        padding: 6px;
+        font-size: 0.65rem;
+    }
+
+    /* Mobile Navbar Specifics */
+    .nav-container {
+        flex-direction: row; /* Keep logo and hamburger horizontal */
+        justify-content: space-between;
+        padding: 10px;
+        height: 60px; /* Consistent height for mobile navbar */
+    }
+    .nav-brand {
+        font-size: 1.5rem;
+        gap: 8px;
+    }
+    .nav-brand i {
+        font-size: 1.8rem;
+    }
+    .nav-menu {
+        display: none; /* Hidden by default on mobile */
+    }
+    .nav-toggle-button {
+        display: block; /* Show hamburger button */
+        font-size: 1.8rem;
+    }
+    .navbar.shrink { /* For mobile, shrink effect mainly affects shadow */
+        height: 60px; /* Height remains consistent */
+        padding-top: 0;
+        padding-bottom: 0;
     }
 }
 
@@ -1501,13 +1590,19 @@ html {
     to { transform: translateX(-100%); opacity: 0; }
 }
 
+/* New animation for dropdown/modal appearance */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 
 /* Loading Spinner (Standard) */
 .loading {
     display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
+    width: 1.25rem; /* 20px */
+    height: 1.25rem; /* 20px */
+    border: 0.1875rem solid rgba(255, 255, 255, 0.3); /* 3px */
     border-radius: 50%;
     border-top-color: #fff;
     animation: spin 1s ease-in-out infinite;
@@ -1520,14 +1615,14 @@ html {
 /* Utility Classes for content display in dynamic inputs */
 .dynamic-time-ranges-container {
     border: 1px dashed var(--border-color);
-    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
-    padding: 15px;
-    margin-top: 15px;
-    background-color: var(--info-light-bg); /* Using info color tint */
-    min-height: 80px;
+    border-radius: var(--radius-md);
+    padding: 0.9375rem; /* 15px */
+    margin-top: 0.9375rem; /* 15px */
+    background-color: var(--info-light-bg);
+    min-height: 5rem; /* 80px */
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0.625rem; /* 10px */
     justify-content: center;
     align-items: flex-start;
 }
@@ -1538,18 +1633,18 @@ html {
     justify-content: space-between;
     background-color: var(--info-light-bg);
     border: 1px solid var(--info-color);
-    border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
-    padding: 10px 15px;
+    border-radius: var(--radius-sm);
+    padding: 0.625rem 0.9375rem; /* 10px 15px */
     font-size: 0.95rem;
     color: var(--text-medium);
-    box-shadow: 0 1px 5px rgba(var(--black-rgb), 0.05); /* استخدام متغير RGB */
+    box-shadow: 0 1px 5px rgba(var(--black-rgb), 0.05);
     width: 100%;
     transition: all 0.2s ease;
 }
 
 .dynamic-time-range-item:hover {
-    transform: translateX(5px);
-    box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.1); /* استخدام متغير RGB */
+    transform: translateX(0.3125rem); /* 5px */
+    box-shadow: 0 0.125rem 0.5rem rgba(var(--black-rgb), 0.1); /* 2px 8px */
 }
 
 
@@ -1563,34 +1658,34 @@ html {
 }
 
 .dynamic-time-range-item .delete-btn:hover {
-    color: #e53935; /* Darker error */
+    color: #e53935;
     transform: scale(1.1);
 }
 
 .add-time-range-controls {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 0.625rem; /* 10px */
     align-items: flex-end;
-    margin-top: 20px;
-    padding-top: 15px;
+    margin-top: 1.25rem; /* 20px */
+    padding-top: 0.9375rem; /* 15px */
     border-top: 1px solid var(--border-color);
 }
 
 .add-time-range-controls .form-group {
     margin-bottom: 0;
     flex: 1 1 auto;
-    min-width: 120px;
+    min-width: 7.5rem; /* 120px */
 }
 
 .add-time-range-controls .form-control {
-    padding: 10px 15px;
+    padding: 0.625rem 0.9375rem; /* 10px 15px */
     font-size: 0.9rem;
-    border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
+    border-radius: var(--radius-sm);
 }
 
 .add-time-range-controls .btn {
-    padding: 10px 20px;
+    padding: 0.625rem 1.25rem; /* 10px 20px */
     font-size: 0.95rem;
     align-self: flex-end;
     box-shadow: none;
@@ -1598,33 +1693,33 @@ html {
 }
 
 .add-time-range-controls .btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.1); /* استخدام متغير RGB */
+    transform: translateY(-0.0625rem); /* 1px */
+    box-shadow: 0 0.125rem 0.5rem rgba(var(--black-rgb), 0.1); /* 2px 8px */
 }
 
 /* Tabs specific styling (already in previous CSS) */
 .tabs-container {
     background: var(--white);
-    border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
-    box-shadow: var(--shadow-md); /* استخدام نظام الظلال الجديد */
-    margin-bottom: 50px;
-    padding: 30px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 3.125rem; /* 50px */
+    padding: 1.875rem; /* 30px */
 }
 
 .tab-buttons {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 30px;
+    gap: 0.9375rem; /* 15px */
+    margin-bottom: 1.875rem; /* 30px */
     border-bottom: 2px solid var(--border-color);
-    padding-bottom: 15px;
+    padding-bottom: 0.9375rem; /* 15px */
 }
 
 .tab-button {
-    padding: 12px 25px;
+    padding: 0.75rem 1.5625rem; /* 12px 25px */
     border: none;
-    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
+    border-radius: var(--radius-md);
     background: var(--bg-medium);
     color: var(--text-light);
     font-size: 1rem;
@@ -1633,8 +1728,8 @@ html {
     transition: all var(--transition-speed) ease;
     display: flex;
     align-items: center;
-    gap: 10px;
-    box-shadow: var(--shadow-xs); /* ظل خفيف جدًا */
+    gap: 0.625rem; /* 10px */
+    box-shadow: var(--shadow-xs);
 }
 
 .tab-button i {
@@ -1644,25 +1739,25 @@ html {
 .tab-button:hover {
     background: var(--border-color);
     color: var(--text-medium);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-sm); /* ظل أكبر عند التحويم */
+    transform: translateY(-0.125rem); /* 2px */
+    box-shadow: var(--shadow-sm);
 }
 
 .tab-button.active {
     background: var(--primary-color);
     color: var(--white);
-    box-shadow: var(--shadow-md); /* ظل أكبر للعنصر النشط */
-    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-0.1875rem); /* 3px */
 }
 
 .tab-button.active:hover {
     background: var(--primary-dark);
-    transform: translateY(-3px);
+    transform: translateY(-0.1875rem); /* 3px */
 }
 
 .tab-content {
     display: none;
-    padding: 10px;
+    padding: 0.625rem; /* 10px */
     animation: fadeIn 0.5s ease-in;
 }
 
