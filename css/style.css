@@ -101,9 +101,9 @@ html {
 
 /* --- Navbar (Sleek and Professional) --- */
 .navbar {
-    background: rgba(255, 255, 255, 0.99); /* خلفية بيضاء شبه شفافة */
+    background: rgba(var(--white-rgb), 0.99); /* خلفية بيضاء شبه شفافة باستخدام متغير */
     backdrop-filter: blur(20px); /* تأثير ضبابي */
-    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1); /* ظل كبير وأنيق */
+    box-shadow: 0 10px 50px rgba(var(--black-rgb), 0.1); /* ظل كبير وأنيق */
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -115,7 +115,7 @@ html {
 /* Navbar shrinking effect on scroll */
 .navbar.shrink {
     height: 60px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08); /* ظل أصغر عند الانكماش */
+    box-shadow: 0 5px 25px rgba(var(--black-rgb), 0.08); /* ظل أصغر عند الانكماش */
 }
 
 .nav-container {
@@ -138,7 +138,7 @@ html {
     text-decoration: none;
     transition: all 0.3s ease;
     letter-spacing: -0.8px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+    text-shadow: 1px 1px 2px rgba(var(--black-rgb), 0.05);
 }
 
 .nav-brand:hover {
@@ -155,7 +155,7 @@ html {
     font-size: 2.5rem;
     color: var(--accent-color); /* أيقونة بلون مميز */
     transition: all 0.3s ease;
-    filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.1));
+    filter: drop-shadow(1px 1px 1px rgba(var(--black-rgb), 0.1));
 }
 
 /* Adjust brand icon size on shrink */
@@ -190,7 +190,7 @@ html {
     background: var(--primary-dark); /* خلفية داكنة عند التمرير */
     color: var(--white); /* نص أبيض عند التمرير */
     transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 20px rgba(var(--black-rgb), 0.2);
 }
 
 /* Underline effect on hover */
@@ -229,8 +229,8 @@ html {
     background: var(--white);
     border-radius: 30px;
     margin-bottom: 70px;
-    box-shadow: 0 15px 50px rgba(0,0,0,0.1),
-                0 30px 90px rgba(0,0,0,0.08);
+    box-shadow: 0 15px 50px rgba(var(--black-rgb), 0.1),
+                0 30px 90px rgba(var(--black-rgb), 0.08);
     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     border: 1px solid var(--border-color);
     position: relative;
@@ -245,7 +245,7 @@ html {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, rgba(0, 96, 64, 0.05), rgba(139, 195, 74, 0.03), rgba(0, 96, 64, 0.01));
+    background: linear-gradient(45deg, rgba(var(--primary-color-rgb), 0.05), rgba(var(--success-color-rgb), 0.03), rgba(var(--primary-dark-rgb), 0.01));
     animation: rotateGradient 25s linear infinite;
     opacity: 0.7;
     z-index: 0;
@@ -259,8 +259,8 @@ html {
 
 .hero-section:hover {
     transform: translateY(-8px);
-    box-shadow: 0 25px 70px rgba(0,0,0,0.15),
-                0 40px 100px rgba(0,0,0,0.1);
+    box-shadow: 0 25px 70px rgba(var(--black-rgb), 0.15),
+                0 40px 100px rgba(var(--black-rgb), 0.1);
 }
 
 .hero-content {
@@ -272,7 +272,7 @@ html {
     font-size: 4.5rem;
     color: var(--text-dark);
     margin-bottom: 30px;
-    text-shadow: 2px 3px 10px rgba(0, 0, 0, 0.08);
+    text-shadow: 2px 3px 10px rgba(var(--black-rgb), 0.08);
     font-weight: 900;
     line-height: 1.2;
     letter-spacing: -0.5px;
@@ -298,7 +298,7 @@ html {
     background: var(--white);
     border-radius: 25px;
     overflow: hidden;
-    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 18px 50px rgba(var(--black-rgb), 0.12);
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     border: 1px solid var(--border-color);
     position: relative;
@@ -311,7 +311,7 @@ html {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(45deg, rgba(0, 96, 64, 0.05), rgba(139, 195, 74, 0.03));
+    background: linear-gradient(45deg, rgba(var(--primary-color-rgb), 0.05), rgba(var(--success-color-rgb), 0.03));
     opacity: 0;
     transition: opacity 0.3s ease;
     pointer-events: none;
@@ -323,7 +323,7 @@ html {
 
 .feature-card:hover {
     transform: translateY(-20px);
-    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 30px 70px rgba(var(--black-rgb), 0.2);
     border-color: var(--primary-color);
 }
 
@@ -342,7 +342,7 @@ html {
     color: var(--primary-color);
     margin-bottom: 35px;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.1));
+    filter: drop-shadow(2px 2px 3px rgba(var(--black-rgb), 0.1));
 }
 
 .feature-card:hover i {
@@ -384,7 +384,7 @@ html {
     padding: 40px;
     border-radius: 20px;
     text-align: center;
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 35px rgba(var(--black-rgb), 0.1);
     transition: all 0.3s ease;
     border: 1px solid var(--border-color);
     position: relative;
@@ -398,7 +398,7 @@ html {
     left: 0;
     width: 100%;
     height: 40px;
-    background-color: rgba(139, 195, 74, 0.1); /* Using success color accent */
+    background-color: rgba(var(--success-color-rgb), 0.1); /* Using success color accent */
     transform: skewX(-20deg) scale(0);
     transition: all 0.4s ease;
     border-radius: 50%;
@@ -411,7 +411,7 @@ html {
 
 .stat-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 18px 45px rgba(var(--black-rgb), 0.18);
     border-color: var(--success-color);
 }
 
@@ -422,7 +422,7 @@ html {
     transition: all 0.3s ease;
     position: relative;
     z-index: 1;
-    filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.1));
+    filter: drop-shadow(1px 1px 1px rgba(var(--black-rgb), 0.1));
 }
 .stat-card:hover i {
     color: var(--success-color);
@@ -450,7 +450,7 @@ html {
     padding: 60px 40px;
     background: var(--white);
     border-radius: 25px;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 50px rgba(var(--black-rgb), 0.1);
     border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
@@ -463,7 +463,7 @@ html {
     right: -60px;
     width: 180px;
     height: 180px;
-    background-color: rgba(0, 121, 107, 0.08); /* Using primary color accent */
+    background-color: rgba(var(--primary-color-rgb), 0.08); /* Using primary color accent */
     border-radius: 50%;
     transform: rotate(45deg);
 }
@@ -474,7 +474,7 @@ html {
     left: -40px;
     width: 100px;
     height: 100px;
-    background-color: rgba(63, 81, 181, 0.03); /* A subtle blue tint */
+    background-color: rgba(var(--info-color-rgb), 0.03); /* A subtle blue tint */
     border-radius: 50%;
 }
 
@@ -483,7 +483,7 @@ html {
     font-size: 4rem;
     color: var(--text-dark);
     margin-bottom: 25px;
-    text-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
+    text-shadow: 2px 4px 12px rgba(var(--black-rgb), 0.1);
     font-weight: 800;
     position: relative;
     z-index: 1;
@@ -501,7 +501,7 @@ html {
 .card {
     background: var(--white);
     border-radius: 20px;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 45px rgba(var(--black-rgb), 0.1);
     overflow: hidden;
     transition: all 0.3s ease;
     border: 1px solid var(--border-color);
@@ -509,7 +509,7 @@ html {
 }
 
 .card:hover {
-    box-shadow: 0 20px 55px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 20px 55px rgba(var(--black-rgb), 0.15);
 }
 
 .card-header {
@@ -521,7 +521,7 @@ html {
     justify-content: space-between;
     font-weight: 700;
     font-size: 1.6rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(var(--white-rgb), 0.2);
 }
 
 .card-header h2 {
@@ -560,7 +560,7 @@ html {
     transition: all 0.3s ease-in-out;
     background: var(--white);
     color: var(--text-dark);
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+    box-shadow: inset 0 1px 3px rgba(var(--black-rgb), 0.08);
 }
 
 .form-group input:focus,
@@ -568,7 +568,7 @@ html {
 .form-group textarea:focus {
     outline: none;
     border-color: var(--success-color);
-    box-shadow: 0 0 0 5px rgba(76, 175, 80, 0.25); /* Using success color tint */
+    box-shadow: 0 0 0 5px rgba(var(--success-color-rgb), 0.25); /* Using success color tint */
 }
 
 /* Validation error style */
@@ -620,13 +620,13 @@ html {
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.12);
+    box-shadow: inset 0 1px 4px rgba(var(--black-rgb), 0.12);
 }
 
 .checkbox-item input[type="checkbox"]:checked {
     background-color: var(--success-color);
     border-color: var(--success-color);
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.12), 0 0 0 5px rgba(76, 175, 80, 0.25);
+    box-shadow: inset 0 1px 4px rgba(var(--black-rgb), 0.12), 0 0 0 5px rgba(var(--success-color-rgb), 0.25);
 }
 
 /* Checkmark for custom checkbox */
@@ -656,14 +656,14 @@ html {
     align-items: center;
     gap: 12px;
     text-decoration: none;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 10px 30px rgba(var(--black-rgb), 0.12);
     text-transform: capitalize;
     letter-spacing: 0.8px;
 }
 
 .btn:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 15px 45px rgba(var(--black-rgb), 0.25);
 }
 
 .btn-primary {
@@ -717,11 +717,11 @@ html {
     font-size: 0.95rem;
     gap: 10px;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.1);
 }
 .btn-sm:hover {
     transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 18px rgba(var(--black-rgb), 0.15);
 }
 
 
@@ -749,13 +749,13 @@ html {
     padding: 28px;
     margin-bottom: 25px;
     position: relative;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 25px rgba(var(--black-rgb), 0.08);
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .item-card:hover {
     transform: translateX(10px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 12px 35px rgba(var(--black-rgb), 0.12);
     border-color: var(--primary-color);
 }
 
@@ -810,7 +810,7 @@ html {
     align-items: center;
     gap: 18px;
     font-size: 1.1rem;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 20px rgba(var(--black-rgb), 0.1);
 }
 
 .status-message i {
@@ -845,7 +845,7 @@ html {
     overflow-x: auto;
     margin-bottom: 50px;
     border-radius: 18px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 12px 40px rgba(var(--black-rgb), 0.1);
 }
 
 .schedule-table {
@@ -890,7 +890,7 @@ html {
 
 /* Hover effect for empty cells in edit mode */
 .schedule-table-cell.edit-mode-active:not(.has-lecture):hover {
-    background-color: #f5fafd; /* Using info-light-bg tint */
+    background-color: rgba(var(--info-color-rgb), 0.05); /* Using info-light-bg tint */
     cursor: pointer;
     box-shadow: inset 0 0 0 3px var(--primary-color);
 }
@@ -903,16 +903,16 @@ html {
 
 /* تحديث: أنماط للخلايا المستهدفة للنقل */
 .schedule-table-cell.valid-move-target {
-    background-color: rgba(76, 175, 80, 0.1); /* أخضر فاتح من success-color */
+    background-color: rgba(var(--success-color-rgb), 0.1); /* أخضر فاتح من success-color */
     box-shadow: inset 0 0 0 3px var(--success-color); /* حدود خضراء */
     cursor: pointer;
 }
 .schedule-table-cell.valid-move-target:hover {
-    background-color: rgba(76, 175, 80, 0.2);
+    background-color: rgba(var(--success-color-rgb), 0.2);
 }
 
 .schedule-table-cell.invalid-move-target {
-    background-color: rgba(244, 67, 54, 0.1); /* أحمر فاتح من error-color */
+    background-color: rgba(var(--error-color-rgb), 0.1); /* أحمر فاتح من error-color */
     box-shadow: inset  0 0 0 3px var(--error-color); /* حدود حمراء */
     cursor: not-allowed;
 }
@@ -931,7 +931,7 @@ html {
     line-height: 1.5;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(var(--black-rgb), 0.1);
     position: relative;
     z-index: 1;
     /* تمت إزالة height: 80px; ليتمدد المحتوى */
@@ -939,13 +939,13 @@ html {
 
 .schedule-slot:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 8px 20px rgba(var(--black-rgb), 0.18);
 }
 
 /* تحديث: أنماط للمحاضرة المصدر أثناء وضع النقل */
 .schedule-slot.moving-source-lecture {
     box-shadow: 0 0 0 4px var(--info-color), /* إطار أزرق */
-                0 12px 35px rgba(0, 0, 0, 0.25);
+                0 12px 35px rgba(var(--black-rgb), 0.25);
     transform: scale(1.03);
     opacity: 0.9; /* شفافة قليلاً */
     cursor: grabbing;
@@ -1016,7 +1016,7 @@ html {
 }
 
 .schedule-slot [contenteditable="true"]:focus {
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: rgba(var(--white-rgb), 0.95);
     box-shadow: 0 0 0 2px rgba(var(--success-color-rgb), 0.4);
     border-color: var(--success-color);
 }
@@ -1058,12 +1058,12 @@ html {
     font-size: 0.75rem; /* حجم الخط أصغر */
     gap: 5px; /* مسافة أقل بين الأيقونة والنص */
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(var(--black-rgb), 0.1);
     white-space: nowrap; /* منع انقسام النص */
 }
 .lecture-actions-buttons .btn:hover {
     transform: translateY(-2px); /* تأثير تحريك بسيط عند التمرير */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 8px rgba(var(--black-rgb), 0.15);
 }
 
 
@@ -1102,7 +1102,7 @@ html {
 .filter-controls input[type="text"]:focus {
     outline: none;
     border-color: var(--success-color);
-    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+    box-shadow: 0 0 0 3px rgba(var(--success-color-rgb), 0.2);
 }
 
 
@@ -1120,13 +1120,13 @@ html {
     padding: 25px;
     margin-bottom: 20px;
     position: relative;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 20px rgba(var(--black-rgb), 0.1);
     transition: all 0.3s ease;
 }
 
 .report-card:hover {
     transform: translateX(10px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 25px rgba(var(--black-rgb), 0.15);
     border-color: var(--primary-color);
 }
 
@@ -1195,7 +1195,7 @@ html {
 }
 .report-actions .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(var(--black-rgb), 0.1);
 }
 
 
@@ -1207,7 +1207,7 @@ html {
     padding: 30px;
     margin-top: 60px;
     font-size: 0.95rem;
-    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -8px 30px rgba(var(--black-rgb), 0.1);
     letter-spacing: 0.2px;
 }
 
@@ -1348,9 +1348,9 @@ html {
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
+    border: 3px solid rgba(var(--white-rgb), 0.3);
     border-radius: 50%;
-    border-top-color: #fff;
+    border-top-color: var(--white);
     animation: spin 1s ease-in-out infinite;
 }
 
@@ -1383,14 +1383,14 @@ html {
     padding: 10px 15px;
     font-size: 0.95rem;
     color: var(--text-medium);
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 5px rgba(var(--black-rgb), 0.05);
     width: 100%;
     transition: all 0.2s ease;
 }
 
 .dynamic-time-range-item:hover {
     transform: translateX(5px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.1);
 }
 
 
@@ -1440,14 +1440,14 @@ html {
 
 .add-time-range-controls .btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.1);
 }
 
 /* Tabs specific styling (already in previous CSS) */
 .tabs-container {
     background: var(--white);
     border-radius: 20px;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 45px rgba(var(--black-rgb), 0.1);
     margin-bottom: 50px;
     padding: 30px;
 }
@@ -1475,7 +1475,7 @@ html {
     display: flex;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.08);
 }
 
 .tab-button i {
@@ -1486,13 +1486,13 @@ html {
     background: var(--border-color);
     color: var(--text-medium);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.12);
 }
 
 .tab-button.active {
     background: var(--primary-color);
     color: var(--white);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 15px rgba(var(--black-rgb), 0.15);
     transform: translateY(-3px);
 }
 
