@@ -14,10 +14,11 @@
             <a href="index.html" class="nav-brand">
                 <i class="fas fa-calendar-alt"></i> نظام جدولة المحاضرات
             </a>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
-                <li><a href="data-entry.html" class="nav-link"><i class="fas fa-plus-circle"></i> إدخال البيانات</a></li>
-                <li><a href="generate.html" class="nav-link"><i class="fas fa-cogs"></i> توليد الجداول</a></li>
+            <button class="nav-toggle-button" id="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="nav-menu"> <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="data-entry.html" class="nav-link active"><i class="fas fa-plus-circle"></i> إدخال البيانات</a></li> <li><a href="generate.html" class="nav-link"><i class="fas fa-cogs"></i> توليد الجداول</a></li>
                 <li><a href="doctor-view.html" class="nav-link"><i class="fas fa-user-md"></i> جداول الدكاترة</a></li>
                 <li><a href="room-view.html" class="nav-link"><i class="fas fa-door-open"></i> جداول القاعات</a></li>
                 <li><a href="admin-reports.html" class="nav-link"><i class="fas fa-bug"></i> البلاغات</a></li>
@@ -60,10 +61,10 @@
                                 <div class="control-buttons" style="margin-bottom: 15px; justify-content: flex-end;">
                                     <button type="button" id="smart-fill-morning-btn" class="btn btn-info btn-sm"><i class="fas fa-sun"></i> ملء دوام صباحي</button>
                                     <button type="button" id="smart-fill-full-day-btn" class="btn btn-info btn-sm"><i class="fas fa-calendar-day"></i> ملء دوام كامل</button>
-                                    <button type="button" id="clear-all-available-times-btn" class="btn btn-danger btn-sm"><i class="fas fa-times-circle"></i> مسح كل الأوقات</button>
                                     <button type="button" id="apply-to-all-weekdays-btn" class="btn btn-info btn-sm">
-    <i class="fas fa-calendar-check"></i> تطبيق على كل الأيام
-</button>
+                                        <i class="fas fa-calendar-check"></i> تطبيق على كل الأيام
+                                    </button>
+                                    <button type="button" id="clear-all-available-times-btn" class="btn btn-danger btn-sm"><i class="fas fa-times-circle"></i> مسح كل الأوقات</button>
                                 </div>
                                 <div class="checkbox-group">
                                     <div>
@@ -96,7 +97,7 @@
                             <div class="form-group">
                                 <label>أوقات غير مناسبة (لكل يوم):</label>
                                 <div id="doctor-unavailable-times-list" class="dynamic-time-ranges-container">
-                                    </div>
+                                </div>
                                 <div class="add-time-range-controls">
                                     <div class="form-group">
                                         <label for="add-doctor-unavailable-day">اليوم:</label>
@@ -127,7 +128,15 @@
                         <div class="items-list-container" style="margin-top: 30px;">
                             <h3>الدكاترة المسجلون:</h3>
                             <div id="doctors-list" class="items-list">
+                                <div class="empty-state hidden">
+                                    <i class="fas fa-user-friends"></i>
+                                    <h3>لا يوجد دكاترة مسجلون بعد!</h3>
+                                    <p>ابدأ بإضافة بيانات أول دكتور لتبدأ عملية الجدولة.</p>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="location.reload();">
+                                        <i class="fas fa-plus"></i> إضافة دكتور الآن
+                                    </button>
                                 </div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -168,7 +177,15 @@
                         <div class="items-list-container" style="margin-top: 30px;">
                             <h3>المقررات المسجلة:</h3>
                             <div id="courses-list" class="items-list">
+                                <div class="empty-state hidden">
+                                    <i class="fas fa-book-open"></i>
+                                    <h3>لا توجد مقررات مسجلة بعد!</h3>
+                                    <p>ابدأ بإضافة أول مقرر دراسي لتبدأ عملية الجدولة.</p>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="location.reload();">
+                                        <i class="fas fa-plus"></i> إضافة مقرر الآن
+                                    </button>
                                 </div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -221,7 +238,15 @@
                         <div class="items-list-container" style="margin-top: 30px;">
                             <h3>الشُعب المسجلة:</h3>
                             <div id="sections-list" class="items-list">
+                                <div class="empty-state hidden">
+                                    <i class="fas fa-layer-group"></i>
+                                    <h3>لا توجد شُعب مسجلة بعد!</h3>
+                                    <p>ابدأ بإضافة أول شعبة أو استخدم خيار الإنشاء التلقائي أعلاه.</p>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="location.reload();">
+                                        <i class="fas fa-plus"></i> إضافة شعبة الآن
+                                    </button>
                                 </div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -254,7 +279,7 @@
                             <div class="form-group">
                                 <label>أوقات ممنوعة لاستخدام المعامل (لكل يوم):</label>
                                 <div id="lab-forbidden-times-list" class="dynamic-time-ranges-container">
-                                    </div>
+                                </div>
                                 <div class="add-time-range-controls">
                                     <div class="form-group">
                                         <label for="add-lab-forbidden-day">اليوم:</label>
@@ -285,7 +310,15 @@
                         <div class="items-list-container" style="margin-top: 30px;">
                             <h3>القاعات المسجلة:</h3>
                             <div id="rooms-list" class="items-list">
+                                <div class="empty-state hidden">
+                                    <i class="fas fa-chalkboard"></i>
+                                    <h3>لا توجد قاعات مسجلة بعد!</h3>
+                                    <p>ابدأ بإضافة بيانات أول قاعة لتبدأ عملية الجدولة.</p>
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="location.reload();">
+                                        <i class="fas fa-plus"></i> إضافة قاعة الآن
+                                    </button>
                                 </div>
+                            </div>
                         </div>
                     </div>
                 </section>
