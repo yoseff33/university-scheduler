@@ -1,7 +1,6 @@
 /* css/style.css */
 
 /* Google Fonts Import */
-/* تم تحديث الخطوط لتجربة أكثر عصرية واحترافية */
 @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 
@@ -10,8 +9,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* استخدام 'unset' أو 'revert' يمكن أن يكون مفيدًا في بعض الحالات لمرونة أكبر */
-    /* margin: unset; padding: unset; */
 }
 
 /* تعريف لوحة الألوان الجديدة كمتغيرات CSS مع درجات إضافية وقيم RGB */
@@ -55,8 +52,11 @@
     --white: #FFFFFF; /* Pure White */
     --black: #000000; /* Pure Black */
     --black-rgb: 0, 0, 0; /* قيم RGB للأسود */
+    --white-rgb: 255, 255, 255; /* قيم RGB للأبيض */
+
 
     /* متغيرات الظلال الجديدة - لإضفاء إحساس بالعمق والاحترافية */
+    --shadow-xs: 0 1px 4px rgba(var(--black-rgb), 0.04), 0 2px 8px rgba(var(--black-rgb), 0.06);
     --shadow-sm: 0 2px 8px rgba(var(--black-rgb), 0.05), 0 4px 12px rgba(var(--black-rgb), 0.08);
     --shadow-md: 0 5px 15px rgba(var(--black-rgb), 0.07), 0 10px 25px rgba(var(--black-rgb), 0.1);
     --shadow-lg: 0 10px 30px rgba(var(--black-rgb), 0.08), 0 20px 45px rgba(var(--black-rgb), 0.12);
@@ -596,6 +596,21 @@ html {
     box-shadow: 0 0 0 5px rgba(var(--success-rgb), 0.25); /* استخدام متغير RGB لظل التركيز */
 }
 
+/* Placeholder styling for a modern look */
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--text-light);
+    opacity: 0.7; /* Make placeholder slightly transparent */
+    font-size: 1.05rem; /* Slightly larger for better readability */
+    transition: opacity 0.3s ease;
+}
+
+.form-group input:focus::placeholder,
+.form-group textarea:focus::placeholder {
+    opacity: 0.4; /* Dim placeholder further on focus */
+}
+
+
 /* Validation error style */
 .form-group .input-error {
     border-color: var(--error-color);
@@ -676,7 +691,8 @@ html {
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); */ /* Transition adjusted below */
+    transition: all 0.3s ease-in-out; /* استخدام انتقال أسهل وأكثر سلاسة */
     display: inline-flex;
     align-items: center;
     gap: 12px;
@@ -684,7 +700,9 @@ html {
     box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
     text-transform: capitalize;
     letter-spacing: 0.8px;
-    will-change: transform, box-shadow; /* تحسين أداء التحريكات */
+    position: relative; /* للمساعدة في تأثيرات الإضاءة */
+    overflow: hidden; /* لضمان أن تأثيرات الشimmer لا تتجاوز الحدود */
+    will-change: transform, box-shadow, background; /* تحسين أداء التحريكات */
 }
 
 .btn:hover {
@@ -692,68 +710,105 @@ html {
     box-shadow: var(--shadow-md); /* ظل أكبر عند التحويم */
 }
 
+/* Subtle gradient for buttons to add depth */
 .btn-primary {
-    background: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     color: var(--white);
 }
 
 .btn-primary:hover {
-    background: var(--primary-dark);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, #00382E 100%); /* درجة أغمق عند التحويم */
 }
 
+/* Button glow effect on hover/focus */
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(var(--white-rgb), 0.2); /* تأثير ضوء أبيض شفاف */
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: width 0.4s ease-out, height 0.4s ease-out, opacity 0.4s ease-out;
+    z-index: 0; /* تأكد من أنه خلف النص */
+}
+
+.btn:hover::before {
+    width: 200px;
+    height: 200px;
+    opacity: 1;
+}
+
+
+/* Outline / Ghost Buttons - لمسة احترافية إضافية */
+.btn-outline-primary {
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    box-shadow: none; /* لا ظل مبدئياً */
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    box-shadow: var(--shadow-sm); /* ظل خفيف عند التحويم */
+    transform: translateY(-4px); /* حركة أخف قليلاً */
+}
+/* End of Outline Buttons */
+
+
 .btn-danger {
-    background: var(--error-color);
+    background: linear-gradient(135deg, var(--error-color) 0%, #D32F2F 100%);
     color: var(--white);
 }
 
 .btn-danger:hover {
-    background: #D32F2F; /* Specific darker red */
+    background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);
 }
 
 .btn-success {
-    background: var(--success-color);
+    background: linear-gradient(135deg, var(--success-color) 0%, #388E3C 100%);
     color: var(--white);
 }
 
 .btn-success:hover {
-    background: #388E3C; /* Specific darker green */
+    background: linear-gradient(135deg, #388E3C 0%, #2E7D32 100%);
 }
 
 .btn-warning {
-    background: var(--warning-color);
+    background: linear-gradient(135deg, var(--warning-color) 0%, #F57C00 100%);
     color: var(--white);
 }
 
 .btn-warning:hover {
-    background: #F57C00; /* Specific darker orange */
+    background: linear-gradient(135deg, #F57C00 0%, #EF6C00 100%);
 }
 
 .btn-info {
-    background: var(--info-color);
+    background: linear-gradient(135deg, var(--info-color) 0%, #1976D2 100%);
     color: var(--white);
 }
 
 .btn-info:hover {
-    background: #1976D2; /* Specific darker blue */
+    background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
 }
 
 /* Small button variant */
 .btn-sm {
-    padding: 12px 22px;
+    padding: 12px 25px; /* Adjust padding slightly for consistency */
     font-size: 0.95rem;
     gap: 10px;
     border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
-    box-shadow: var(--shadow-xs); /* ظل أصغر للأزرار الصغيرة - (جديد) */
+    box-shadow: var(--shadow-xs); /* ظل أصغر للأزرار الصغيرة */
 }
 .btn-sm:hover {
     transform: translateY(-4px) scale(1.01); /* تأثير تحريك وتكبير بسيط */
     box-shadow: var(--shadow-sm); /* ظل أكبر عند التحويم */
 }
-/* تعريف Shadow-xs جديد ليتناسب مع الأزرار الصغيرة */
-:root {
-    /* ... المتغيرات الأخرى ... */
-    --shadow-xs: 0 1px 4px rgba(var(--black-rgb), 0.04), 0 2px 8px rgba(var(--black-rgb), 0.06);
-}
+
 
 /* --- Items List (for displaying lists of data) --- */
 .items-list-container h3 {
@@ -1003,7 +1058,7 @@ html {
 /* استخدام ألوان متناسقة مع اللوحة الجديدة مع درجات أفتح وأكثر حيوية */
 .lecture-color-0 { --lecture-bg-color: var(--info-light-bg); --lecture-border-color: var(--info-color); }
 .lecture-color-1 { --lecture-bg-color: var(--accent-bg-light); --lecture-border-color: var(--accent-color); }
-.lecture-color-2 { --lecture-bg-color: var(--success-light-bg); --lecture-border-color: var(--success-color); }
+.lecture-color-2 { --lecture-bg-color: var(--primary-bg-light); --lecture-border-color: var(--primary-color); } /* Changed to primary light */
 .lecture-color-3 { --lecture-bg-color: var(--error-light-bg); --lecture-border-color: var(--error-color); }
 .lecture-color-4 { --lecture-bg-color: #F0E6F7; --lecture-border-color: #C39BE0; } /* Light Purple */
 .lecture-color-5 { --lecture-bg-color: #E6F3F7; --lecture-border-color: #8FD8ED; } /* Lighter Cyan */
