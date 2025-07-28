@@ -95,7 +95,7 @@ const hasEnoughBreakTime = (doctorId, day, currentStartTimeMinutes, currentDocto
         if (lectureAtPrevSlot) {
             const lectureStartInPrevSlot = lectureAtPrevSlot.startTime;
             const lectureDurationInPrevSlot = (lectureAtPrevSlot.type === 'long' ? LECTURE_DURATION_LONG : LECTURE_DURATION_SHORT);
-            prevLectureEndTimeMinutes = timeToMinutes(lectureStartInPrevSlot) + lectureDurationInPrevSlot;
+            prevLectureEndTimeMinutes = timeToMinutes(lectureStartInPrevSlot) + lectureDurationInPrev Slot;
             console.log(`[hasEnoughBreakTime] Found previous lecture for doctor ${doctorId} at ${prevSlotToCheck}, ends at ${minutesToTime(prevLectureEndTimeMinutes)}`);
             break;
         }
@@ -633,7 +633,12 @@ const displayGeneratedSchedules = () => {
                         <div class="schedule-slot-details">
                             <span>${lecture.courseCode}</span> | <span>${labOrTheory}</span> | <span>(${lecture.durationMinutes} دقيقة)</span>
                         </div>
-                        ${editMode ? `<button class="move-lecture-btn btn btn-sm btn-info" title="نقل المحاضرة"><i class="fas fa-arrows-alt"></i></button>` : ''}
+                        ${editMode ? `
+                            <div class="lecture-actions-buttons">
+                                <button class="move-lecture-btn btn btn-sm btn-info" title="نقل المحاضرة"><i class="fas fa-arrows-alt"></i> نقل</button>
+                                <button class="delete-lecture-btn btn btn-sm btn-danger" title="حذف المحاضرة"><i class="fas fa-trash"></i> حذف</button>
+                            </div>
+                        ` : ''}
                     `;
                     td.appendChild(lectureCard);
                     td.classList.add('has-lecture');
@@ -649,7 +654,104 @@ const displayGeneratedSchedules = () => {
     addContentEditableListeners();
     attachMoveButtonListeners(); 
     attachCellClickListenersForMove();
+    attachDeleteButtonListeners(); // استدعاء جديد لربط مستمعات أحداث أزرار الحذف
 };
+
+// **وظيفة جديدة: معالجة حذف المحاضرة**
+const deleteLecture = (doctorId, day, timeSlot, lectureData) => {
+    if (!confirm(`هل أنت متأكد من حذف المحاضرة "${lectureData.courseName} - ${lectureData.sectionName}"؟`)) {
+        return;
+    }
+
+    const originalDoctorId = doctorId;
+    const originalDay = day;
+    const originalTimeSlot = timeSlot;
+    const originalLectureRoomId = lectureData.roomId;
+
+    // تحديث assignedHours للدكتور
+    const doctorGlobal = doctors.find(d => d.id === originalDoctorId);
+    if (doctorGlobal) {
+        doctorGlobal.assignedHours -= lectureData.durationMinutes;
+    }
+
+    // إزالة المحاضرة من جميع هياكل البيانات
+    const originalLectureStartSlotIndex = timeSlots.indexOf(originalTimeSlot);
+    for (let i = 0; i < lectureData.slotsOccupied; i++) {
+        const currentOriginalSlot = timeSlots[originalLectureStartSlotIndex + i];
+        if (currentOriginalSlot) {
+            // إزالة من الجدول العام
+            if (schedule[originalDay] && schedule[originalDay][currentOriginalSlot] && schedule[originalDay][currentOriginalSlot][originalLectureRoomId]) {
+                delete schedule[originalDay][currentOriginalSlot][originalLectureRoomId];
+            }
+            // تحديث توافر القاعة
+            if (roomAvailability[originalLectureRoomId] && roomAvailability[originalLectureRoomId][originalDay]) {
+                roomAvailability[originalLectureRoomId][originalDay][currentOriginalSlot] = true;
+            }
+            // إزالة من جدول الدكتور
+            if (doctorSchedules[originalDoctorId] && doctorSchedules[originalDoctorId][originalDay]) {
+                doctorSchedules[originalDoctorId][originalDay][currentOriginalSlot] = null;
+            }
+        }
+    }
+
+    // حفظ التغييرات
+    saveData('generatedSchedule', schedule);
+    saveData('doctorSchedules', doctorSchedules);
+    saveData('doctors', doctors);
+    saveData('rooms', rooms); // ربما لا تتغير Rooms بشكل مباشر، لكن للحفاظ على التناسق
+
+    // تحديث حالة isScheduled للشعب إذا لزم الأمر
+    const section = sections.find(s => s.id === lectureData.sectionId);
+    if (section) {
+        const allLecturesForSection = []; // يجب إعادة حساب جميع أجزاء المحاضرة للشعبة
+        let scheduledParts = 0;
+        // يمكن أن يكون هذا الجزء أكثر تعقيداً ليتأكد من كل "أجزاء" المقرر قد أزيلت
+        // لكن للتبسيط، سنفترض أننا نتحقق مما إذا كان هناك أي جزء من هذا المقرر/الشعبة لا يزال مجدولاً
+        for (const docId in doctorSchedules) {
+            for (const day in doctorSchedules[docId]) {
+                for (const slot in doctorSchedules[docId][day]) {
+                    const l = doctorSchedules[docId][day][slot];
+                    if (l && l.sectionId === section.id && l.courseId === lectureData.courseId) {
+                        scheduledParts++;
+                    }
+                }
+            }
+        }
+        section.isScheduled = (scheduledParts > 0); // إذا لم يعد هناك أي جزء مجدول، فالمقرر غير مجدول
+        saveData('sections', sections);
+    }
+
+    showMessage('تم حذف المحاضرة بنجاح!', 'success');
+    displayGeneratedSchedules(); // إعادة رسم الجداول لتعكس الحذف
+};
+
+
+// **وظيفة جديدة: ربط مستمعات الأحداث لأزرار الحذف**
+function attachDeleteButtonListeners() {
+    document.querySelectorAll('.delete-lecture-btn').forEach(button => {
+        button.removeEventListener('click', handleDeleteLectureButtonClick);
+        button.addEventListener('click', handleDeleteLectureButtonClick);
+    });
+    console.log('[Delete] Delete button listeners attached.');
+};
+
+// **وظيفة جديدة: معالجة النقر على زر الحذف**
+const handleDeleteLectureButtonClick = (event) => {
+    const lectureCard = event.currentTarget.closest('.schedule-slot');
+    const doctorId = parseInt(lectureCard.getAttribute('data-doctor-id'));
+    const day = lectureCard.getAttribute('data-original-day');
+    const timeSlot = lectureCard.getAttribute('data-original-timeslot');
+
+    const lectureData = doctorSchedules[doctorId][day][timeSlot];
+    if (lectureData) {
+        deleteLecture(doctorId, day, timeSlot, lectureData);
+    } else {
+        showMessage('خطأ: لم يتم العثور على بيانات المحاضرة للحذف.', 'error');
+        console.error('Lecture data not found for delete button click:', lectureCard);
+    }
+    event.stopPropagation(); // منع انتقال النقر إلى الخلية (TD)
+};
+
 
 // --- وظائف التحرير (Edit Mode Functions) ---
 function enableEditMode() {
@@ -660,7 +762,7 @@ function enableEditMode() {
 
     displayGeneratedSchedules(); 
 
-    // **التعديل الجديد لمنع قفز الشاشة:**
+    // **تم التأكد من وجود هذا السطر لمنع قفز الشاشة:**
     document.getElementById('schedule-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     showMessage('وضع التحرير مفعل. انقر على زر النقل في المحاضرة لتغيير مكانها، أو عدّل النص مباشرة.', 'info', 7000);
