@@ -123,6 +123,8 @@ body {
 html {
     scrollbar-width: thin;
     scrollbar-color: #90A4AE var(--bg-medium);
+    /* الحل لمشكلة اهتزاز الشاشة: اجعل شريط التمرير العمودي يظهر دائمًا */
+    overflow-y: scroll; 
 }
 
 
