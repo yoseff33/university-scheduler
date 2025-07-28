@@ -530,7 +530,7 @@ html {
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #8BC34A;
+    border-color: #8BC340;
     box-shadow: 0 0 0 5px rgba(139, 195, 74, 0.25);
 }
 
@@ -843,31 +843,12 @@ html {
     min-width: 110px;
 }
 
-/* تحديث: إضافة div لرسالة النقل داخل الخلية */
 .schedule-table-cell {
     background: white;
-    height: 90px; /* تحديد ارتفاع ثابت للخلايا */
+    min-height: 90px; /* تم التعديل مرة أخرى إلى min-height */
     vertical-align: top;
-    position: relative; /* مهم لوضع زر النقل أو رسالة التغذية الراجعة */
+    position: relative;
     padding: 12px;
-}
-.schedule-table-cell .move-target-feedback {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(255, 0, 0, 0.7); /* خلفية حمراء شفافة */
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-align: center;
-    white-space: nowrap;
-    pointer-events: none; /* لا يتداخل مع أحداث النقر */
-    opacity: 0; /* مخفي افتراضياً */
-    transition: opacity 0.3s ease;
-    width: 90%; /* عرض مناسب */
 }
 
 /* Hover effect for empty cells in edit mode */
@@ -916,7 +897,7 @@ html {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     position: relative;
     z-index: 1;
-    height: 80px; /* تحديد ارتفاع ثابت للمحاضرات في الجدول */
+    /* تمت إزالة height: 80px; ليتمدد المحتوى */
 }
 
 .schedule-slot:hover {
@@ -1270,22 +1251,6 @@ html {
     .report-title {
         font-size: 1.1rem;
     }
-    /* Tabs specific adjustments */
-    .tabs-container {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .tab-button {
-        width: 100%;
-        text-align: center;
-        justify-content: center;
-    }
-    .tabs-container {
-        padding: 15px;
-    }
-    .tab-content {
-        padding: 5px;
-    }
 }
 
 @media (max-width: 480px) {
@@ -1310,7 +1275,6 @@ html {
         text-align: center;
         justify-content: center;
     }
-    /* ... nav-link::after rules unchanged ... */
 }
 
 
@@ -1414,12 +1378,6 @@ html {
     margin-bottom: 0;
     flex: 1 1 auto;
     min-width: 120px;
-}
-
-.add-time-range-controls .form-group label {
-    margin-bottom: 5px;
-    font-size: 0.85rem;
-    font-weight: 500;
 }
 
 .add-time-range-controls .form-control {
