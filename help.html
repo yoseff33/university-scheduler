@@ -14,15 +14,16 @@
             <a href="index.html" class="nav-brand">
                 <i class="fas fa-calendar-alt"></i> نظام جدولة المحاضرات
             </a>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+            <button class="nav-toggle-button" id="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="nav-menu"> <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
                 <li><a href="data-entry.html" class="nav-link"><i class="fas fa-plus-circle"></i> إدخال البيانات</a></li>
                 <li><a href="generate.html" class="nav-link"><i class="fas fa-cogs"></i> توليد الجداول</a></li>
                 <li><a href="doctor-view.html" class="nav-link"><i class="fas fa-user-md"></i> جداول الدكاترة</a></li>
                 <li><a href="room-view.html" class="nav-link"><i class="fas fa-door-open"></i> جداول القاعات</a></li>
                 <li><a href="admin-reports.html" class="nav-link"><i class="fas fa-bug"></i> البلاغات</a></li>
-                <li><a href="help.html" class="nav-link"><i class="fas fa-question-circle"></i> المساعدة</a></li>
-            </ul>
+                <li><a href="help.html" class="nav-link active"><i class="fas fa-question-circle"></i> المساعدة</a></li> </ul>
         </div>
     </nav>
 
@@ -46,13 +47,13 @@
                     <li><strong>بيانات القاعات:</strong> أدخل اسم القاعة، سعتها، ونوعها (قاعة دراسية، معمل، قاعة تدريب). حدد أي أوقات ممنوعة لاستخدام المعامل إن وجدت. يمكنك <strong>تعديل أو حذف</strong> أي قاعة لاحقًا.</li>
                 </ul>
                 <p>
-                    <strong style="color: #dc2626;">هام:</strong> يتم التحقق من صحة المدخلات فورياً. تأكد من أن جميع الحقول صحيحة قبل الإرسال. يتم حفظ البيانات تلقائيًا في متصفحك (Local Storage) ولا تحتاج إلى اتصال بالإنترنت أو قاعدة بيانات.
+                    <strong style="color: var(--error-color);">هام:</strong> يتم التحقق من صحة المدخلات فورياً. تأكد من أن جميع الحقول صحيحة قبل الإرسال. يتم حفظ البيانات تلقائيًا في متصفحك (Local Storage) ولا تحتاج إلى اتصال بالإنترنت أو قاعدة بيانات.
                 </p>
 
                 <h3><i class="fas fa-cogs"></i> 2. توليد الجداول (<span class="font-mono">generate.html</span>)</h3>
                 <p>بعد إدخال جميع البيانات اللازمة، انتقل إلى صفحة <strong>"توليد الجداول"</strong>.</p>
                 <ul>
-                    <li>اضغط على زر <strong style="color: #059669;">"توليد الجداول تلقائيًا"</strong>. سيقوم النظام بتشغيل خوارزمية ذكية لمطابقة المحاضرات مع الدكاترة والقاعات والأوقات، مع مراعاة القيود التي أدخلتها وتوزيع المحاضرات بإنصاف وفترات راحة.</li>
+                    <li>اضغط على زر <strong style="color: var(--success-color);">"توليد الجداول تلقائيًا"</strong>. سيقوم النظام بتشغيل خوارزمية ذكية لمطابقة المحاضرات مع الدكاترة والقاعات والأوقات، مع مراعاة القيود التي أدخلتها وتوزيع المحاضرات بإنصاف وفترات راحة.</li>
                     <li>ستظهر الجداول الناتجة لكل دكتور على حدة.</li>
                     <li><strong>التعديل اليدوي (السحب والإفلات):</strong> يمكنك سحب وإفلات المحاضرات بين الأوقات أو بين القاعات لتعديل الجدول يدويًا.</li>
                     <li><strong>التحرير المباشر:</strong> يمكنك النقر مباشرة على اسم المقرر أو الشعبة أو القاعة داخل المحاضرة في الجدول لتعديل نصها.</li>
@@ -65,7 +66,7 @@
                 <ul>
                     <li>اختر اسم الدكتور من القائمة المنسدلة لعرض جدوله الخاص.</li>
                     <li>يمكنك <strong>طباعة</strong> الجدول المعروض للدكتور المحدد.</li>
-                    <li><strong style="color: #dc2626;">الإبلاغ عن مشاكل القاعات:</strong> يوجد نموذج خاص يمكنك استخدامه للإبلاغ عن أي أعطال أو مشاكل في القاعات (مثل أعطال التكييف أو البروجيكتور). هذه البلاغات موجهة لمسؤول الصيانة أو الإدارة.</li>
+                    <li><strong style="color: var(--error-color);">الإبلاغ عن مشاكل القاعات:</strong> يوجد نموذج خاص يمكنك استخدامه للإبلاغ عن أي أعطال أو مشاكل في القاعات (مثل أعطال التكييف أو البروجيكتور). هذه البلاغات موجهة لمسؤول الصيانة أو الإدارة.</li>
                 </ul>
 
                 <h3><i class="fas fa-door-open"></i> 4. جداول القاعات (<span class="font-mono">room-view.html</span>)</h3>
