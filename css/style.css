@@ -1,7 +1,9 @@
 /* css/style.css */
 
 /* Google Fonts Import */
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap');
+/* تم تحديث الخطوط لتجربة أكثر عصرية واحترافية */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 
 /* Global Reset */
 * {
@@ -10,24 +12,59 @@
     box-sizing: border-box;
 }
 
+/* تعريف لوحة الألوان الجديدة كمتغيرات CSS */
+:root {
+    /* ألوان أساسية (Primary) */
+    --primary-color: #00796B; /* Teal - لون أساسي عميق */
+    --primary-dark: #004D40; /* Dark Teal - للعلامة التجارية/النصوص الهامة */
+    --primary-light: #4DB6AC; /* Light Teal - للتظليل الخفيف */
+
+    /* ألوان ثانوية/مميزة (Accent) */
+    --accent-color: #FFB300; /* Amber - للتركيز والتمييز */
+    --accent-dark: #FF8F00; /* Dark Amber */
+    --accent-light: #FFD54F; /* Light Amber */
+
+    /* ألوان النجاح/التحذير/الخطأ */
+    --success-color: #4CAF50; /* Green - للنجاح */
+    --success-light-bg: #E8F5E9; /* Light Green background */
+    --warning-color: #FF9800; /* Orange - للتحذير */
+    --warning-light-bg: #FFF3E0; /* Light Orange background */
+    --error-color: #F44336; /* Red - للخطأ */
+    --error-light-bg: #FFEBEE; /* Light Red background */
+    --info-color: #2196F3; /* Blue - للمعلومات */
+    --info-light-bg: #E3F2FD; /* Light Blue background */
+
+    /* ألوان النص والرماديات (Neutrals) */
+    --text-dark: #212121; /* Dark Gray - للعناوين والنصوص الرئيسية */
+    --text-medium: #424242; /* Medium Gray - للنصوص الفرعية */
+    --text-light: #757575; /* Light Gray - للتفاصيل والوصف */
+    --bg-light: #F8F9FA; /* Very Light Gray - للخلفيات الخفيفة */
+    --bg-medium: #EFF3F6; /* Slightly darker light gray */
+    --border-color: #E0E0E0; /* Light Gray - للحدود والفواصل */
+    --white: #FFFFFF; /* Pure White */
+    --black: #000000; /* Pure Black */
+}
+
 /* Custom Text Selection Highlight */
 ::selection {
-    background: #FFB300; /* Amber for selection */
-    color: #212121;
+    background: var(--accent-color);
+    color: var(--text-dark);
 }
 ::-moz-selection { /* For Firefox */
-    background: #FFB300;
-    color: #212121;
+    background: var(--accent-color);
+    color: var(--text-dark);
 }
 
 /* Base Body Styles */
 body {
-    font-family: 'Tajawal', 'Montserrat', sans-serif;
-    background: linear-gradient(135deg, #f7f9fc 0%, #eef2f5 100%);
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e0e0e0' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 54v-4h-2v4H0v2h4v4h2v-4h4v-2H6zM6-20v4h-2v-4H0v-2h4v-4h2v4h4v2H6zM36-20v4h-2v-4h-4v-2h4v-4h2v4h4v2h-4zM6 4v-4h-2v4H0v2h4v4h2v-4h4V6H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    font-family: 'Tajawal', 'Inter', sans-serif; /* استخدام Inter كخط ثانوي للإنجليزية */
+    background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-medium) 100%);
+    /* تم تغيير نمط الخلفية أو إزالته إذا كان مزعجًا، يمكن تخصيصها لاحقًا */
+    /* background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e0e0e0' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 54v-4h-2v4H0v2h4v4h2v-4h4v-2H6zM6-20v4h-2v-4H0v-2h4v-4h2v4h4v2H6zM36-20v4h-2v-4h-4v-2h4v-4h2v4h4v2h-4zM6 4v-4h-2v4H0v2h4v4h2v-4h4V6H6z'/%3E%3C/g%3E%3C/g%3E%3Csvg%3E"); */
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B0BEC5' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 54v-4h-2v4H0v2h4v4h2v-4h4v-2H6zM6-20v4h-2v-4H0v-2h4v-4h2v4h4v2H6zM36-20v4h-2v-4h-4v-2h4v-4h2v4h4v2h-4zM6 4v-4h-2v4H0v2h4v4h2v-4h4V6H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     
     min-height: 100vh;
-    color: #263238;
+    color: var(--text-medium);
     direction: rtl;
     text-align: right;
     overflow-x: hidden;
@@ -41,24 +78,24 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: #f0f0f0;
+    background: var(--bg-medium);
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #BDBDBD;
+    background: #90A4AE; /* A soft blue-gray for thumb */
     border-radius: 10px;
     transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #9E9E9E;
+    background: #78909C; /* Darker on hover */
 }
 
 /* Custom Scrollbar for Firefox */
 html {
     scrollbar-width: thin;
-    scrollbar-color: #BDBDBD #f0f0f0;
+    scrollbar-color: #90A4AE var(--bg-medium);
 }
 
 
@@ -72,7 +109,7 @@ html {
     z-index: 1000;
     height: 75px;
     transition: all 0.3s ease-in-out;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--border-color);
 }
 
 /* Navbar shrinking effect on scroll */
@@ -97,7 +134,7 @@ html {
     gap: 15px;
     font-size: 2rem;
     font-weight: 800;
-    color: #004d40;
+    color: var(--primary-dark);
     text-decoration: none;
     transition: all 0.3s ease;
     letter-spacing: -0.8px;
@@ -105,7 +142,7 @@ html {
 }
 
 .nav-brand:hover {
-    color: #00897B;
+    color: var(--primary-color);
     transform: translateY(-3px);
 }
 
@@ -116,7 +153,7 @@ html {
 
 .nav-brand i {
     font-size: 2.5rem;
-    color: #FFB300;
+    color: var(--accent-color);
     transition: all 0.3s ease;
     filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.1));
 }
@@ -135,7 +172,7 @@ html {
 
 .nav-link {
     text-decoration: none;
-    color: #546E7A;
+    color: var(--text-light);
     padding: 12px 22px;
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -150,8 +187,8 @@ html {
 }
 
 .nav-link:hover {
-    background: #006064;
-    color: white;
+    background: var(--primary-dark);
+    color: var(--white);
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
@@ -164,7 +201,7 @@ html {
     right: 50%;
     width: 0;
     height: 4px;
-    background-color: #8BC34A;
+    background-color: var(--success-color);
     border-radius: 2px;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     transform: translateX(50%);
@@ -189,13 +226,13 @@ html {
 .hero-section {
     text-align: center;
     padding: 100px 50px;
-    background: #ffffff;
+    background: var(--white);
     border-radius: 30px;
     margin-bottom: 70px;
     box-shadow: 0 15px 50px rgba(0,0,0,0.1),
                 0 30px 90px rgba(0,0,0,0.08);
     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
 }
@@ -233,7 +270,7 @@ html {
 
 .hero-content h1 {
     font-size: 4.5rem;
-    color: #212121;
+    color: var(--text-dark);
     margin-bottom: 30px;
     text-shadow: 2px 3px 10px rgba(0, 0, 0, 0.08);
     font-weight: 900;
@@ -243,7 +280,7 @@ html {
 
 .hero-content p {
     font-size: 1.6rem;
-    color: #424242;
+    color: var(--text-medium);
     max-width: 850px;
     margin: 0 auto;
     line-height: 1.8;
@@ -258,12 +295,12 @@ html {
 }
 
 .feature-card {
-    background: #ffffff;
+    background: var(--white);
     border-radius: 25px;
     overflow: hidden;
     box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border-color);
     position: relative;
 }
 
@@ -287,7 +324,7 @@ html {
 .feature-card:hover {
     transform: translateY(-20px);
     box-shadow: 0 30px 70px rgba(0, 0, 0, 0.2);
-    border-color: #006064;
+    border-color: var(--primary-color);
 }
 
 .feature-card a {
@@ -302,7 +339,7 @@ html {
 
 .feature-card i {
     font-size: 4.5rem;
-    color: #006064;
+    color: var(--primary-color);
     margin-bottom: 35px;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.1));
@@ -310,23 +347,23 @@ html {
 
 .feature-card:hover i {
     transform: scale(1.25) rotate(20deg);
-    color: #FFB300;
+    color: var(--accent-color);
 }
 
 .feature-card h3 {
     font-size: 1.8rem;
     margin-bottom: 25px;
-    color: #212121;
+    color: var(--text-dark);
     font-weight: 700;
     transition: color 0.3s ease;
 }
 
 .feature-card:hover h3 {
-    color: #00897B;
+    color: var(--primary-color);
 }
 
 .feature-card p {
-    color: #424242;
+    color: var(--text-medium);
     line-height: 1.7;
     font-size: 1.05rem;
 }
@@ -343,13 +380,13 @@ html {
 }
 
 .stat-card {
-    background: #ffffff;
+    background: var(--white);
     padding: 40px;
     border-radius: 20px;
     text-align: center;
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
 }
@@ -361,7 +398,7 @@ html {
     left: 0;
     width: 100%;
     height: 40px;
-    background-color: rgba(139, 195, 74, 0.1);
+    background-color: rgba(139, 195, 74, 0.1); /* Using success color accent */
     transform: skewX(-20deg) scale(0);
     transition: all 0.4s ease;
     border-radius: 50%;
@@ -375,12 +412,12 @@ html {
 .stat-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
-    border-color: #8BC34A;
+    border-color: var(--success-color);
 }
 
 .stat-card i {
     font-size: 3.5rem;
-    color: #006064;
+    color: var(--primary-color);
     margin-bottom: 30px;
     transition: all 0.3s ease;
     position: relative;
@@ -388,19 +425,19 @@ html {
     filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.1));
 }
 .stat-card:hover i {
-    color: #4CAF50;
+    color: var(--success-color);
     transform: rotate(7deg) scale(1.15);
 }
 
 .stat-card h3 {
     font-size: 3.2rem;
-    color: #212121;
+    color: var(--text-dark);
     margin-bottom: 18px;
     font-weight: 800;
 }
 
 .stat-card p {
-    color: #424242;
+    color: var(--text-medium);
     font-size: 1.15rem;
     position: relative;
     z-index: 1;
@@ -411,10 +448,10 @@ html {
     text-align: center;
     margin-bottom: 60px;
     padding: 60px 40px;
-    background: #ffffff;
+    background: var(--white);
     border-radius: 25px;
     box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
 }
@@ -426,7 +463,7 @@ html {
     right: -60px;
     width: 180px;
     height: 180px;
-    background-color: rgba(0, 121, 107, 0.08);
+    background-color: rgba(0, 121, 107, 0.08); /* Using primary color accent */
     border-radius: 50%;
     transform: rotate(45deg);
 }
@@ -437,14 +474,14 @@ html {
     left: -40px;
     width: 100px;
     height: 100px;
-    background-color: rgba(63, 81, 181, 0.03);
+    background-color: rgba(63, 81, 181, 0.03); /* A subtle blue tint */
     border-radius: 50%;
 }
 
 
 .page-header h1 {
     font-size: 4rem;
-    color: #212121;
+    color: var(--text-dark);
     margin-bottom: 25px;
     text-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
     font-weight: 800;
@@ -454,7 +491,7 @@ html {
 
 .page-header p {
     font-size: 1.5rem;
-    color: #424242;
+    color: var(--text-medium);
     line-height: 1.8;
     position: relative;
     z-index: 1;
@@ -462,12 +499,12 @@ html {
 
 /* --- General Card Style --- */
 .card {
-    background: #ffffff;
+    background: var(--white);
     border-radius: 20px;
     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: all 0.3s ease;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border-color);
     margin-bottom: 40px;
 }
 
@@ -476,8 +513,8 @@ html {
 }
 
 .card-header {
-    background: #00796B;
-    color: white;
+    background: var(--primary-color);
+    color: var(--white);
     padding: 28px 40px;
     display: flex;
     align-items: center;
@@ -508,7 +545,7 @@ html {
     display: block;
     margin-bottom: 12px;
     font-weight: 600;
-    color: #424242;
+    color: var(--text-medium);
     font-size: 1.1rem;
 }
 
@@ -517,12 +554,12 @@ html {
 .form-group textarea {
     width: 100%;
     padding: 16px 22px;
-    border: 2px solid #E0E0E0;
+    border: 2px solid var(--border-color);
     border-radius: 15px;
     font-size: 1.1rem;
     transition: all 0.3s ease-in-out;
-    background: white;
-    color: #212121;
+    background: var(--white);
+    color: var(--text-dark);
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
 }
 
@@ -530,17 +567,17 @@ html {
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #8BC340;
-    box-shadow: 0 0 0 5px rgba(139, 195, 74, 0.25);
+    border-color: var(--success-color);
+    box-shadow: 0 0 0 5px rgba(76, 175, 80, 0.25); /* Using success color tint */
 }
 
 /* Validation error style */
 .form-group .input-error {
-    border-color: #F44336;
+    border-color: var(--error-color);
 }
 
 .field-error {
-    color: #F44336;
+    color: var(--error-color);
     font-size: 0.9rem;
     margin-top: 10px;
     text-align: right;
@@ -564,11 +601,11 @@ html {
     font-weight: normal;
     cursor: pointer;
     transition: all 0.2s ease;
-    color: #546E7A;
+    color: var(--text-light);
     font-size: 1rem;
 }
 .checkbox-item:hover {
-    color: #00796B;
+    color: var(--primary-color);
 }
 
 .checkbox-item input[type="checkbox"] {
@@ -577,9 +614,9 @@ html {
     margin: 0;
     flex-shrink: 0;
     appearance: none;
-    border: 2px solid #9E9E9E;
+    border: 2px solid var(--text-light);
     border-radius: 6px;
-    background-color: white;
+    background-color: var(--white);
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
@@ -587,9 +624,9 @@ html {
 }
 
 .checkbox-item input[type="checkbox"]:checked {
-    background-color: #4CAF50;
-    border-color: #4CAF50;
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.12), 0 0 0 5px rgba(139, 195, 74, 0.25);
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+    box-shadow: inset 0 1px 4px rgba(0,0,0,0.12), 0 0 0 5px rgba(76, 175, 80, 0.25);
 }
 
 /* Checkmark for custom checkbox */
@@ -599,7 +636,7 @@ html {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: white;
+    color: var(--white);
     font-size: 15px;
     line-height: 1;
     font-weight: bold;
@@ -630,48 +667,48 @@ html {
 }
 
 .btn-primary {
-    background: #00796B;
-    color: white;
+    background: var(--primary-color);
+    color: var(--white);
 }
 
 .btn-primary:hover {
-    background: #00695C;
+    background: var(--primary-dark);
 }
 
 .btn-danger {
-    background: #F44336;
-    color: white;
+    background: var(--error-color);
+    color: var(--white);
 }
 
 .btn-danger:hover {
-    background: #D32F2F;
+    background: #D32F2F; /* Specific darker red */
 }
 
 .btn-success {
-    background: #4CAF50;
-    color: white;
+    background: var(--success-color);
+    color: var(--white);
 }
 
 .btn-success:hover {
-    background: #388E3C;
+    background: #388E3C; /* Specific darker green */
 }
 
 .btn-warning {
-    background: #FF9800;
-    color: white;
+    background: var(--warning-color);
+    color: var(--white);
 }
 
 .btn-warning:hover {
-    background: #F57C00;
+    background: #F57C00; /* Specific darker orange */
 }
 
 .btn-info {
-    background: #2196F3;
-    color: white;
+    background: var(--info-color);
+    color: var(--white);
 }
 
 .btn-info:hover {
-    background: #1976D2;
+    background: #1976D2; /* Specific darker blue */
 }
 
 /* Small button variant */
@@ -691,10 +728,10 @@ html {
 /* --- Items List (for displaying lists of data) --- */
 .items-list-container h3 {
     font-size: 1.6rem;
-    color: #263238;
+    color: var(--text-dark);
     margin-bottom: 30px;
     padding-bottom: 15px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--border-color);
     font-weight: 600;
 }
 
@@ -706,8 +743,8 @@ html {
 }
 
 .item-card {
-    background: #ffffff;
-    border: 1px solid #e0e0e0;
+    background: var(--white);
+    border: 1px solid var(--border-color);
     border-radius: 18px;
     padding: 28px;
     margin-bottom: 25px;
@@ -719,7 +756,7 @@ html {
 .item-card:hover {
     transform: translateX(10px);
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
-    border-color: #00796B;
+    border-color: var(--primary-color);
 }
 
 .item-header {
@@ -731,7 +768,7 @@ html {
 
 .item-title {
     font-weight: 700;
-    color: #00796B;
+    color: var(--primary-color);
     font-size: 1.4rem;
     letter-spacing: 0.2px;
 }
@@ -742,7 +779,7 @@ html {
 }
 
 .item-details {
-    color: #424242;
+    color: var(--text-medium);
     line-height: 1.7;
     font-size: 1.05rem;
 }
@@ -781,27 +818,27 @@ html {
 }
 
 .status-message.success {
-    background: #e8f5e9;
-    color: #388E3C;
-    border: 1px solid #8BC34A;
+    background: var(--success-light-bg);
+    color: var(--success-color);
+    border: 1px solid var(--success-color);
 }
 
 .status-message.error {
-    background: #fdeded;
-    color: #D32F2F;
-    border: 1px solid #F44336;
+    background: var(--error-light-bg);
+    color: var(--error-color);
+    border: 1px solid var(--error-color);
 }
 
 .status-message.info {
-    background: #e3f2fd;
-    color: #2196F3;
-    border: 1px solid #90CAF9;
+    background: var(--info-light-bg);
+    color: var(--info-color);
+    border: 1px solid var(--info-color);
 }
 
 .status-message.warning {
-    background: #fff8e1;
-    color: #F57C00;
-    border: 1px solid #FF9800;
+    background: var(--warning-light-bg);
+    color: var(--warning-color);
+    border: 1px solid var(--warning-color);
 }
 
 .table-container {
@@ -814,7 +851,7 @@ html {
 .schedule-table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
+    background: var(--white);
     border-radius: 18px;
     overflow: hidden;
     min-width: 900px;
@@ -824,27 +861,27 @@ html {
 .schedule-table td {
     padding: 18px;
     text-align: center;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border-color);
 }
 
 .schedule-table th {
-    background: #006064;
-    color: white;
+    background: var(--primary-dark);
+    color: var(--white);
     font-weight: 600;
     font-size: 1rem;
     letter-spacing: 0.3px;
 }
 
 .schedule-table-time-header {
-    background: #e3f2fd;
+    background: var(--info-light-bg);
     font-weight: 700;
-    color: #263238;
+    color: var(--text-dark);
     font-size: 1rem;
     min-width: 110px;
 }
 
 .schedule-table-cell {
-    background: white;
+    background: var(--white);
     min-height: 90px; /* تم التعديل مرة أخرى إلى min-height */
     vertical-align: top;
     position: relative;
@@ -853,30 +890,30 @@ html {
 
 /* Hover effect for empty cells in edit mode */
 .schedule-table-cell.edit-mode-active:not(.has-lecture):hover {
-    background-color: #f5fafd;
+    background-color: #f5fafd; /* Using info-light-bg tint */
     cursor: pointer;
-    box-shadow: inset 0 0 0 3px #00796B;
+    box-shadow: inset 0 0 0 3px var(--primary-color);
 }
 
 /* Styles for cells selected for move destination */
 .schedule-table-cell.selected-move-target {
-    background-color: #e3f2fd;
-    box-shadow: inset 0 0 0 4px #006064;
+    background-color: var(--info-light-bg);
+    box-shadow: inset 0 0 0 4px var(--primary-dark);
 }
 
 /* تحديث: أنماط للخلايا المستهدفة للنقل */
 .schedule-table-cell.valid-move-target {
-    background-color: rgba(139, 195, 74, 0.1); /* أخضر فاتح */
-    box-shadow: inset 0 0 0 3px #4CAF50; /* حدود خضراء */
+    background-color: rgba(76, 175, 80, 0.1); /* أخضر فاتح من success-color */
+    box-shadow: inset 0 0 0 3px var(--success-color); /* حدود خضراء */
     cursor: pointer;
 }
 .schedule-table-cell.valid-move-target:hover {
-    background-color: rgba(139, 195, 74, 0.2);
+    background-color: rgba(76, 175, 80, 0.2);
 }
 
 .schedule-table-cell.invalid-move-target {
-    background-color: rgba(244, 67, 54, 0.1); /* أحمر فاتح */
-    box-shadow: inset  0 0 0 3px #F44336; /* حدود حمراء */
+    background-color: rgba(244, 67, 54, 0.1); /* أحمر فاتح من error-color */
+    box-shadow: inset  0 0 0 3px var(--error-color); /* حدود حمراء */
     cursor: not-allowed;
 }
 .schedule-table-cell.invalid-move-target .move-target-feedback {
@@ -885,8 +922,8 @@ html {
 
 
 .schedule-slot {
-    background: #f8f9fa;
-    border: 2px solid #e0e0e0;
+    background: var(--bg-light);
+    border: 2px solid var(--border-color);
     border-radius: 12px;
     padding: 14px;
     margin: 6px;
@@ -907,12 +944,12 @@ html {
 
 /* تحديث: أنماط للمحاضرة المصدر أثناء وضع النقل */
 .schedule-slot.moving-source-lecture {
-    box-shadow: 0 0 0 4px #2196F3, /* إطار أزرق */
+    box-shadow: 0 0 0 4px var(--info-color), /* إطار أزرق */
                 0 12px 35px rgba(0, 0, 0, 0.25);
     transform: scale(1.03);
     opacity: 0.9; /* شفافة قليلاً */
     cursor: grabbing;
-    border-color: #2196F3;
+    border-color: var(--info-color);
 }
 
 
@@ -920,43 +957,44 @@ html {
 .schedule-slot.colored-lecture {
     background: var(--lecture-bg-color);
     border-color: var(--lecture-border-color);
-    color: #212121;
+    color: var(--text-dark);
 }
 
 .schedule-slot.colored-lecture .schedule-slot-subject {
-    color: #212121;
+    color: var(--text-dark);
 }
 .schedule-slot.colored-lecture .schedule-slot-info {
-    color: #424242;
+    color: var(--text-medium);
 }
 
 /* Color Palette for Lectures (more refined) */
-.lecture-color-0 { --lecture-bg-color: #E0F7FA; --lecture-border-color: #4DD0E1; }
-.lecture-color-1 { --lecture-bg-color: #FFFDE7; --lecture-border-color: #FFEB3B; }
-.lecture-color-2 { --lecture-bg-color: #E8F5E9; --lecture-border-color: #81C784; }
-.lecture-color-3 { --lecture-bg-color: #FFEBEE; --lecture-border-color: #EF9A9A; }
-.lecture-color-4 { --lecture-bg-color: #EDE7F6; --lecture-border-color: #B39DDB; }
-.lecture-color-5 { --lecture-bg-color: #F3E5F5; --lecture-border-color: #CE93D8; }
-.lecture-color-6 { --lecture-bg-color: #E0F7FA; --lecture-border-color: #4DD0E1; }
+/* استخدام ألوان متناسقة مع اللوحة الجديدة */
+.lecture-color-0 { --lecture-bg-color: #E0F2F7; --lecture-border-color: #99D9F0; } /* Light Blue/Cyan */
+.lecture-color-1 { --lecture-bg-color: #FFF8E6; --lecture-border-color: #FFD25B; } /* Light Yellow/Amber */
+.lecture-color-2 { --lecture-bg-color: #E6F8E6; --lecture-border-color: #A3D9A3; } /* Light Green */
+.lecture-color-3 { --lecture-bg-color: #FFEEEC; --lecture-border-color: #FFB3A6; } /* Light Red/Coral */
+.lecture-color-4 { --lecture-bg-color: #F0E6F7; --lecture-border-color: #C39BE0; } /* Light Purple */
+.lecture-color-5 { --lecture-bg-color: #E6F3F7; --lecture-border-color: #8FD8ED; } /* Lighter Cyan */
+.lecture-color-6 { --lecture-bg-color: #F7E6E6; --lecture-border-color: #F0B3B3; } /* Light Rose */
 
 
 .schedule-slot-subject {
     font-weight: 700;
-    color: #212121;
+    color: var(--text-dark);
     margin-bottom: 5px;
     font-size: 1rem;
     line-height: 1.3;
 }
 
 .schedule-slot-info {
-    color: #424242;
+    color: var(--text-medium);
     font-size: 0.85rem;
     line-height: 1.4;
 }
 /* New style for detailed info in schedule slots */
 .schedule-slot-details {
     font-size: 0.75rem;
-    color: #757575;
+    color: var(--text-light);
     margin-top: 5px;
     line-height: 1.3;
 }
@@ -979,8 +1017,8 @@ html {
 
 .schedule-slot [contenteditable="true"]:focus {
     background-color: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.4);
-    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(var(--success-color-rgb), 0.4);
+    border-color: var(--success-color);
 }
 
 /* Dim non-editable content when edit mode is active */
@@ -991,53 +1029,58 @@ html {
     pointer-events: none;
 }
 
-/* تحديث: زر النقل الجديد */
-.schedule-slot .move-lecture-btn {
+/* تحديث: أزرار النقل والحذف الجديدة ضمن المحاضرة */
+.lecture-actions-buttons {
     position: absolute;
-    top: 5px;
-    left: 5px; /* RTL */
-    background-color: rgba(0, 121, 107, 0.8);
-    color: white;
-    border-radius: 8px;
-    width: 30px;
-    height: 30px;
+    top: 8px;
+    left: 8px; /* RTL - لتظهر الأزرار على اليسار */
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9rem;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    opacity: 0; /* مخفي افتراضيا */
-    transition: all 0.2s ease;
+    gap: 8px; /* المسافة بين الأزرار */
+    opacity: 0; /* مخفية افتراضياً */
+    transition: all 0.3s ease;
     z-index: 5;
-    transform: scale(0.8);
-    border: none; /* إزالة الحدود الافتراضية للزر */
-    padding: 0;
+    transform: translateY(-5px); /* تأثير بسيط عند الظهور */
 }
-.schedule-slot:hover .move-lecture-btn,
-.schedule-slot.moving-source-lecture .move-lecture-btn {
+
+.schedule-slot:hover .lecture-actions-buttons,
+.schedule-slot.moving-source-lecture .lecture-actions-buttons {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0);
 }
-/* إخفاء زر النقل إذا لم يكن وضع التحرير مفعلاً */
-.schedule-slot:not(.editable-lecture) .move-lecture-btn {
+
+/* إخفاء الأزرار إذا لم يكن وضع التحرير مفعلاً */
+.schedule-slot:not(.editable-lecture) .lecture-actions-buttons {
     display: none;
 }
+
+.lecture-actions-buttons .btn {
+    padding: 6px 10px; /* تصغير الأزرار أكثر لتناسب المساحة */
+    font-size: 0.75rem; /* حجم الخط أصغر */
+    gap: 5px; /* مسافة أقل بين الأيقونة والنص */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    white-space: nowrap; /* منع انقسام النص */
+}
+.lecture-actions-buttons .btn:hover {
+    transform: translateY(-2px); /* تأثير تحريك بسيط عند التمرير */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
 
 /* --- Admin Reports --- */
 .admin-reports-section .stats-grid {
     margin-bottom: 30px;
 }
 .admin-stats .stat-card.pending {
-    border-left: 4px solid #FFC107;
+    border-left: 4px solid var(--warning-color);
 }
 
 .admin-stats .stat-card.resolved {
-    border-left: 4px solid #4CAF50;
+    border-left: 4px solid var(--success-color);
 }
 
 .admin-stats .stat-card.total {
-    border-left: 4px solid #00796B;
+    border-left: 4px solid var(--primary-color);
 }
 
 .filter-controls {
@@ -1050,15 +1093,15 @@ html {
 .filter-controls select,
 .filter-controls input[type="text"] {
     padding: 10px 15px;
-    border: 1px solid #cfd8dc;
+    border: 1px solid var(--border-color);
     border-radius: 10px;
-    background: white;
+    background: var(--white);
     transition: all 0.3s ease;
 }
 .filter-controls select:focus,
 .filter-controls input[type="text"]:focus {
     outline: none;
-    border-color: #4CAF50;
+    border-color: var(--success-color);
     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
 }
 
@@ -1071,8 +1114,8 @@ html {
 }
 
 .report-card {
-    background: white;
-    border: 1px solid #e0e0e0;
+    background: var(--white);
+    border: 1px solid var(--border-color);
     border-radius: 15px;
     padding: 25px;
     margin-bottom: 20px;
@@ -1084,14 +1127,15 @@ html {
 .report-card:hover {
     transform: translateX(10px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: var(--primary-color);
 }
 
 .report-card.pending {
-    border-left: 5px solid #FFC107;
+    border-left: 5px solid var(--warning-color);
 }
 
 .report-card.resolved {
-    border-left: 5px solid #4CAF50;
+    border-left: 5px solid var(--success-color);
 }
 
 .report-header {
@@ -1103,7 +1147,7 @@ html {
 
 .report-title {
     font-weight: 700;
-    color: #263238;
+    color: var(--text-dark);
     font-size: 1.3rem;
 }
 
@@ -1116,24 +1160,24 @@ html {
 }
 
 .report-status.pending {
-    background: #fff8e1;
-    color: #f39c12;
+    background: var(--warning-light-bg);
+    color: var(--warning-color);
 }
 
 .report-status.resolved {
-    background: #e8f5e9;
-    color: #27ae60;
+    background: var(--success-light-bg);
+    color: var(--success-color);
 }
 
 .report-details {
-    color: #546E7A;
+    color: var(--text-medium);
     line-height: 1.7;
     font-size: 1rem;
 }
 
 .report-meta {
     font-size: 0.95rem;
-    color: #90A4AE;
+    color: var(--text-light);
     margin-top: 12px;
     display: block;
 }
@@ -1141,7 +1185,7 @@ html {
 .report-actions {
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid var(--border-color);
     display: flex;
     gap: 12px;
     justify-content: flex-end;
@@ -1157,8 +1201,8 @@ html {
 
 /* --- Footer --- */
 .footer {
-    background: #263238;
-    color: white;
+    background: var(--text-dark); /* Using text-dark for a consistent dark footer */
+    color: var(--white);
     text-align: center;
     padding: 30px;
     margin-top: 60px;
@@ -1316,11 +1360,11 @@ html {
 
 /* Utility Classes for content display in dynamic inputs */
 .dynamic-time-ranges-container {
-    border: 1px dashed #cfd8dc;
+    border: 1px dashed var(--border-color);
     border-radius: 10px;
     padding: 15px;
     margin-top: 15px;
-    background-color: #f8faff;
+    background-color: var(--info-light-bg); /* Using info color tint */
     min-height: 80px;
     display: flex;
     flex-direction: column;
@@ -1333,12 +1377,12 @@ html {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #e3f2fd;
-    border: 1px solid #bbdefb;
+    background-color: var(--info-light-bg);
+    border: 1px solid var(--info-color);
     border-radius: 8px;
     padding: 10px 15px;
     font-size: 0.95rem;
-    color: #34495e;
+    color: var(--text-medium);
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
     width: 100%;
     transition: all 0.2s ease;
@@ -1353,14 +1397,14 @@ html {
 .dynamic-time-range-item .delete-btn {
     background: none;
     border: none;
-    color: #ef5350;
+    color: var(--error-color);
     cursor: pointer;
     font-size: 1.1rem;
     transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .dynamic-time-range-item .delete-btn:hover {
-    color: #e53935;
+    color: #e53935; /* Darker error */
     transform: scale(1.1);
 }
 
@@ -1371,7 +1415,7 @@ html {
     align-items: flex-end;
     margin-top: 20px;
     padding-top: 15px;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid var(--border-color);
 }
 
 .add-time-range-controls .form-group {
@@ -1401,7 +1445,7 @@ html {
 
 /* Tabs specific styling (already in previous CSS) */
 .tabs-container {
-    background: #ffffff;
+    background: var(--white);
     border-radius: 20px;
     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
     margin-bottom: 50px;
@@ -1414,7 +1458,7 @@ html {
     flex-wrap: wrap;
     gap: 15px;
     margin-bottom: 30px;
-    border-bottom: 2px solid #e0e0e0;
+    border-bottom: 2px solid var(--border-color);
     padding-bottom: 15px;
 }
 
@@ -1422,8 +1466,8 @@ html {
     padding: 12px 25px;
     border: none;
     border-radius: 10px;
-    background: #f0f0f0;
-    color: #607d8b;
+    background: var(--bg-medium);
+    color: var(--text-light);
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
@@ -1439,21 +1483,21 @@ html {
 }
 
 .tab-button:hover {
-    background: #e0e0e0;
-    color: #546E7A;
+    background: var(--border-color);
+    color: var(--text-medium);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .tab-button.active {
-    background: #00796B;
-    color: white;
+    background: var(--primary-color);
+    color: var(--white);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     transform: translateY(-3px);
 }
 
 .tab-button.active:hover {
-    background: #006064;
+    background: var(--primary-dark);
     transform: translateY(-3px);
 }
 
