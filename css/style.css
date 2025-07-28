@@ -1564,7 +1564,7 @@ html {
 
 
 /* Desktops and larger screens (min-width: 993px) */
-@media (min-width: 980px) {
+@media (min-width: 950px) {
     html {
         font-size: 100%; /* Default 16px */
     }
