@@ -4,50 +4,50 @@
 @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 
-/* Global Reset - أساس نظيف ومرن */
+/* Global Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    scroll-behavior: smooth; /* لتحريك سلس عند التنقل */
+    scroll-behavior: smooth;
 }
 
-/* تعريف لوحة الألوان الاحترافية كمتغيرات CSS مع درجات RGB لمرونة الشفافية */
+/* تعريف لوحة الألوان الجديدة كمتغيرات CSS مع درجات إضافية وقيم RGB */
 :root {
-    /* ألوان أساسية (Primary) - تركيز على الدرجات الهادئة والعميقة */
-    --primary-color: #00796B; /* Teal - لون أساسي غني */
-    --primary-dark: #004D40; /* Dark Teal - للعناوين والأبرز */
+    /* ألوان أساسية (Primary) */
+    --primary-color: #00796B; /* Teal - لون أساسي عميق */
+    --primary-dark: #004D40; /* Dark Teal - للعلامة التجارية/النصوص الهامة */
     --primary-light: #4DB6AC; /* Light Teal - للتظليل الخفيف */
-    --primary-rgb: 0, 121, 107; /* قيم RGB للشفافية */
-    --primary-bg-light: #E0F2F1; /* خلفية ناعمة من اللون الأساسي */
-    --primary-bg-medium: #B2DFDB; /* خلفية متوسطة */
+    --primary-rgb: 0, 121, 107; /* قيم RGB للتحكم بالشفافية */
+    --primary-bg-light: #E0F2F1; /* خلفية خفيفة جدًا من اللون الأساسي */
+    --primary-bg-medium: #B2DFDB; /* خلفية متوسطة من اللون الأساسي */
 
-    /* ألوان ثانوية/مميزة (Accent) - لإضافة حيوية وتباين */
+    /* ألوان ثانوية/مميزة (Accent) */
     --accent-color: #FFB300; /* Amber - للتركيز والتمييز */
     --accent-dark: #FF8F00; /* Dark Amber */
     --accent-light: #FFD54F; /* Light Amber */
-    --accent-rgb: 255, 179, 0; /* قيم RGB للشفافية */
-    --accent-bg-light: #FFF8E1; /* خلفية ناعمة من اللون الثانوي */
+    --accent-rgb: 255, 179, 0; /* قيم RGB للتحكم بالشفافية */
+    --accent-bg-light: #FFF8E1; /* خلفية خفيفة جدًا من اللون الثانوي */
 
-    /* ألوان حالات النظام (Success, Warning, Error, Info) - واضحة ومحددة */
+    /* ألوان النجاح/التحذير/الخطأ والمعلومات */
     --success-color: #4CAF50; /* Green - للنجاح */
     --success-rgb: 76, 175, 80;
-    --success-light-bg: #E8F5E9; 
+    --success-light-bg: #E8F5E9; /* Light Green background */
     --warning-color: #FF9800; /* Orange - للتحذير */
     --warning-rgb: 255, 152, 0;
-    --warning-light-bg: #FFF3E0; 
+    --warning-light-bg: #FFF3E0; /* Light Orange background */
     --error-color: #F44336; /* Red - للخطأ */
     --error-rgb: 244, 67, 54;
-    --error-light-bg: #FFEBEE; 
+    --error-light-bg: #FFEBEE; /* Light Red background */
     --info-color: #2196F3; /* Blue - للمعلومات */
     --info-rgb: 33, 150, 243;
-    --info-light-bg: #E3F2FD; 
+    --info-light-bg: #E3F2FD; /* Light Blue background */
 
-    /* ألوان النص والرماديات (Neutrals) - أساس محايد للتصميم */
+    /* ألوان النص والرماديات (Neutrals) */
     --text-dark: #212121; /* Dark Gray - للعناوين والنصوص الرئيسية */
     --text-medium: #424242; /* Medium Gray - للنصوص الفرعية */
     --text-light: #757575; /* Light Gray - للتفاصيل والوصف */
-    --bg-light: #F8F9FA; /* Very Light Gray - للخلفيات الفاتحة */
+    --bg-light: #F8F9FA; /* Very Light Gray - للخلفيات الخفيفة */
     --bg-medium: #EFF3F6; /* Slightly darker light gray */
     --border-color: #E0E0E0; /* Light Gray - للحدود والفواصل */
     --white: #FFFFFF; /* Pure White */
@@ -55,20 +55,21 @@
     --black-rgb: 0, 0, 0; /* قيم RGB للأسود */
     --white-rgb: 255, 255, 255; /* قيم RGB للأبيض */
 
-    /* متغيرات الظلال الجديدة - لإضفاء إحساس بالعمق والاحترافية (نظام طبقات) */
+
+    /* متغيرات الظلال الجديدة - لإضفاء إحساس بالعمق والاحترافية */
     --shadow-xs: 0 1px 4px rgba(var(--black-rgb), 0.04), 0 2px 8px rgba(var(--black-rgb), 0.06);
     --shadow-sm: 0 2px 8px rgba(var(--black-rgb), 0.05), 0 4px 12px rgba(var(--black-rgb), 0.08);
     --shadow-md: 0 5px 15px rgba(var(--black-rgb), 0.07), 0 10px 25px rgba(var(--black-rgb), 0.1);
     --shadow-lg: 0 10px 30px rgba(var(--black-rgb), 0.08), 0 20px 45px rgba(var(--black-rgb), 0.12);
     --shadow-xl: 0 15px 45px rgba(var(--black-rgb), 0.1), 0 30px 60px rgba(var(--black-rgb), 0.15);
 
-    /* متغيرات لنصف قطر الزوايا (Border Radius) - لتوحيد التناسق البصري */
+    /* متغيرات لنصف قطر الزوايا (Border Radius) لتناسق التصميم */
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 20px;
     --radius-xl: 30px;
 
-    /* متغيرات لسرعة ونوع الانتقال والحركة - للتحكم الشامل في التفاعلات */
+    /* متغيرات لسرعة الانتقال والحركة */
     --transition-speed: 0.3s;
     --transition-bezier: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
@@ -76,7 +77,7 @@
     font-size: 16px; /* هذه قيمة افتراضية يمكن تغييرها لضبط حجم الخط الأساسي */
 }
 
-/* Custom Text Selection Highlight - لمسة شخصية أنيقة */
+/* Custom Text Selection Highlight */
 ::selection {
     background: var(--accent-color);
     color: var(--text-dark);
@@ -86,7 +87,7 @@
     color: var(--text-dark);
 }
 
-/* Base Body Styles - أساس تصميم الصفحة */
+/* Base Body Styles */
 html {
     /* الحل لمشكلة اهتزاز الشاشة: اجعل شريط التمرير العمودي يظهر دائمًا */
     overflow-y: scroll;
@@ -103,7 +104,7 @@ body {
     color: var(--text-medium);
     direction: rtl;
     text-align: right;
-    overflow-x: hidden; /* لمنع التمرير الأفقي */
+    overflow-x: hidden;
     line-height: 1.7;
 }
 
@@ -129,14 +130,13 @@ body {
 }
 
 /* Custom Scrollbar for Firefox */
-/* تمت إضافة overflow-y: scroll; في الـ html الأعلى */
 html {
     scrollbar-width: thin;
     scrollbar-color: #90A4AE var(--bg-medium);
 }
 
 
-/* --- Navbar (Sleek and Professional) - قلب التصميم التفاعلي --- */
+/* --- Navbar (Sleek and Professional) --- */
 .navbar {
     background: rgba(var(--white-rgb), 0.98);
     backdrop-filter: blur(25px);
@@ -149,7 +149,7 @@ html {
     border-bottom: 1px solid var(--border-color);
 }
 
-/* Navbar shrinking effect on scroll - لمسة ديناميكية عند التمرير */
+/* Navbar shrinking effect on scroll */
 .navbar.shrink {
     height: 60px;
     box-shadow: var(--shadow-md);
@@ -170,7 +170,7 @@ html {
     display: flex;
     align-items: center;
     gap: 15px;
-    font-size: 2rem; /* تم تغيير حجم الخط ليتجاوب مع الـ rem في الـ media queries */
+    font-size: 2rem;
     font-weight: 800;
     color: var(--primary-dark);
     text-decoration: none;
@@ -190,7 +190,7 @@ html {
 }
 
 .nav-brand i {
-    font-size: 2.5rem; /* تم تغيير حجم الخط ليتجاوب مع الـ rem في الـ media queries */
+    font-size: 2.5rem;
     background: linear-gradient(45deg, var(--accent-color), var(--accent-dark));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -248,16 +248,16 @@ html {
 .nav-link {
     text-decoration: none;
     color: var(--text-light);
-    padding: 0.75rem 1.375rem; /* استخدام rem للتباعد */
+    padding: 0.75rem 1.375rem;
     border-radius: var(--radius-md);
     transition: all var(--transition-speed) var(--transition-bezier);
     display: flex;
     align-items: center;
-    gap: 0.625rem; /* 10px */
+    gap: 0.625rem;
     white-space: nowrap;
     position: relative;
     font-weight: 600;
-    font-size: 1.05rem; /* سيتغير مع حجم الـ html font-size */
+    font-size: 1.05rem;
     letter-spacing: 0.3px;
     transform: skewX(-2deg);
 }
@@ -309,7 +309,7 @@ html {
 .main-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 50px 30px; /* استخدام px هنا مناسب للـ padding الخارجي */
+    padding: 50px 30px;
     min-height: calc(100vh - 170px);
 }
 
@@ -360,7 +360,7 @@ html {
 .hero-content h1 {
     font-size: clamp(2.8rem, 7vw, 4.5rem);
     color: var(--text-dark);
-    margin-bottom: 1.875rem; /* 30px */
+    margin-bottom: 1.875rem;
     text-shadow: 2px 3px 10px rgba(var(--black-rgb), 0.08);
     font-weight: 900;
     line-height: 1.2;
@@ -379,8 +379,8 @@ html {
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-    gap: 3.125rem; /* 50px */
-    margin-bottom: 5rem; /* 80px */
+    gap: 3.125rem;
+    margin-bottom: 5rem;
 }
 
 .feature-card {
@@ -412,7 +412,7 @@ html {
 }
 
 .feature-card:hover {
-    transform: translateY(-1.25rem) scale(1.02); /* 20px */
+    transform: translateY(-1.25rem) scale(1.02);
     box-shadow: var(--shadow-lg);
     border-color: var(--primary-color);
 }
@@ -420,7 +420,7 @@ html {
 .feature-card a {
     text-decoration: none;
     color: inherit;
-    padding: 3.125rem; /* 50px */
+    padding: 3.125rem;
     display: block;
     text-align: center;
     position: relative;
@@ -434,7 +434,7 @@ html {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-fill-color: transparent;
-    margin-bottom: 2.1875rem; /* 35px */
+    margin-bottom: 2.1875rem;
     transition: all var(--transition-speed) var(--transition-bezier);
     filter: drop-shadow(2px 2px 3px rgba(var(--black-rgb),0.1));
 }
@@ -450,7 +450,7 @@ html {
 
 .feature-card h3 {
     font-size: 1.8rem;
-    margin-bottom: 1.5625rem; /* 25px */
+    margin-bottom: 1.5625rem;
     color: var(--text-dark);
     font-weight: 700;
     transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
@@ -460,7 +460,7 @@ html {
 
 .feature-card:hover h3 {
     color: var(--primary-color);
-    transform: translateY(-0.3125rem); /* 5px */
+    transform: translateY(-0.3125rem);
 }
 
 .feature-card p {
@@ -473,24 +473,24 @@ html {
 }
 
 .feature-card:hover p {
-    transform: translateY(-0.3125rem); /* 5px */
+    transform: translateY(-0.3125rem);
 }
 
 
 /* --- Stats Section --- */
 .stats-section {
-    margin-top: 4.375rem; /* 70px */
+    margin-top: 4.375rem;
 }
 
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 2.1875rem; /* 35px */
+    gap: 2.1875rem;
 }
 
 .stat-card {
     background: var(--white);
-    padding: 2.5rem; /* 40px */
+    padding: 2.5rem;
     border-radius: var(--radius-lg);
     text-align: center;
     box-shadow: var(--shadow-sm);
@@ -504,10 +504,10 @@ html {
 .stat-card::after {
     content: '';
     position: absolute;
-    bottom: -1.25rem; /* -20px */
+    bottom: -1.25rem;
     left: 0;
     width: 100%;
-    height: 2.5rem; /* 40px */
+    height: 2.5rem;
     background-color: rgba(var(--success-rgb), 0.1);
     transform: skewX(-20deg) scale(0);
     transition: all 0.4s ease;
@@ -520,7 +520,7 @@ html {
 }
 
 .stat-card:hover {
-    transform: translateY(-0.625rem) scale(1.02); /* 10px */
+    transform: translateY(-0.625rem) scale(1.02);
     box-shadow: var(--shadow-md);
     border-color: var(--success-color);
 }
@@ -532,7 +532,7 @@ html {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-fill-color: transparent;
-    margin-bottom: 1.875rem; /* 30px */
+    margin-bottom: 1.875rem;
     transition: all var(--transition-speed) ease;
     position: relative;
     z-index: 1;
@@ -550,7 +550,7 @@ html {
 .stat-card h3 {
     font-size: 3.2rem;
     color: var(--text-dark);
-    margin-bottom: 1.125rem; /* 18px */
+    margin-bottom: 1.125rem;
     font-weight: 800;
 }
 
@@ -564,8 +564,8 @@ html {
 /* --- Page Header (for other pages) --- */
 .page-header {
     text-align: center;
-    margin-bottom: 3.75rem; /* 60px */
-    padding: 3.75rem 2.5rem; /* 60px 40px */
+    margin-bottom: 3.75rem;
+    padding: 3.75rem 2.5rem;
     background: var(--white);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
@@ -577,10 +577,10 @@ html {
 .page-header::before {
     content: '';
     position: absolute;
-    bottom: -3.75rem; /* -60px */
-    right: -3.75rem; /* -60px */
-    width: 11.25rem; /* 180px */
-    height: 11.25rem; /* 180px */
+    bottom: -3.75rem;
+    right: -3.75rem;
+    width: 11.25rem;
+    height: 11.25rem;
     background-color: rgba(var(--primary-rgb), 0.08);
     border-radius: 50%;
     transform: rotate(45deg);
@@ -588,10 +588,10 @@ html {
 .page-header::after {
     content: '';
     position: absolute;
-    top: -2.5rem; /* -40px */
-    left: -2.5rem; /* -40px */
-    width: 6.25rem; /* 100px */
-    height: 6.25rem; /* 100px */
+    top: -2.5rem;
+    left: -2.5rem;
+    width: 6.25rem;
+    height: 6.25rem;
     background-color: rgba(63, 81, 181, 0.03);
     border-radius: 50%;
 }
@@ -600,7 +600,7 @@ html {
 .page-header h1 {
     font-size: clamp(2.5rem, 6vw, 4rem);
     color: var(--text-dark);
-    margin-bottom: 1.5625rem; /* 25px */
+    margin-bottom: 1.5625rem;
     text-shadow: 2px 4px 12px rgba(var(--black-rgb), 0.1);
     font-weight: 800;
     position: relative;
@@ -623,7 +623,7 @@ html {
     overflow: hidden;
     transition: all var(--transition-speed) ease;
     border: 1px solid var(--border-color);
-    margin-bottom: 2.5rem; /* 40px */
+    margin-bottom: 2.5rem;
     will-change: box-shadow;
 }
 
@@ -634,7 +634,7 @@ html {
 .card-header {
     background: var(--primary-color);
     color: var(--white);
-    padding: 1.75rem 2.5rem; /* 28px 40px */
+    padding: 1.75rem 2.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -647,22 +647,22 @@ html {
     font-size: 1.6rem;
     display: flex;
     align-items: center;
-    gap: 0.9375rem; /* 15px */
+    gap: 0.9375rem;
 }
 
 .card-body {
-    padding: 2.5rem; /* 40px */
+    padding: 2.5rem;
 }
 
 /* --- Form Elements --- */
 .form-group {
-    margin-bottom: 1.875rem; /* 30px */
+    margin-bottom: 1.875rem;
     position: relative;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 0.75rem; /* 12px */
+    margin-bottom: 0.75rem;
     font-weight: 600;
     color: var(--text-medium);
     font-size: 1.1rem;
@@ -672,7 +672,7 @@ html {
 .form-group select,
 .form-group textarea {
     width: 100%;
-    padding: 1rem 1.375rem; /* 16px 22px */
+    padding: 1rem 1.375rem;
     border: 2px solid var(--border-color);
     border-radius: var(--radius-md);
     font-size: 1.1rem;
@@ -687,7 +687,7 @@ html {
 .form-group textarea:focus {
     outline: none;
     border-color: var(--success-color);
-    box-shadow: 0 0 0 0.3125rem rgba(var(--success-rgb), 0.25); /* 5px */
+    box-shadow: 0 0 0 0.3125rem rgba(var(--success-rgb), 0.25);
 }
 
 /* Placeholder styling for a modern look */
@@ -713,7 +713,7 @@ html {
 .field-error {
     color: var(--error-color);
     font-size: 0.9rem;
-    margin-top: 0.625rem; /* 10px */
+    margin-top: 0.625rem;
     text-align: right;
     display: block;
     font-weight: 500;
@@ -724,14 +724,14 @@ html {
 .checkbox-group {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.25rem; /* 20px */
-    margin-top: 1.25rem; /* 20px */
+    gap: 1.25rem;
+    margin-top: 1.25rem;
 }
 
 .checkbox-item {
     display: flex;
     align-items: center;
-    gap: 0.75rem; /* 12px */
+    gap: 0.75rem;
     font-weight: normal;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -743,8 +743,8 @@ html {
 }
 
 .checkbox-item input[type="checkbox"] {
-    width: 1.375rem; /* 22px */
-    height: 1.375rem; /* 22px */
+    width: 1.375rem;
+    height: 1.375rem;
     margin: 0;
     flex-shrink: 0;
     appearance: none;
@@ -760,7 +760,7 @@ html {
 .checkbox-item input[type="checkbox"]:checked {
     background-color: var(--success-color);
     border-color: var(--success-color);
-    box-shadow: inset 0 1px 4px rgba(var(--black-rgb),0.12), 0 0 0 0.3125rem rgba(var(--success-rgb), 0.25); /* 5px */
+    box-shadow: inset 0 1px 4px rgba(var(--black-rgb),0.12), 0 0 0 0.3125rem rgba(var(--success-rgb), 0.25);
 }
 
 /* Checkmark for custom checkbox */
@@ -771,7 +771,7 @@ html {
     left: 50%;
     transform: translate(-50%, -50%);
     color: var(--white);
-    font-size: 0.9375rem; /* 15px */
+    font-size: 0.9375rem;
     line-height: 1;
     font-weight: bold;
 }
@@ -779,7 +779,7 @@ html {
 
 /* --- Buttons --- */
 .btn {
-    padding: 1.125rem 2.375rem; /* 18px 38px */
+    padding: 1.125rem 2.375rem;
     border: none;
     border-radius: var(--radius-md);
     font-size: 1.1rem;
@@ -788,19 +788,19 @@ html {
     transition: all var(--transition-speed) ease-in-out;
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem; /* 12px */
+    gap: 0.75rem;
     text-decoration: none;
     box-shadow: var(--shadow-sm);
     text-transform: capitalize;
     letter-spacing: 0.8px;
     position: relative;
     overflow: hidden;
-    z-index: 1; /* لتجنب تداخل الـ ::before مع النص */
+    z-index: 1;
     will-change: transform, box-shadow, background;
 }
 
 .btn:hover {
-    transform: translateY(-0.5rem) scale(1.02); /* 8px */
+    transform: translateY(-0.5rem) scale(1.02);
     box-shadow: var(--shadow-md);
 }
 
@@ -827,12 +827,12 @@ html {
     transform: translate(-50%, -50%);
     opacity: 0;
     transition: width 0.4s ease-out, height 0.4s ease-out, opacity 0.4s ease-out;
-    z-index: 0; /* تأكد من أنه خلف النص */
+    z-index: 0;
 }
 
 .btn:hover::before {
-    width: 12.5rem; /* 200px */
-    height: 12.5rem; /* 200px */
+    width: 12.5rem;
+    height: 12.5rem;
     opacity: 1;
 }
 
@@ -843,14 +843,13 @@ html {
     color: var(--primary-color);
     border: 2px solid var(--primary-color);
     box-shadow: none;
-    z-index: auto; /* إعادة تعيين z-index */
 }
 
 .btn-outline-primary:hover {
     background: var(--primary-color);
     color: var(--white);
     box-shadow: var(--shadow-sm);
-    transform: translateY(-0.25rem); /* 4px */
+    transform: translateY(-0.25rem);
 }
 
 
@@ -892,14 +891,14 @@ html {
 
 /* Small button variant */
 .btn-sm {
-    padding: 0.75rem 1.5625rem; /* 12px 25px */
+    padding: 0.75rem 1.5625rem;
     font-size: 0.95rem;
-    gap: 0.625rem; /* 10px */
+    gap: 0.625rem;
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-xs);
 }
 .btn-sm:hover {
-    transform: translateY(-0.25rem) scale(1.01); /* 4px */
+    transform: translateY(-0.25rem) scale(1.01);
     box-shadow: var(--shadow-sm);
 }
 
@@ -908,25 +907,25 @@ html {
 .items-list-container h3 {
     font-size: 1.6rem;
     color: var(--text-dark);
-    margin-bottom: 1.875rem; /* 30px */
-    padding-bottom: 0.9375rem; /* 15px */
+    margin-bottom: 1.875rem;
+    padding-bottom: 0.9375rem;
     border-bottom: 1px solid var(--border-color);
     font-weight: 600;
 }
 
 .items-list {
-    max-height: 37.5rem; /* 600px */
+    max-height: 37.5rem;
     overflow-y: auto;
-    padding-left: 0.9375rem; /* 15px */
-    padding-right: 0.9375rem; /* 15px */
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
 }
 
 .item-card {
     background: var(--white);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    padding: 1.75rem; /* 28px */
-    margin-bottom: 1.5625rem; /* 25px */
+    padding: 1.75rem;
+    margin-bottom: 1.5625rem;
     position: relative;
     box-shadow: var(--shadow-sm);
     transition: all var(--transition-speed) var(--transition-bezier);
@@ -934,7 +933,7 @@ html {
 }
 
 .item-card:hover {
-    transform: translateX(0.625rem) scale(1.01); /* 10px */
+    transform: translateX(0.625rem) scale(1.01);
     box-shadow: var(--shadow-md);
     border-color: var(--primary-color);
 }
@@ -943,7 +942,7 @@ html {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 1.125rem; /* 18px */
+    margin-bottom: 1.125rem;
 }
 
 .item-title {
@@ -955,7 +954,7 @@ html {
 
 .item-actions {
     display: flex;
-    gap: 0.75rem; /* 12px */
+    gap: 0.75rem;
 }
 
 .item-details {
@@ -965,30 +964,30 @@ html {
 }
 
 .item-detail {
-    margin-bottom: 0.625rem; /* 10px */
+    margin-bottom: 0.625rem;
 }
 
 /* --- Schedule specific styles --- */
 .schedule-controls {
-    margin-bottom: 3.75rem; /* 60px */
+    margin-bottom: 3.75rem;
 }
 
 .control-buttons {
     display: flex;
-    gap: 1.5625rem; /* 25px */
+    gap: 1.5625rem;
     flex-wrap: wrap;
-    margin-bottom: 1.875rem; /* 30px */
+    margin-bottom: 1.875rem;
 }
 
 .status-message {
-    padding: 1.375rem; /* 22px */
+    padding: 1.375rem;
     border-radius: var(--radius-md);
-    margin-top: 1.875rem; /* 30px */
+    margin-top: 1.875rem;
     display: none;
     font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 1.125rem; /* 18px */
+    gap: 1.125rem;
     font-size: 1.1rem;
     box-shadow: var(--shadow-sm);
     animation: slideInLeft 0.5s ease-out forwards;
@@ -1024,7 +1023,7 @@ html {
 
 .table-container {
     overflow-x: auto;
-    margin-bottom: 3.125rem; /* 50px */
+    margin-bottom: 3.125rem;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
 }
@@ -1035,12 +1034,12 @@ html {
     background: var(--white);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    min-width: 56.25rem; /* 900px */
+    min-width: 56.25rem;
 }
 
 .schedule-table th,
 .schedule-table td {
-    padding: 1.125rem; /* 18px */
+    padding: 1.125rem;
     text-align: center;
     border: 1px solid var(--border-color);
 }
@@ -1058,34 +1057,34 @@ html {
     font-weight: 700;
     color: var(--text-dark);
     font-size: 1rem;
-    min-width: 6.875rem; /* 110px */
+    min-width: 6.875rem;
 }
 
 .schedule-table-cell {
     background: var(--white);
-    min-height: 5.625rem; /* 90px */
+    min-height: 5.625rem;
     vertical-align: top;
     position: relative;
-    padding: 0.75rem; /* 12px */
+    padding: 0.75rem;
 }
 
 /* Hover effect for empty cells in edit mode */
 .schedule-table-cell.edit-mode-active:not(.has-lecture):hover {
     background-color: var(--info-light-bg);
     cursor: pointer;
-    box-shadow: inset 0 0 0 0.1875rem var(--primary-color); /* 3px */
+    box-shadow: inset 0 0 0 0.1875rem var(--primary-color);
 }
 
 /* Styles for cells selected for move destination */
 .schedule-table-cell.selected-move-target {
     background-color: var(--info-light-bg);
-    box-shadow: inset 0 0 0 0.25rem var(--primary-dark); /* 4px */
+    box-shadow: inset 0 0 0 0.25rem var(--primary-dark);
 }
 
 /* تحديث: أنماط للخلايا المستهدفة للنقل */
 .schedule-table-cell.valid-move-target {
     background-color: rgba(var(--success-rgb), 0.1);
-    box-shadow: inset 0 0 0 0.1875rem var(--success-color); /* 3px */
+    box-shadow: inset 0 0 0 0.1875rem var(--success-color);
     cursor: pointer;
 }
 .schedule-table-cell.valid-move-target:hover {
@@ -1094,7 +1093,7 @@ html {
 
 .schedule-table-cell.invalid-move-target {
     background-color: rgba(var(--error-rgb), 0.1);
-    box-shadow: inset  0 0 0 0.1875rem var(--error-color); /* 3px */
+    box-shadow: inset  0 0 0 0.1875rem var(--error-color);
     cursor: not-allowed;
 }
 .schedule-table-cell.invalid-move-target .move-target-feedback {
@@ -1106,8 +1105,8 @@ html {
     background: var(--bg-light);
     border: 2px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: 0.875rem; /* 14px */
-    margin: 0.375rem; /* 6px */
+    padding: 0.875rem;
+    margin: 0.375rem;
     font-size: 0.95rem;
     line-height: 1.5;
     transition: all var(--transition-speed) var(--transition-bezier);
@@ -1119,13 +1118,13 @@ html {
 }
 
 .schedule-slot:hover {
-    transform: translateY(-0.25rem) scale(1.01); /* 4px */
+    transform: translateY(-0.25rem) scale(1.01);
     box-shadow: var(--shadow-md);
 }
 
 /* تحديث: أنماط للمحاضرة المصدر أثناء وضع النقل */
 .schedule-slot.moving-source-lecture {
-    box-shadow: 0 0 0 0.25rem var(--info-color), /* 4px */
+    box-shadow: 0 0 0 0.25rem var(--info-color),
                 var(--shadow-lg);
     transform: scale(1.03);
     opacity: 0.9;
@@ -1161,7 +1160,7 @@ html {
 .schedule-slot-subject {
     font-weight: 700;
     color: var(--text-dark);
-    margin-bottom: 0.3125rem; /* 5px */
+    margin-bottom: 0.3125rem;
     font-size: 1rem;
     line-height: 1.3;
 }
@@ -1175,29 +1174,29 @@ html {
 .schedule-slot-details {
     font-size: 0.75rem;
     color: var(--text-light);
-    margin-top: 0.3125rem; /* 5px */
+    margin-top: 0.3125rem;
     line-height: 1.3;
 }
 .schedule-slot-details span {
     display: inline-block;
-    margin: 0 0.125rem; /* 2px */
+    margin: 0 0.125rem;
 }
 
 
 /* Styles for contenteditable elements */
 .schedule-slot [contenteditable="true"] {
     outline: none;
-    padding: 0.1875rem 0.375rem; /* 3px 6px */
+    padding: 0.1875rem 0.375rem;
     border-radius: var(--radius-sm);
     transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    min-width: 3.75rem; /* 60px */
+    min-width: 3.75rem;
     cursor: text;
     border: 1px dashed transparent;
 }
 
 .schedule-slot [contenteditable="true"]:focus {
     background-color: rgba(var(--white-rgb), 0.95);
-    box-shadow: 0 0 0 0.125rem rgba(var(--success-rgb), 0.4); /* 2px */
+    box-shadow: 0 0 0 0.125rem rgba(var(--success-rgb), 0.4);
     border-color: var(--success-color);
 }
 
@@ -1212,14 +1211,14 @@ html {
 /* تحديث: أزرار النقل والحذف الجديدة ضمن المحاضرة */
 .lecture-actions-buttons {
     position: absolute;
-    top: 0.5rem; /* 8px */
-    left: 0.5rem; /* 8px */
+    top: 0.5rem;
+    left: 0.5rem;
     display: flex;
-    gap: 0.5rem; /* 8px */
+    gap: 0.5rem;
     opacity: 0;
     transition: all var(--transition-speed) ease;
     z-index: 5;
-    transform: translateY(-0.3125rem); /* 5px */
+    transform: translateY(-0.3125rem);
 }
 
 .schedule-slot:hover .lecture-actions-buttons,
@@ -1234,45 +1233,45 @@ html {
 }
 
 .lecture-actions-buttons .btn {
-    padding: 0.375rem 0.625rem; /* 6px 10px */
+    padding: 0.375rem 0.625rem;
     font-size: 0.75rem;
-    gap: 0.3125rem; /* 5px */
+    gap: 0.3125rem;
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-xs);
     white-space: nowrap;
 }
 .lecture-actions-buttons .btn:hover {
-    transform: translateY(-0.125rem); /* 2px */
+    transform: translateY(-0.125rem);
     box-shadow: var(--shadow-sm);
 }
 
 
 /* --- Admin Reports --- */
 .admin-reports-section .stats-grid {
-    margin-bottom: 1.875rem; /* 30px */
+    margin-bottom: 1.875rem;
 }
 .admin-stats .stat-card.pending {
-    border-left: 0.25rem solid var(--warning-color); /* 4px */
+    border-left: 0.25rem solid var(--warning-color);
 }
 
 .admin-stats .stat-card.resolved {
-    border-left: 0.25rem solid var(--success-color); /* 4px */
+    border-left: 0.25rem solid var(--success-color);
 }
 
 .admin-stats .stat-card.total {
-    border-left: 0.25rem solid var(--primary-color); /* 4px */
+    border-left: 0.25rem solid var(--primary-color);
 }
 
 .filter-controls {
     display: flex;
-    gap: 0.9375rem; /* 15px */
-    margin-bottom: 1.875rem; /* 30px */
+    gap: 0.9375rem;
+    margin-bottom: 1.875rem;
     flex-wrap: wrap;
 }
 
 .filter-controls select,
 .filter-controls input[type="text"] {
-    padding: 0.625rem 0.9375rem; /* 10px 15px */
+    padding: 0.625rem 0.9375rem;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     background: var(--white);
@@ -1282,23 +1281,23 @@ html {
 .filter-controls input[type="text"]:focus {
     outline: none;
     border-color: var(--success-color);
-    box-shadow: 0 0 0 0.1875rem rgba(var(--success-rgb), 0.2); /* 3px */
+    box-shadow: 0 0 0 0.1875rem rgba(var(--success-rgb), 0.2);
 }
 
 
 .admin-reports-list {
-    max-height: 40.625rem; /* 650px */
+    max-height: 40.625rem;
     overflow-y: auto;
-    padding-left: 0.625rem; /* 10px */
-    padding-right: 0.625rem; /* 10px */
+    padding-left: 0.625rem;
+    padding-right: 0.625rem;
 }
 
 .report-card {
     background: var(--white);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: 1.5625rem; /* 25px */
-    margin-bottom: 1.25rem; /* 20px */
+    padding: 1.5625rem;
+    margin-bottom: 1.25rem;
     position: relative;
     box-shadow: var(--shadow-sm);
     transition: all var(--transition-speed) ease;
@@ -1306,24 +1305,24 @@ html {
 }
 
 .report-card:hover {
-    transform: translateX(0.625rem) scale(1.005); /* 10px */
+    transform: translateX(0.625rem) scale(1.005);
     box-shadow: var(--shadow-md);
     border-color: var(--primary-color);
 }
 
 .report-card.pending {
-    border-left: 0.3125rem solid var(--warning-color); /* 5px */
+    border-left: 0.3125rem solid var(--warning-color);
 }
 
 .report-card.resolved {
-    border-left: 0.3125rem solid var(--success-color); /* 5px */
+    border-left: 0.3125rem solid var(--success-color);
 }
 
 .report-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 1.125rem; /* 18px */
+    margin-bottom: 1.125rem;
 }
 
 .report-title {
@@ -1333,7 +1332,7 @@ html {
 }
 
 .report-status {
-    padding: 0.375rem 0.875rem; /* 6px 14px */
+    padding: 0.375rem 0.875rem;
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 600;
@@ -1359,24 +1358,24 @@ html {
 .report-meta {
     font-size: 0.95rem;
     color: var(--text-light);
-    margin-top: 0.75rem; /* 12px */
+    margin-top: 0.75rem;
     display: block;
 }
 
 .report-actions {
-    margin-top: 1.25rem; /* 20px */
-    padding-top: 1.25rem; /* 20px */
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
     border-top: 1px solid var(--border-color);
     display: flex;
-    gap: 0.75rem; /* 12px */
+    gap: 0.75rem;
     justify-content: flex-end;
 }
 .report-actions .btn {
     box-shadow: none;
 }
 .report-actions .btn:hover {
-    transform: translateY(-0.125rem); /* 2px */
-    box-shadow: 0 0.25rem 0.625rem rgba(var(--black-rgb), 0.1); /* 4px 10px */
+    transform: translateY(-0.125rem);
+    box-shadow: 0 0.25rem 0.625rem rgba(var(--black-rgb), 0.1);
 }
 
 
@@ -1385,10 +1384,10 @@ html {
     background: var(--text-dark);
     color: var(--white);
     text-align: center;
-    padding: 1.875rem; /* 30px */
-    margin-top: 3.75rem; /* 60px */
+    padding: 1.875rem;
+    margin-top: 3.75rem;
     font-size: 0.95rem;
-    box-shadow: 0 -0.5rem 1.875rem rgba(var(--black-rgb), 0.1); /* -8px 30px */
+    box-shadow: 0 -0.5rem 1.875rem rgba(var(--black-rgb), 0.1);
     letter-spacing: 0.2px;
 }
 
@@ -1407,13 +1406,13 @@ html {
         font-size: 93.75%; /* 15px for tablets */
     }
     .main-content {
-        padding: 30px 20px; /* Adjust padding for tablets */
+        padding: 30px 20px;
     }
     .nav-container {
         padding: 0 20px;
     }
     .nav-menu {
-        gap: 15px; /* Adjust gap for tablets */
+        gap: 15px;
     }
     /* Keep Navbar horizontal on tablets, but refine sizes */
     .nav-brand {
@@ -1427,7 +1426,7 @@ html {
         padding: 10px 18px;
     }
     .hero-content h1 {
-        font-size: clamp(2.2rem, 5vw, 3.5rem); /* Adjust clamp range for tablets */
+        font-size: clamp(2.2rem, 5vw, 3.5rem);
     }
     .hero-content p {
         font-size: clamp(1rem, 2vw, 1.3rem);
@@ -1439,7 +1438,7 @@ html {
         font-size: clamp(1.1rem, 2.2vw, 1.3rem);
     }
     .features-grid, .stats-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjust grid columns */
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 30px;
     }
     .item-card, .report-card {
@@ -1482,22 +1481,22 @@ html {
 }
 
 
-/* Mobile Devices (max-width: 480px) */
+/* Mobile Devices (max-width: 480px) - التعديلات الرئيسية هنا */
 @media (max-width: 480px) {
     html {
         font-size: 81.25%; /* 13px for very small screens (13/16 = 0.8125) */
     }
     .main-content {
-        padding: 20px 10px; /* Reduced padding for smallest screens */
+        padding: 20px 10px;
     }
     .hero-section {
         padding: 40px 15px;
     }
     .hero-content h1 {
-        font-size: 2.2rem; /* Smaller font for hero heading */
+        font-size: 2.2rem;
     }
     .hero-content p {
-        font-size: 0.95rem; /* Smaller font for hero paragraph */
+        font-size: 0.95rem;
     }
     .page-header {
         padding: 30px 15px;
@@ -1509,7 +1508,7 @@ html {
         font-size: 1rem;
     }
     .features-grid, .stats-grid {
-        grid-template-columns: 1fr; /* Force single column on smallest screens */
+        grid-template-columns: 1fr;
         gap: 20px;
     }
     .card-body {
@@ -1518,22 +1517,22 @@ html {
     .form-group input,
     .form-group select,
     .form-group textarea {
-        padding: 12px 15px; /* Smaller padding for inputs */
+        padding: 12px 15px;
         font-size: 0.9rem;
     }
     .btn {
-        padding: 12px 20px; /* Smaller buttons */
+        padding: 12px 20px;
         font-size: 0.9rem;
-        width: 100%; /* Full width buttons */
+        width: 100%;
     }
     .btn-sm {
-        width: auto; /* Small buttons can retain auto width */
+        width: auto;
     }
     .schedule-table {
-        min-width: 100%; /* Allow table to scroll horizontally if needed */
+        min-width: 100%;
     }
     .schedule-table th, .schedule-table td {
-        padding: 8px; /* Even smaller padding */
+        padding: 8px;
         font-size: 0.7rem;
     }
     .schedule-slot {
@@ -1541,29 +1540,53 @@ html {
         font-size: 0.65rem;
     }
 
-    /* Mobile Navbar Specifics */
+    /* Mobile Navbar Specifics - تحسينات الـ Navbar للجوالات الصغيرة */
     .nav-container {
-        flex-direction: row; /* Keep logo and hamburger horizontal */
+        flex-direction: row; /* الشعار وزر الهامبرغر بجانب بعضهما */
         justify-content: space-between;
         padding: 10px;
-        height: 60px; /* Consistent height for mobile navbar */
+        height: 60px; /* ارتفاع ثابت للـ Navbar على الجوال */
     }
     .nav-brand {
-        font-size: 1.5rem;
+        font-size: 1.2rem; /* تصغير حجم الشعار بشكل ملحوظ */
         gap: 8px;
     }
     .nav-brand i {
-        font-size: 1.8rem;
+        font-size: 1.5rem; /* تصغير حجم أيقونة الشعار */
     }
     .nav-menu {
-        display: none; /* Hidden by default on mobile */
+        /* سيتم التحكم بها بواسطة JavaScript للإظهار/الإخفاء */
+        display: none; /* مخفية افتراضياً */
+        position: absolute; /* لجعلها تظهر فوق المحتوى */
+        top: 60px; /* تحت الـ Navbar مباشرة */
+        right: 0;
+        width: 100%;
+        box-shadow: var(--shadow-md);
+        background: rgba(var(--white-rgb), 0.98); /* خلفية متطابقة مع الـ Navbar */
+        backdrop-filter: blur(20px);
+        flex-direction: column; /* الروابط عمودية */
+        padding: 15px 0; /* تباعد رأسي */
+        border-radius: 0; /* لا يوجد زوايا للتبويبات المنبثقة */
+    }
+    .nav-menu li {
+        width: 100%; /* الروابط تأخذ عرض 100% */
+    }
+    .nav-link {
+        width: 100%;
+        text-align: right; /* محاذاة لليمين */
+        padding: 10px 20px; /* تباعد أكبر للروابط في القائمة المنبثقة */
+        font-size: 0.9rem; /* حجم خط مناسب للروابط */
+        justify-content: flex-end; /* لترتيب الأيقونة والنص إلى اليمين في RTL */
+    }
+    .nav-link::after { /* إزالة أو تعديل تأثير التسطير في القائمة المنبثقة إذا كان مزعجاً */
+        display: none; /* إخفاء التسطير للروابط في القائمة المنبثقة */
     }
     .nav-toggle-button {
-        display: block; /* Show hamburger button */
+        display: block; /* إظهار زر الهامبرغر */
         font-size: 1.8rem;
     }
-    .navbar.shrink { /* For mobile, shrink effect mainly affects shadow */
-        height: 60px; /* Height remains consistent */
+    .navbar.shrink {
+        height: 60px; /* الارتفاع يبقى ثابت على الجوال حتى عند التمرير */
         padding-top: 0;
         padding-bottom: 0;
     }
@@ -1600,9 +1623,9 @@ html {
 /* Loading Spinner (Standard) */
 .loading {
     display: inline-block;
-    width: 1.25rem; /* 20px */
-    height: 1.25rem; /* 20px */
-    border: 0.1875rem solid rgba(255, 255, 255, 0.3); /* 3px */
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 0.1875rem solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     border-top-color: #fff;
     animation: spin 1s ease-in-out infinite;
@@ -1616,13 +1639,13 @@ html {
 .dynamic-time-ranges-container {
     border: 1px dashed var(--border-color);
     border-radius: var(--radius-md);
-    padding: 0.9375rem; /* 15px */
-    margin-top: 0.9375rem; /* 15px */
+    padding: 0.9375rem;
+    margin-top: 0.9375rem;
     background-color: var(--info-light-bg);
-    min-height: 5rem; /* 80px */
+    min-height: 5rem;
     display: flex;
     flex-direction: column;
-    gap: 0.625rem; /* 10px */
+    gap: 0.625rem;
     justify-content: center;
     align-items: flex-start;
 }
@@ -1634,7 +1657,7 @@ html {
     background-color: var(--info-light-bg);
     border: 1px solid var(--info-color);
     border-radius: var(--radius-sm);
-    padding: 0.625rem 0.9375rem; /* 10px 15px */
+    padding: 0.625rem 0.9375rem;
     font-size: 0.95rem;
     color: var(--text-medium);
     box-shadow: 0 1px 5px rgba(var(--black-rgb), 0.05);
@@ -1643,8 +1666,8 @@ html {
 }
 
 .dynamic-time-range-item:hover {
-    transform: translateX(0.3125rem); /* 5px */
-    box-shadow: 0 0.125rem 0.5rem rgba(var(--black-rgb), 0.1); /* 2px 8px */
+    transform: translateX(0.3125rem);
+    box-shadow: 0 0.125rem 0.5rem rgba(var(--black-rgb), 0.1);
 }
 
 
@@ -1665,27 +1688,27 @@ html {
 .add-time-range-controls {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.625rem; /* 10px */
+    gap: 0.625rem;
     align-items: flex-end;
-    margin-top: 1.25rem; /* 20px */
-    padding-top: 0.9375rem; /* 15px */
+    margin-top: 1.25rem;
+    padding-top: 0.9375rem;
     border-top: 1px solid var(--border-color);
 }
 
 .add-time-range-controls .form-group {
     margin-bottom: 0;
     flex: 1 1 auto;
-    min-width: 7.5rem; /* 120px */
+    min-width: 7.5rem;
 }
 
 .add-time-range-controls .form-control {
-    padding: 0.625rem 0.9375rem; /* 10px 15px */
+    padding: 0.625rem 0.9375rem;
     font-size: 0.9rem;
     border-radius: var(--radius-sm);
 }
 
 .add-time-range-controls .btn {
-    padding: 0.625rem 1.25rem; /* 10px 20px */
+    padding: 0.625rem 1.25rem;
     font-size: 0.95rem;
     align-self: flex-end;
     box-shadow: none;
@@ -1693,8 +1716,8 @@ html {
 }
 
 .add-time-range-controls .btn:hover {
-    transform: translateY(-0.0625rem); /* 1px */
-    box-shadow: 0 0.125rem 0.5rem rgba(var(--black-rgb), 0.1); /* 2px 8px */
+    transform: translateY(-0.0625rem);
+    box-shadow: 0 0.125rem 0.5rem rgba(var(--black-rgb), 0.1);
 }
 
 /* Tabs specific styling (already in previous CSS) */
@@ -1702,22 +1725,22 @@ html {
     background: var(--white);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
-    margin-bottom: 3.125rem; /* 50px */
-    padding: 1.875rem; /* 30px */
+    margin-bottom: 3.125rem;
+    padding: 1.875rem;
 }
 
 .tab-buttons {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 0.9375rem; /* 15px */
-    margin-bottom: 1.875rem; /* 30px */
+    gap: 0.9375rem;
+    margin-bottom: 1.875rem;
     border-bottom: 2px solid var(--border-color);
-    padding-bottom: 0.9375rem; /* 15px */
+    padding-bottom: 0.9375rem;
 }
 
 .tab-button {
-    padding: 0.75rem 1.5625rem; /* 12px 25px */
+    padding: 0.75rem 1.5625rem;
     border: none;
     border-radius: var(--radius-md);
     background: var(--bg-medium);
@@ -1728,7 +1751,7 @@ html {
     transition: all var(--transition-speed) ease;
     display: flex;
     align-items: center;
-    gap: 0.625rem; /* 10px */
+    gap: 0.625rem;
     box-shadow: var(--shadow-xs);
 }
 
@@ -1739,7 +1762,7 @@ html {
 .tab-button:hover {
     background: var(--border-color);
     color: var(--text-medium);
-    transform: translateY(-0.125rem); /* 2px */
+    transform: translateY(-0.125rem);
     box-shadow: var(--shadow-sm);
 }
 
@@ -1747,17 +1770,17 @@ html {
     background: var(--primary-color);
     color: var(--white);
     box-shadow: var(--shadow-md);
-    transform: translateY(-0.1875rem); /* 3px */
+    transform: translateY(-0.1875rem);
 }
 
 .tab-button.active:hover {
     background: var(--primary-dark);
-    transform: translateY(-0.1875rem); /* 3px */
+    transform: translateY(-0.1875rem);
 }
 
 .tab-content {
     display: none;
-    padding: 0.625rem; /* 10px */
+    padding: 0.625rem;
     animation: fadeIn 0.5s ease-in;
 }
 
