@@ -32,16 +32,16 @@
     /* ألوان النجاح/التحذير/الخطأ والمعلومات */
     --success-color: #4CAF50; /* Green - للنجاح */
     --success-rgb: 76, 175, 80;
-    --success-light-bg: #E8F5E9; /* Light Green background */
+    --success-light-bg: #E8F5E9; 
     --warning-color: #FF9800; /* Orange - للتحذير */
     --warning-rgb: 255, 152, 0;
-    --warning-light-bg: #FFF3E0; /* Light Orange background */
+    --warning-light-bg: #FFF3E0; 
     --error-color: #F44336; /* Red - للخطأ */
     --error-rgb: 244, 67, 54;
-    --error-light-bg: #FFEBEE; /* Light Red background */
+    --error-light-bg: #FFEBEE; 
     --info-color: #2196F3; /* Blue - للمعلومات */
     --info-rgb: 33, 150, 243;
-    --info-light-bg: #E3F2FD; /* Light Blue background */
+    --info-light-bg: #E3F2FD; 
 
     /* ألوان النص والرماديات (Neutrals) */
     --text-dark: #212121; /* Dark Gray - للعناوين والنصوص الرئيسية */
@@ -158,9 +158,9 @@ html {
 }
 
 .nav-container {
-    max-width: 1200px; /* يمكن زيادة هذا قليلاً إذا لم ينفع التصغير */
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0 30px; /* تقليل الـ padding الأفقي لتوفير مساحة أكبر على الشاشات الكبيرة */
+    padding: 0 20px; /* تقليل الـ padding الأفقي بشكل أكبر (من 30px إلى 20px) */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -170,15 +170,15 @@ html {
 .nav-brand {
     display: flex;
     align-items: center;
-    gap: 8px; /* تقليل المسافة بين الأيقونة والنص لتوفير مساحة */
+    gap: 5px; /* تقليل المسافة بين الأيقونة والنص (من 8px إلى 5px) */
     /* تصغير حجم الخط للشعار في الحالة الافتراضية (للشاشات الكبيرة) */
-    font-size: 1.5rem; /* تم تصغيره من 1.6rem */
+    font-size: 1.4rem; /* تم تصغيره من 1.5rem */
     font-weight: 800;
     color: var(--primary-dark);
     text-decoration: none;
     transition: all var(--transition-speed) ease;
-    white-space: nowrap; /* منع انقسام النص إلى سطرين */
-    letter-spacing: -0.5px; /* تقليل التباعد بين الحروف قليلاً */
+    white-space: nowrap;
+    letter-spacing: -0.5px;
     text-shadow: 1px 1px 2px rgba(var(--black-rgb),0.05);
 }
 
@@ -189,12 +189,12 @@ html {
 
 /* Adjust brand size on shrink */
 .navbar.shrink .nav-brand {
-    font-size: 1.2rem; /* حجم أصغر للشعار عند الانكماش (كان 1.3rem) */
+    font-size: 1.1rem; /* حجم أصغر للشعار عند الانكماش (كان 1.2rem) */
 }
 
 .nav-brand i {
     /* تصغير حجم الأيقونة في الحالة الافتراضية */
-    font-size: 1.8rem; /* تم تصغيره من 1.9rem */
+    font-size: 1.7rem; /* تم تصغيره من 1.8rem */
     background: linear-gradient(45deg, var(--accent-color), var(--accent-dark));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -206,7 +206,7 @@ html {
 
 /* Adjust brand icon size on shrink */
 .navbar.shrink .nav-brand i {
-    font-size: 1.5rem; /* حجم أصغر لأيقونة الشعار عند الانكماش (كان 1.6rem) */
+    font-size: 1.4rem; /* حجم أصغر لأيقونة الشعار عند الانكماش (كان 1.5rem) */
 }
 
 /* Mobile Navigation Toggle (Hamburger Icon) */
@@ -227,16 +227,16 @@ html {
 .nav-menu {
     display: flex; /* افتراضي للشاشات الكبيرة */
     list-style: none;
-    gap: 20px; /* تقليل الـ gap بين عناصر القائمة لتوفير مساحة */
+    gap: 15px; /* تقليل الـ gap بين عناصر القائمة (من 20px إلى 15px) */
 }
 
 /* حالة فتح القائمة على الجوال */
 .nav-menu.open {
-    display: flex; /* إظهار القائمة */
+    display: flex;
     flex-direction: column;
     position: absolute;
-    top: 75px; /* تحت الـ Navbar */
-    right: 0; /* لليمين في RTL */
+    top: 75px;
+    right: 0;
     width: 100%;
     background: rgba(var(--white-rgb), 0.98);
     backdrop-filter: blur(20px);
@@ -244,24 +244,24 @@ html {
     padding: 20px;
     border-radius: var(--radius-md);
     border-top: 1px solid var(--border-color);
-    animation: fadeInDown 0.4s ease-out; /* تأثير ظهور ناعم */
-    z-index: 999; /* أقل من زر التبديل */
+    animation: fadeInDown 0.4s ease-out;
+    z-index: 999;
 }
 
 
 .nav-link {
     text-decoration: none;
     color: var(--text-light);
-    padding: 0.6rem 1rem; /* تقليل الـ padding للروابط على الشاشات الكبيرة */
+    padding: 0.4rem 0.8rem; /* تقليل الـ padding للروابط (من 0.6rem 1rem إلى 0.4rem 0.8rem) */
     border-radius: var(--radius-md);
     transition: all var(--transition-speed) var(--transition-bezier);
     display: flex;
     align-items: center;
-    gap: 0.5rem; /* 8px */
+    gap: 0.4rem; /* 6px */
     white-space: nowrap;
     position: relative;
     font-weight: 600;
-    font-size: 1rem; /* استخدام 1rem ليتناسب مع الـ html font-size */
+    font-size: 0.95rem; /* تم تصغيره من 1rem */
     letter-spacing: 0.3px;
     transform: skewX(-2deg);
 }
@@ -1465,11 +1465,11 @@ html {
         height: 60px;
     }
     .nav-brand {
-        font-size: 1.1rem; /* تم تصغيره لـ 1.1rem */
+        font-size: 1.1rem;
         gap: 5px;
     }
     .nav-brand i {
-        font-size: 1.3rem; /* تم تصغيره لـ 1.3rem */
+        font-size: 1.3rem;
     }
     .nav-menu {
         display: none;
@@ -1520,18 +1520,18 @@ html {
         padding: 0 20px;
     }
     .nav-brand {
-        font-size: 1.4rem; /* تم تصغيره لـ 1.4rem */
-        gap: 8px;
+        font-size: 1.3rem; /* تصغيره من 1.4rem */
+        gap: 6px; /* تقليل الـ gap */
     }
     .nav-brand i {
-        font-size: 1.7rem; /* تم تصغيره لـ 1.7rem */
+        font-size: 1.6rem; /* تصغيره من 1.7rem */
     }
     .nav-menu {
-        gap: 15px; /* تقليل الـ gap بين عناصر القائمة */
+        gap: 12px; /* تقليل الـ gap بين عناصر القائمة */
     }
     .nav-link {
-        font-size: 0.95rem; /* تصغير حجم خط الروابط قليلاً */
-        padding: 8px 15px; /* تقليل الـ padding للروابط */
+        font-size: 0.9rem; /* تصغير حجم خط الروابط (من 0.95rem إلى 0.9rem) */
+        padding: 0.4rem 0.7rem; /* تقليل الـ padding للروابط */
     }
     .hero-content h1 {
         font-size: clamp(2.2rem, 5vw, 3.5rem);
@@ -1568,7 +1568,6 @@ html {
     html {
         font-size: 100%; /* Default 16px */
     }
-    /* هنا لا حاجة لتصغير إضافي للشعار لأن القيم الافتراضية أصبحت أصغر */
     .nav-toggle-button {
         display: none;
     }
