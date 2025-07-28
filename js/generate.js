@@ -614,7 +614,7 @@ const displayGeneratedSchedules = () => {
                     lectureCard.setAttribute('data-lecture-id', `${doctor.id}-${day}-${timeSlot}-${lecture.sectionId}-${lecture.courseId}-${lecture.lectureIndex}`);
                     lectureCard.setAttribute('data-course-id', lecture.courseId);
                     lectureCard.setAttribute('data-section-id', lecture.sectionId);
-                    lectureCard.setAttribute('data-room-id', lecture.roomId); // حفظ roomId هنا
+                    lectureCard.setAttribute('data-room-id', lecture.roomId);
                     lectureCard.setAttribute('data-lecture-type', lecture.type);
                     lectureCard.setAttribute('data-original-day', day);
                     lectureCard.setAttribute('data-original-timeslot', timeSlot);
@@ -841,7 +841,9 @@ const handleCellClickForMove = (event) => {
     if (targetCell.classList.contains('valid-move-target')) {
         const targetDay = targetCell.getAttribute('data-day');
         const targetTimeSlot = targetCell.getAttribute('data-timeslot');
-        const targetDoctorId = parseInt(cell.closest('.doctor-schedule-card').id.replace('doctor-schedule-', '')); // جلب ID الدكتور الجديد
+        // FIX START (تم تعديل 'cell' إلى 'targetCell')
+        const targetDoctorId = parseInt(targetCell.closest('.doctor-schedule-card').id.replace('doctor-schedule-', ''));
+        // FIX END
         const targetRoomName = lectureToMoveData.roomName; 
 
         performLectureMove(lectureToMoveData, targetDay, targetTimeSlot, targetDoctorId, targetRoomName);
@@ -968,8 +970,6 @@ const performLectureMove = (lectureData, targetDay, targetTimeSlot, targetDoctor
                 // إذا كانت الخلية الأصلية لديها rowspan، يجب إزالة rowspan من الخلية الأولى وجعل الخلايا التالية مرئية مرة أخرى
                 if (i === 0 && lectureData.slotsOccupied > 1) {
                     cellToClear.removeAttribute('rowspan');
-                    // لجعل الخلايا المخفية بسبب rowspan تظهر مرة أخرى، يجب إعادة عرض الجدول بالكامل.
-                    // أو يمكن جعلها display: table-cell إذا كانت مخفية بـ display: none.
                     // ولكن بما أننا سنستدعي displayGeneratedSchedules() لاحقاً، فإنها ستقوم بإعادة بناء الجدول بالكامل
                 }
             }
