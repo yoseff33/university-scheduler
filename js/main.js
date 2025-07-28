@@ -7,24 +7,40 @@
  * @param {number} duration - مدة عرض الرسالة بالمللي ثانية (افتراضي 3000).
  */
 function showMessage(message, type = 'info', duration = 3000) {
-    const toastContainer = document.querySelector('.message-toast-container');
+    let toastContainer = document.querySelector('.message-toast-container');
     if (!toastContainer) {
-        const div = document.createElement('div');
-        div.className = 'message-toast-container';
-        document.body.appendChild(div);
+        // إذا لم يتم العثور على الحاوية في الـ DOM، قم بإنشائها
+        toastContainer = document.createElement('div');
+        toastContainer.className = 'message-toast-container';
+        document.body.appendChild(toastContainer);
     }
 
     const toast = document.createElement('div');
-    toast.className = `message-toast ${type}`;
-    toast.innerHTML = `<div class="message-content"><i class="fas fa-info-circle"></i><span>${message}</span></div>`;
+    // إضافة فئة 'slideInLeft' لبدء الحركة من اليسار (لأن الـ RTL)
+    toast.className = `message-toast ${type} slideInLeft`; 
+    
+    // تحديد الأيقونة بناءً على نوع الرسالة
+    let iconClass = 'fas fa-info-circle'; // افتراضي
+    if (type === 'success') {
+        iconClass = 'fas fa-check-circle';
+    } else if (type === 'error') {
+        iconClass = 'fas fa-times-circle';
+    } else if (type === 'warning') {
+        iconClass = 'fas fa-exclamation-triangle';
+    }
+    
+    toast.innerHTML = `<div class="message-content"><i class="${iconClass}"></i><span>${message}</span></div>`;
 
-    document.querySelector('.message-toast-container').appendChild(toast);
+    toastContainer.appendChild(toast); // استخدام toastContainer الذي تم التأكد من وجوده
 
+    // إزالة الرسالة بعد المدة المحددة
     setTimeout(() => {
-        toast.style.animation = 'slideOutLeft 0.3s ease-out forwards'; // Adjusted for RTL
+        // إضافة فئة 'slideOutLeft' لتشغيل حركة الاختفاء لليسار (لأن الـ RTL)
+        toast.classList.remove('slideInLeft'); // إزالة حركة الدخول قبل تشغيل الخروج
+        toast.classList.add('slideOutLeft');
         toast.addEventListener('animationend', () => {
             toast.remove();
-        });
+        }, { once: true }); // استخدام { once: true } لضمان تنفيذ المستمع مرة واحدة فقط
     }, duration);
 }
 
@@ -60,12 +76,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- كود تفعيل زر الهامبرغر وقائمة التنقل ---
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+
+    if (navToggle && navMenu) { // التأكد من وجود العناصر
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('open'); // تبديل فئة 'open' لإظهار/إخفاء القائمة
+        });
+
+        // إغلاق القائمة عند النقر على رابط (اختياري، ولكن يحسن تجربة المستخدم)
+        navMenu.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('open'); // إزالة فئة 'open' لإغلاق القائمة
+            });
+        });
+    }
+    // --- نهاية كود تفعيل زر الهامبرغر ---
+
+
     const updateHomepageStats = () => {
-        const doctors = getData('doctors');
-        const courses = getData('courses');
-        const sections = getData('sections');
-        const rooms = getData('rooms');
-        const issueReports = getData('issueReports') || [];
+        // تأكد أن دالة getData موجودة في utils.js ويتم تحميلها قبله
+        // إذا لم تكن موجودة بعد، ستحتاج إلى جلبها من مكانها أو تعريفها هنا
+        const doctors = typeof getData !== 'undefined' ? getData('doctors') : [];
+        const courses = typeof getData !== 'undefined' ? getData('courses') : [];
+        const sections = typeof getData !== 'undefined' ? getData('sections') : [];
+        const rooms = typeof getData !== 'undefined' ? getData('rooms') : [];
+        const issueReports = typeof getData !== 'undefined' ? (getData('issueReports') || []) : [];
 
         const totalDoctorsElement = document.getElementById('total-doctors');
         const totalCoursesElement = document.getElementById('total-courses');
