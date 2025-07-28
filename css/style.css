@@ -10,28 +10,39 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    /* استخدام 'unset' أو 'revert' يمكن أن يكون مفيدًا في بعض الحالات لمرونة أكبر */
+    /* margin: unset; padding: unset; */
 }
 
-/* تعريف لوحة الألوان الجديدة كمتغيرات CSS */
+/* تعريف لوحة الألوان الجديدة كمتغيرات CSS مع درجات إضافية وقيم RGB */
 :root {
     /* ألوان أساسية (Primary) */
     --primary-color: #00796B; /* Teal - لون أساسي عميق */
     --primary-dark: #004D40; /* Dark Teal - للعلامة التجارية/النصوص الهامة */
     --primary-light: #4DB6AC; /* Light Teal - للتظليل الخفيف */
+    --primary-rgb: 0, 121, 107; /* قيم RGB للتحكم بالشفافية */
+    --primary-bg-light: #E0F2F1; /* خلفية خفيفة جدًا من اللون الأساسي */
+    --primary-bg-medium: #B2DFDB; /* خلفية متوسطة من اللون الأساسي */
 
     /* ألوان ثانوية/مميزة (Accent) */
     --accent-color: #FFB300; /* Amber - للتركيز والتمييز */
     --accent-dark: #FF8F00; /* Dark Amber */
     --accent-light: #FFD54F; /* Light Amber */
+    --accent-rgb: 255, 179, 0; /* قيم RGB للتحكم بالشفافية */
+    --accent-bg-light: #FFF8E1; /* خلفية خفيفة جدًا من اللون الثانوي */
 
-    /* ألوان النجاح/التحذير/الخطأ */
+    /* ألوان النجاح/التحذير/الخطأ والمعلومات */
     --success-color: #4CAF50; /* Green - للنجاح */
+    --success-rgb: 76, 175, 80;
     --success-light-bg: #E8F5E9; /* Light Green background */
     --warning-color: #FF9800; /* Orange - للتحذير */
+    --warning-rgb: 255, 152, 0;
     --warning-light-bg: #FFF3E0; /* Light Orange background */
     --error-color: #F44336; /* Red - للخطأ */
+    --error-rgb: 244, 67, 54;
     --error-light-bg: #FFEBEE; /* Light Red background */
     --info-color: #2196F3; /* Blue - للمعلومات */
+    --info-rgb: 33, 150, 243;
     --info-light-bg: #E3F2FD; /* Light Blue background */
 
     /* ألوان النص والرماديات (Neutrals) */
@@ -43,6 +54,19 @@
     --border-color: #E0E0E0; /* Light Gray - للحدود والفواصل */
     --white: #FFFFFF; /* Pure White */
     --black: #000000; /* Pure Black */
+    --black-rgb: 0, 0, 0; /* قيم RGB للأسود */
+
+    /* متغيرات الظلال الجديدة - لإضفاء إحساس بالعمق والاحترافية */
+    --shadow-sm: 0 2px 8px rgba(var(--black-rgb), 0.05), 0 4px 12px rgba(var(--black-rgb), 0.08);
+    --shadow-md: 0 5px 15px rgba(var(--black-rgb), 0.07), 0 10px 25px rgba(var(--black-rgb), 0.1);
+    --shadow-lg: 0 10px 30px rgba(var(--black-rgb), 0.08), 0 20px 45px rgba(var(--black-rgb), 0.12);
+    --shadow-xl: 0 15px 45px rgba(var(--black-rgb), 0.1), 0 30px 60px rgba(var(--black-rgb), 0.15);
+
+    /* متغيرات لنصف قطر الزوايا (Border Radius) لتناسق التصميم */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 30px;
 }
 
 /* Custom Text Selection Highlight */
@@ -58,10 +82,9 @@
 /* Base Body Styles */
 body {
     font-family: 'Tajawal', 'Inter', sans-serif; /* استخدام Inter كخط ثانوي للإنجليزية */
+    /* خلفية متدرجة أنيقة مع نقش خفيف جدًا لعمق إضافي */
     background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-medium) 100%);
-    /* تم تغيير نمط الخلفية أو إزالته إذا كان مزعجًا، يمكن تخصيصها لاحقًا */
-    /* background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e0e0e0' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 54v-4h-2v4H0v2h4v4h2v-4h4v-2H6zM6-20v4h-2v-4H0v-2h4v-4h2v4h4v2H6zM36-20v4h-2v-4h-4v-2h4v-4h2v4h4v2h-4zM6 4v-4h-2v4H0v2h4v4h2v-4h4V6H6z'/%3E%3C/g%3E%3C/g%3E%3Csvg%3E"); */
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B0BEC5' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 54v-4h-2v4H0v2h4v4h2v-4h4v-2H6zM6-20v4h-2v-4H0v-2h4v-4h2v4h4v2H6zM36-20v4h-2v-4h-4v-2h4v-4h2v4h4v2h-4zM6 4v-4h-2v4H0v2h4v4h2v-4h4V6H6z'/%3E%3C/g%3E%3C/g%3E%3Csvg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23B0BEC5' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 54v-4h-2v4H0v2h4v4h2v-4h4v-2H6zM6-20v4h-2v-4H0v-2h4v-4h2v4h4v2H6zM36-20v4h-2v-4h-4v-2h4v-4h2v4h4v2h-4zM6 4v-4h-2v4H0v2h4v4h2v-4h4V6H6z'/%3E%3C/g%3E%3C/g%3E%3Csvg%3E");
     
     min-height: 100vh;
     color: var(--text-medium);
@@ -101,9 +124,9 @@ html {
 
 /* --- Navbar (Sleek and Professional) --- */
 .navbar {
-    background: rgba(var(--white-rgb), 0.99); /* خلفية بيضاء شبه شفافة باستخدام متغير */
-    backdrop-filter: blur(20px); /* تأثير ضبابي */
-    box-shadow: 0 10px 50px rgba(var(--black-rgb), 0.1); /* ظل كبير وأنيق */
+    background: rgba(var(--white-rgb), 0.98); /* خلفية بيضاء شبه شفافة مع متغير RGB */
+    backdrop-filter: blur(25px); /* تأثير ضبابي أقوى لعمق أكبر */
+    box-shadow: var(--shadow-lg); /* استخدام نظام الظلال الجديد */
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -115,7 +138,7 @@ html {
 /* Navbar shrinking effect on scroll */
 .navbar.shrink {
     height: 60px;
-    box-shadow: 0 5px 25px rgba(var(--black-rgb), 0.08); /* ظل أصغر عند الانكماش */
+    box-shadow: var(--shadow-md); /* ظل أصغر عند الانكماش */
 }
 
 .nav-container {
@@ -138,12 +161,12 @@ html {
     text-decoration: none;
     transition: all 0.3s ease;
     letter-spacing: -0.8px;
-    text-shadow: 1px 1px 2px rgba(var(--black-rgb), 0.05);
+    text-shadow: 1px 1px 2px rgba(var(--black-rgb),0.05); /* استخدام متغير RGB */
 }
 
 .nav-brand:hover {
     color: var(--primary-color); /* يتغير للون الأساسي عند التمرير */
-    transform: translateY(-3px);
+    transform: translateY(-3px) scale(1.02); /* تأثير تحريك وتكبير بسيط */
 }
 
 /* Adjust brand size on shrink */
@@ -155,7 +178,7 @@ html {
     font-size: 2.5rem;
     color: var(--accent-color); /* أيقونة بلون مميز */
     transition: all 0.3s ease;
-    filter: drop-shadow(1px 1px 1px rgba(var(--black-rgb), 0.1));
+    filter: drop-shadow(1px 1px 1px rgba(var(--black-rgb),0.1)); /* استخدام متغير RGB */
 }
 
 /* Adjust brand icon size on shrink */
@@ -174,7 +197,7 @@ html {
     text-decoration: none;
     color: var(--text-light); /* لون نص الروابط */
     padding: 12px 22px;
-    border-radius: 12px;
+    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     display: flex;
     align-items: center;
@@ -189,8 +212,8 @@ html {
 .nav-link:hover {
     background: var(--primary-dark); /* خلفية داكنة عند التمرير */
     color: var(--white); /* نص أبيض عند التمرير */
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(var(--black-rgb), 0.2);
+    transform: translateY(-4px) scale(1.02); /* تأثير تحريك وتكبير بسيط */
+    box-shadow: var(--shadow-md); /* ظل أنيق عند التحويم */
 }
 
 /* Underline effect on hover */
@@ -203,7 +226,7 @@ html {
     height: 4px;
     background-color: var(--success-color); /* لون خط التسطير من اللوحة الجديدة */
     border-radius: 2px;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1); /* تغيير نوع الانتقال لجعلها أنعم */
     transform: translateX(50%);
 }
 
@@ -227,10 +250,9 @@ html {
     text-align: center;
     padding: 100px 50px;
     background: var(--white);
-    border-radius: 30px;
+    border-radius: var(--radius-xl); /* استخدام متغير لنصف قطر الزوايا */
     margin-bottom: 70px;
-    box-shadow: 0 15px 50px rgba(var(--black-rgb), 0.1),
-                0 30px 90px rgba(var(--black-rgb), 0.08);
+    box-shadow: var(--shadow-xl); /* استخدام نظام الظلال الجديد */
     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     border: 1px solid var(--border-color);
     position: relative;
@@ -245,7 +267,8 @@ html {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, rgba(var(--primary-color-rgb), 0.05), rgba(var(--success-color-rgb), 0.03), rgba(var(--primary-dark-rgb), 0.01));
+    /* استخدام قيم RGB لمرونة الشفافية */
+    background: linear-gradient(45deg, rgba(var(--primary-rgb), 0.05), rgba(var(--accent-rgb), 0.03), rgba(var(--primary-rgb), 0.01));
     animation: rotateGradient 25s linear infinite;
     opacity: 0.7;
     z-index: 0;
@@ -258,9 +281,8 @@ html {
 }
 
 .hero-section:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 25px 70px rgba(var(--black-rgb), 0.15),
-                0 40px 100px rgba(var(--black-rgb), 0.1);
+    transform: translateY(-8px) scale(1.005); /* تأثير تحريك وتكبير بسيط */
+    box-shadow: var(--shadow-xl); /* الحفاظ على ظل كبير وواضح عند التحويم */
 }
 
 .hero-content {
@@ -269,17 +291,17 @@ html {
 }
 
 .hero-content h1 {
-    font-size: 4.5rem;
+    font-size: clamp(2.8rem, 7vw, 4.5rem); /* استخدام clamp لتجاوبية أفضل لحجم الخط */
     color: var(--text-dark);
     margin-bottom: 30px;
-    text-shadow: 2px 3px 10px rgba(var(--black-rgb), 0.08);
+    text-shadow: 2px 3px 10px rgba(var(--black-rgb), 0.08); /* استخدام متغير RGB */
     font-weight: 900;
     line-height: 1.2;
     letter-spacing: -0.5px;
 }
 
 .hero-content p {
-    font-size: 1.6rem;
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem); /* استخدام clamp لتجاوبية أفضل لحجم الخط */
     color: var(--text-medium);
     max-width: 850px;
     margin: 0 auto;
@@ -296,12 +318,13 @@ html {
 
 .feature-card {
     background: var(--white);
-    border-radius: 25px;
+    border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
     overflow: hidden;
-    box-shadow: 0 18px 50px rgba(var(--black-rgb), 0.12);
+    box-shadow: var(--shadow-md); /* استخدام نظام الظلال الجديد */
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     border: 1px solid var(--border-color);
     position: relative;
+    will-change: transform, box-shadow; /* تحسين أداء التحريكات */
 }
 
 .feature-card::before {
@@ -311,10 +334,10 @@ html {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(45deg, rgba(var(--primary-color-rgb), 0.05), rgba(var(--success-color-rgb), 0.03));
+    background: linear-gradient(45deg, rgba(var(--primary-rgb), 0.05), rgba(var(--accent-rgb), 0.03));
     opacity: 0;
     transition: opacity 0.3s ease;
-    pointer-events: none;
+    pointer-events: none; /* لمنع التداخل مع تفاعل الماوس */
 }
 
 .feature-card:hover::before {
@@ -322,8 +345,8 @@ html {
 }
 
 .feature-card:hover {
-    transform: translateY(-20px);
-    box-shadow: 0 30px 70px rgba(var(--black-rgb), 0.2);
+    transform: translateY(-20px) scale(1.02); /* تأثير تحريك وتكبير واضح */
+    box-shadow: var(--shadow-lg); /* ظل أكبر عند التحويم */
     border-color: var(--primary-color);
 }
 
@@ -342,7 +365,7 @@ html {
     color: var(--primary-color);
     margin-bottom: 35px;
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    filter: drop-shadow(2px 2px 3px rgba(var(--black-rgb), 0.1));
+    filter: drop-shadow(2px 2px 3px rgba(var(--black-rgb),0.1)); /* استخدام متغير RGB */
 }
 
 .feature-card:hover i {
@@ -382,13 +405,14 @@ html {
 .stat-card {
     background: var(--white);
     padding: 40px;
-    border-radius: 20px;
+    border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
     text-align: center;
-    box-shadow: 0 10px 35px rgba(var(--black-rgb), 0.1);
+    box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
     transition: all 0.3s ease;
     border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
+    will-change: transform, box-shadow; /* تحسين أداء التحريكات */
 }
 
 .stat-card::after {
@@ -398,7 +422,7 @@ html {
     left: 0;
     width: 100%;
     height: 40px;
-    background-color: rgba(var(--success-color-rgb), 0.1); /* Using success color accent */
+    background-color: rgba(var(--success-rgb), 0.1); /* استخدام متغير RGB */
     transform: skewX(-20deg) scale(0);
     transition: all 0.4s ease;
     border-radius: 50%;
@@ -410,8 +434,8 @@ html {
 }
 
 .stat-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 18px 45px rgba(var(--black-rgb), 0.18);
+    transform: translateY(-10px) scale(1.02); /* تأثير تحريك وتكبير بسيط */
+    box-shadow: var(--shadow-md); /* ظل أكبر عند التحويم */
     border-color: var(--success-color);
 }
 
@@ -422,7 +446,7 @@ html {
     transition: all 0.3s ease;
     position: relative;
     z-index: 1;
-    filter: drop-shadow(1px 1px 1px rgba(var(--black-rgb), 0.1));
+    filter: drop-shadow(1px 1px 1px rgba(var(--black-rgb),0.1)); /* استخدام متغير RGB */
 }
 .stat-card:hover i {
     color: var(--success-color);
@@ -449,8 +473,8 @@ html {
     margin-bottom: 60px;
     padding: 60px 40px;
     background: var(--white);
-    border-radius: 25px;
-    box-shadow: 0 15px 50px rgba(var(--black-rgb), 0.1);
+    border-radius: var(--radius-xl); /* استخدام متغير لنصف قطر الزوايا */
+    box-shadow: var(--shadow-lg); /* استخدام نظام الظلال الجديد */
     border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
@@ -463,7 +487,7 @@ html {
     right: -60px;
     width: 180px;
     height: 180px;
-    background-color: rgba(var(--primary-color-rgb), 0.08); /* Using primary color accent */
+    background-color: rgba(var(--primary-rgb), 0.08); /* استخدام متغير RGB */
     border-radius: 50%;
     transform: rotate(45deg);
 }
@@ -474,23 +498,23 @@ html {
     left: -40px;
     width: 100px;
     height: 100px;
-    background-color: rgba(var(--info-color-rgb), 0.03); /* A subtle blue tint */
+    background-color: rgba(63, 81, 181, 0.03); /* A subtle blue tint */
     border-radius: 50%;
 }
 
 
 .page-header h1 {
-    font-size: 4rem;
+    font-size: clamp(2.5rem, 6vw, 4rem); /* استخدام clamp لتجاوبية أفضل */
     color: var(--text-dark);
     margin-bottom: 25px;
-    text-shadow: 2px 4px 12px rgba(var(--black-rgb), 0.1);
+    text-shadow: 2px 4px 12px rgba(var(--black-rgb), 0.1); /* استخدام متغير RGB */
     font-weight: 800;
     position: relative;
     z-index: 1;
 }
 
 .page-header p {
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 2.5vw, 1.5rem); /* استخدام clamp لتجاوبية أفضل */
     color: var(--text-medium);
     line-height: 1.8;
     position: relative;
@@ -500,16 +524,17 @@ html {
 /* --- General Card Style --- */
 .card {
     background: var(--white);
-    border-radius: 20px;
-    box-shadow: 0 15px 45px rgba(var(--black-rgb), 0.1);
+    border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
+    box-shadow: var(--shadow-md); /* استخدام نظام الظلال الجديد */
     overflow: hidden;
     transition: all 0.3s ease;
     border: 1px solid var(--border-color);
     margin-bottom: 40px;
+    will-change: box-shadow; /* تحسين أداء التحريكات */
 }
 
 .card:hover {
-    box-shadow: 0 20px 55px rgba(var(--black-rgb), 0.15);
+    box-shadow: var(--shadow-lg); /* ظل أكبر عند التحويم */
 }
 
 .card-header {
@@ -521,7 +546,7 @@ html {
     justify-content: space-between;
     font-weight: 700;
     font-size: 1.6rem;
-    border-bottom: 1px solid rgba(var(--white-rgb), 0.2);
+    border-bottom: 1px solid rgba(var(--white-rgb), 0.2); /* استخدام متغير RGB */
 }
 
 .card-header h2 {
@@ -555,12 +580,12 @@ html {
     width: 100%;
     padding: 16px 22px;
     border: 2px solid var(--border-color);
-    border-radius: 15px;
+    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
     font-size: 1.1rem;
     transition: all 0.3s ease-in-out;
     background: var(--white);
     color: var(--text-dark);
-    box-shadow: inset 0 1px 3px rgba(var(--black-rgb), 0.08);
+    box-shadow: inset 0 1px 3px rgba(var(--black-rgb),0.08); /* استخدام متغير RGB */
 }
 
 .form-group input:focus,
@@ -568,7 +593,7 @@ html {
 .form-group textarea:focus {
     outline: none;
     border-color: var(--success-color);
-    box-shadow: 0 0 0 5px rgba(var(--success-color-rgb), 0.25); /* Using success color tint */
+    box-shadow: 0 0 0 5px rgba(var(--success-rgb), 0.25); /* استخدام متغير RGB لظل التركيز */
 }
 
 /* Validation error style */
@@ -615,18 +640,18 @@ html {
     flex-shrink: 0;
     appearance: none;
     border: 2px solid var(--text-light);
-    border-radius: 6px;
+    border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
     background-color: var(--white);
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
-    box-shadow: inset 0 1px 4px rgba(var(--black-rgb), 0.12);
+    box-shadow: inset 0 1px 4px rgba(var(--black-rgb),0.12); /* استخدام متغير RGB */
 }
 
 .checkbox-item input[type="checkbox"]:checked {
     background-color: var(--success-color);
     border-color: var(--success-color);
-    box-shadow: inset 0 1px 4px rgba(var(--black-rgb), 0.12), 0 0 0 5px rgba(var(--success-color-rgb), 0.25);
+    box-shadow: inset 0 1px 4px rgba(var(--black-rgb),0.12), 0 0 0 5px rgba(var(--success-rgb), 0.25); /* استخدام متغير RGB */
 }
 
 /* Checkmark for custom checkbox */
@@ -647,7 +672,7 @@ html {
 .btn {
     padding: 18px 38px;
     border: none;
-    border-radius: 15px;
+    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
@@ -656,14 +681,15 @@ html {
     align-items: center;
     gap: 12px;
     text-decoration: none;
-    box-shadow: 0 10px 30px rgba(var(--black-rgb), 0.12);
+    box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
     text-transform: capitalize;
     letter-spacing: 0.8px;
+    will-change: transform, box-shadow; /* تحسين أداء التحريكات */
 }
 
 .btn:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 45px rgba(var(--black-rgb), 0.25);
+    transform: translateY(-8px) scale(1.02); /* تأثير تحريك وتكبير بسيط */
+    box-shadow: var(--shadow-md); /* ظل أكبر عند التحويم */
 }
 
 .btn-primary {
@@ -716,14 +742,18 @@ html {
     padding: 12px 22px;
     font-size: 0.95rem;
     gap: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.1);
+    border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
+    box-shadow: var(--shadow-xs); /* ظل أصغر للأزرار الصغيرة - (جديد) */
 }
 .btn-sm:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(var(--black-rgb), 0.15);
+    transform: translateY(-4px) scale(1.01); /* تأثير تحريك وتكبير بسيط */
+    box-shadow: var(--shadow-sm); /* ظل أكبر عند التحويم */
 }
-
+/* تعريف Shadow-xs جديد ليتناسب مع الأزرار الصغيرة */
+:root {
+    /* ... المتغيرات الأخرى ... */
+    --shadow-xs: 0 1px 4px rgba(var(--black-rgb), 0.04), 0 2px 8px rgba(var(--black-rgb), 0.06);
+}
 
 /* --- Items List (for displaying lists of data) --- */
 .items-list-container h3 {
@@ -745,17 +775,18 @@ html {
 .item-card {
     background: var(--white);
     border: 1px solid var(--border-color);
-    border-radius: 18px;
+    border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
     padding: 28px;
     margin-bottom: 25px;
     position: relative;
-    box-shadow: 0 8px 25px rgba(var(--black-rgb), 0.08);
+    box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform, box-shadow, border-color; /* تحسين أداء التحريكات */
 }
 
 .item-card:hover {
-    transform: translateX(10px);
-    box-shadow: 0 12px 35px rgba(var(--black-rgb), 0.12);
+    transform: translateX(10px) scale(1.01); /* تأثير تحريك وتكبير بسيط */
+    box-shadow: var(--shadow-md); /* ظل أكبر عند التحويم */
     border-color: var(--primary-color);
 }
 
@@ -802,7 +833,7 @@ html {
 
 .status-message {
     padding: 22px;
-    border-radius: 12px;
+    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
     margin-top: 30px;
     display: none;
     font-weight: 600;
@@ -810,7 +841,8 @@ html {
     align-items: center;
     gap: 18px;
     font-size: 1.1rem;
-    box-shadow: 0 5px 20px rgba(var(--black-rgb), 0.1);
+    box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
+    animation: slideInLeft 0.5s ease-out forwards; /* إضافة تأثير ظهور */
 }
 
 .status-message i {
@@ -844,15 +876,15 @@ html {
 .table-container {
     overflow-x: auto;
     margin-bottom: 50px;
-    border-radius: 18px;
-    box-shadow: 0 12px 40px rgba(var(--black-rgb), 0.1);
+    border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
+    box-shadow: var(--shadow-md); /* استخدام نظام الظلال الجديد */
 }
 
 .schedule-table {
     width: 100%;
     border-collapse: collapse;
     background: var(--white);
-    border-radius: 18px;
+    border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
     overflow: hidden;
     min-width: 900px;
 }
@@ -890,7 +922,7 @@ html {
 
 /* Hover effect for empty cells in edit mode */
 .schedule-table-cell.edit-mode-active:not(.has-lecture):hover {
-    background-color: rgba(var(--info-color-rgb), 0.05); /* Using info-light-bg tint */
+    background-color: var(--info-light-bg); /* Using info-light-bg tint */
     cursor: pointer;
     box-shadow: inset 0 0 0 3px var(--primary-color);
 }
@@ -903,16 +935,16 @@ html {
 
 /* تحديث: أنماط للخلايا المستهدفة للنقل */
 .schedule-table-cell.valid-move-target {
-    background-color: rgba(var(--success-color-rgb), 0.1); /* أخضر فاتح من success-color */
+    background-color: rgba(var(--success-rgb), 0.1); /* أخضر فاتح من success-color */
     box-shadow: inset 0 0 0 3px var(--success-color); /* حدود خضراء */
     cursor: pointer;
 }
 .schedule-table-cell.valid-move-target:hover {
-    background-color: rgba(var(--success-color-rgb), 0.2);
+    background-color: rgba(var(--success-rgb), 0.2);
 }
 
 .schedule-table-cell.invalid-move-target {
-    background-color: rgba(var(--error-color-rgb), 0.1); /* أحمر فاتح من error-color */
+    background-color: rgba(var(--error-rgb), 0.1); /* أحمر فاتح من error-color */
     box-shadow: inset  0 0 0 3px var(--error-color); /* حدود حمراء */
     cursor: not-allowed;
 }
@@ -924,28 +956,28 @@ html {
 .schedule-slot {
     background: var(--bg-light);
     border: 2px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
     padding: 14px;
     margin: 6px;
     font-size: 0.95rem;
     line-height: 1.5;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(var(--black-rgb), 0.1);
+    box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
     position: relative;
     z-index: 1;
-    /* تمت إزالة height: 80px; ليتمدد المحتوى */
+    will-change: transform, box-shadow; /* تحسين أداء التحريكات */
 }
 
 .schedule-slot:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(var(--black-rgb), 0.18);
+    transform: translateY(-4px) scale(1.01); /* تأثير تحريك وتكبير بسيط */
+    box-shadow: var(--shadow-md); /* ظل أكبر عند التحويم */
 }
 
 /* تحديث: أنماط للمحاضرة المصدر أثناء وضع النقل */
 .schedule-slot.moving-source-lecture {
     box-shadow: 0 0 0 4px var(--info-color), /* إطار أزرق */
-                0 12px 35px rgba(var(--black-rgb), 0.25);
+                var(--shadow-lg); /* ظل كبير وواضح */
     transform: scale(1.03);
     opacity: 0.9; /* شفافة قليلاً */
     cursor: grabbing;
@@ -967,12 +999,12 @@ html {
     color: var(--text-medium);
 }
 
-/* Color Palette for Lectures (more refined) */
-/* استخدام ألوان متناسقة مع اللوحة الجديدة */
-.lecture-color-0 { --lecture-bg-color: #E0F2F7; --lecture-border-color: #99D9F0; } /* Light Blue/Cyan */
-.lecture-color-1 { --lecture-bg-color: #FFF8E6; --lecture-border-color: #FFD25B; } /* Light Yellow/Amber */
-.lecture-color-2 { --lecture-bg-color: #E6F8E9; --lecture-border-color: #A3D9A3; } /* Light Green */
-.lecture-color-3 { --lecture-bg-color: #FFEEEC; --lecture-border-color: #FFB3A6; } /* Light Red/Coral */
+/* Color Palette for Lectures (more refined and modern) */
+/* استخدام ألوان متناسقة مع اللوحة الجديدة مع درجات أفتح وأكثر حيوية */
+.lecture-color-0 { --lecture-bg-color: var(--info-light-bg); --lecture-border-color: var(--info-color); }
+.lecture-color-1 { --lecture-bg-color: var(--accent-bg-light); --lecture-border-color: var(--accent-color); }
+.lecture-color-2 { --lecture-bg-color: var(--success-light-bg); --lecture-border-color: var(--success-color); }
+.lecture-color-3 { --lecture-bg-color: var(--error-light-bg); --lecture-border-color: var(--error-color); }
 .lecture-color-4 { --lecture-bg-color: #F0E6F7; --lecture-border-color: #C39BE0; } /* Light Purple */
 .lecture-color-5 { --lecture-bg-color: #E6F3F7; --lecture-border-color: #8FD8ED; } /* Lighter Cyan */
 .lecture-color-6 { --lecture-bg-color: #F7E6E6; --lecture-border-color: #F0B3B3; } /* Light Rose */
@@ -1008,7 +1040,7 @@ html {
 .schedule-slot [contenteditable="true"] {
     outline: none;
     padding: 3px 6px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
     transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     min-width: 60px;
     cursor: text;
@@ -1017,7 +1049,7 @@ html {
 
 .schedule-slot [contenteditable="true"]:focus {
     background-color: rgba(var(--white-rgb), 0.95);
-    box-shadow: 0 0 0 2px rgba(var(--success-color-rgb), 0.4);
+    box-shadow: 0 0 0 2px rgba(var(--success-rgb), 0.4);
     border-color: var(--success-color);
 }
 
@@ -1057,13 +1089,13 @@ html {
     padding: 6px 10px; /* تصغير الأزرار أكثر لتناسب المساحة */
     font-size: 0.75rem; /* حجم الخط أصغر */
     gap: 5px; /* مسافة أقل بين الأيقونة والنص */
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(var(--black-rgb), 0.1);
+    border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
+    box-shadow: var(--shadow-xs); /* ظل خفيف جدًا */
     white-space: nowrap; /* منع انقسام النص */
 }
 .lecture-actions-buttons .btn:hover {
     transform: translateY(-2px); /* تأثير تحريك بسيط عند التمرير */
-    box-shadow: 0 4px 8px rgba(var(--black-rgb), 0.15);
+    box-shadow: var(--shadow-sm); /* ظل أكبر عند التحويم */
 }
 
 
@@ -1094,7 +1126,7 @@ html {
 .filter-controls input[type="text"] {
     padding: 10px 15px;
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
     background: var(--white);
     transition: all 0.3s ease;
 }
@@ -1102,7 +1134,7 @@ html {
 .filter-controls input[type="text"]:focus {
     outline: none;
     border-color: var(--success-color);
-    box-shadow: 0 0 0 3px rgba(var(--success-color-rgb), 0.2);
+    box-shadow: 0 0 0 3px rgba(var(--success-rgb), 0.2); /* استخدام متغير RGB */
 }
 
 
@@ -1116,17 +1148,18 @@ html {
 .report-card {
     background: var(--white);
     border: 1px solid var(--border-color);
-    border-radius: 15px;
+    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
     padding: 25px;
     margin-bottom: 20px;
     position: relative;
-    box-shadow: 0 5px 20px rgba(var(--black-rgb), 0.1);
+    box-shadow: var(--shadow-sm); /* استخدام نظام الظلال الجديد */
     transition: all 0.3s ease;
+    will-change: transform, box-shadow, border-color; /* تحسين أداء التحريكات */
 }
 
 .report-card:hover {
-    transform: translateX(10px);
-    box-shadow: 0 8px 25px rgba(var(--black-rgb), 0.15);
+    transform: translateX(10px) scale(1.005); /* تأثير تحريك وتكبير بسيط */
+    box-shadow: var(--shadow-md); /* ظل أكبر عند التحويم */
     border-color: var(--primary-color);
 }
 
@@ -1195,7 +1228,7 @@ html {
 }
 .report-actions .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(var(--black-rgb), 0.1);
+    box-shadow: 0 4px 10px rgba(var(--black-rgb), 0.1); /* استخدام متغير RGB */
 }
 
 
@@ -1207,7 +1240,7 @@ html {
     padding: 30px;
     margin-top: 60px;
     font-size: 0.95rem;
-    box-shadow: 0 -8px 30px rgba(var(--black-rgb), 0.1);
+    box-shadow: 0 -8px 30px rgba(var(--black-rgb), 0.1); /* استخدام متغير RGB */
     letter-spacing: 0.2px;
 }
 
@@ -1244,6 +1277,7 @@ html {
     }
     .hero-section {
         padding: 60px 15px;
+        border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
     }
     .hero-content h1 {
         font-size: 2.8rem;
@@ -1253,6 +1287,7 @@ html {
     }
     .page-header {
         padding: 50px 15px;
+        border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
     }
     .page-header h1 {
         font-size: 2.5rem;
@@ -1288,9 +1323,11 @@ html {
     }
     .item-card {
         padding: 18px;
+        border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
     }
     .report-card {
         padding: 18px;
+        border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
     }
     .report-title {
         font-size: 1.1rem;
@@ -1348,9 +1385,9 @@ html {
     display: inline-block;
     width: 20px;
     height: 20px;
-    border: 3px solid rgba(var(--white-rgb), 0.3);
+    border: 3px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    border-top-color: var(--white);
+    border-top-color: #fff;
     animation: spin 1s ease-in-out infinite;
 }
 
@@ -1361,7 +1398,7 @@ html {
 /* Utility Classes for content display in dynamic inputs */
 .dynamic-time-ranges-container {
     border: 1px dashed var(--border-color);
-    border-radius: 10px;
+    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
     padding: 15px;
     margin-top: 15px;
     background-color: var(--info-light-bg); /* Using info color tint */
@@ -1379,18 +1416,18 @@ html {
     justify-content: space-between;
     background-color: var(--info-light-bg);
     border: 1px solid var(--info-color);
-    border-radius: 8px;
+    border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
     padding: 10px 15px;
     font-size: 0.95rem;
     color: var(--text-medium);
-    box-shadow: 0 1px 5px rgba(var(--black-rgb), 0.05);
+    box-shadow: 0 1px 5px rgba(var(--black-rgb), 0.05); /* استخدام متغير RGB */
     width: 100%;
     transition: all 0.2s ease;
 }
 
 .dynamic-time-range-item:hover {
     transform: translateX(5px);
-    box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.1);
+    box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.1); /* استخدام متغير RGB */
 }
 
 
@@ -1427,7 +1464,7 @@ html {
 .add-time-range-controls .form-control {
     padding: 10px 15px;
     font-size: 0.9rem;
-    border-radius: 8px;
+    border-radius: var(--radius-sm); /* استخدام متغير لنصف قطر الزوايا */
 }
 
 .add-time-range-controls .btn {
@@ -1440,14 +1477,14 @@ html {
 
 .add-time-range-controls .btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.1);
+    box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.1); /* استخدام متغير RGB */
 }
 
 /* Tabs specific styling (already in previous CSS) */
 .tabs-container {
     background: var(--white);
-    border-radius: 20px;
-    box-shadow: 0 15px 45px rgba(var(--black-rgb), 0.1);
+    border-radius: var(--radius-lg); /* استخدام متغير لنصف قطر الزوايا */
+    box-shadow: var(--shadow-md); /* استخدام نظام الظلال الجديد */
     margin-bottom: 50px;
     padding: 30px;
 }
@@ -1465,7 +1502,7 @@ html {
 .tab-button {
     padding: 12px 25px;
     border: none;
-    border-radius: 10px;
+    border-radius: var(--radius-md); /* استخدام متغير لنصف قطر الزوايا */
     background: var(--bg-medium);
     color: var(--text-light);
     font-size: 1rem;
@@ -1475,7 +1512,7 @@ html {
     display: flex;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 2px 8px rgba(var(--black-rgb), 0.08);
+    box-shadow: var(--shadow-xs); /* ظل خفيف جدًا */
 }
 
 .tab-button i {
@@ -1486,13 +1523,13 @@ html {
     background: var(--border-color);
     color: var(--text-medium);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(var(--black-rgb), 0.12);
+    box-shadow: var(--shadow-sm); /* ظل أكبر عند التحويم */
 }
 
 .tab-button.active {
     background: var(--primary-color);
     color: var(--white);
-    box-shadow: 0 4px 15px rgba(var(--black-rgb), 0.15);
+    box-shadow: var(--shadow-md); /* ظل أكبر للعنصر النشط */
     transform: translateY(-3px);
 }
 
