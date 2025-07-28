@@ -14,14 +14,15 @@
             <a href="index.html" class="nav-brand">
                 <i class="fas fa-calendar-alt"></i> نظام جدولة المحاضرات
             </a>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+            <button class="nav-toggle-button" id="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu" id="nav-menu"> <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
                 <li><a href="data-entry.html" class="nav-link"><i class="fas fa-plus-circle"></i> إدخال البيانات</a></li>
                 <li><a href="generate.html" class="nav-link"><i class="fas fa-cogs"></i> توليد الجداول</a></li>
                 <li><a href="doctor-view.html" class="nav-link"><i class="fas fa-user-md"></i> جداول الدكاترة</a></li>
                 <li><a href="room-view.html" class="nav-link"><i class="fas fa-door-open"></i> جداول القاعات</a></li>
-                <li><a href="admin-reports.html" class="nav-link"><i class="fas fa-bug"></i> البلاغات</a></li>
-                <li><a href="help.html" class="nav-link"><i class="fas fa-question-circle"></i> المساعدة</a></li>
+                <li><a href="admin-reports.html" class="nav-link active"><i class="fas fa-bug"></i> البلاغات</a></li> <li><a href="help.html" class="nav-link"><i class="fas fa-question-circle"></i> المساعدة</a></li>
             </ul>
         </div>
     </nav>
@@ -116,7 +117,11 @@
                 <div id="admin-reports-list" class="admin-reports-list">
                     </div>
                 <div id="no-reports-message" class="empty-state hidden">
-                    <p><i class="fas fa-info-circle"></i> لا توجد بلاغات لعرضها.</p>
+                    <i class="fas fa-clipboard-check"></i> <h3>كل شيء على ما يرام!</h3>
+                    <p>لا توجد بلاغات نشطة أو بلاغات مطابقة لمعايير التصفية الخاصة بك حالياً.</p>
+                    <button type="button" class="btn btn-info btn-sm" onclick="location.reload();">
+                        <i class="fas fa-sync-alt"></i> تحديث القائمة
+                    </button>
                 </div>
             </div>
         </section>
