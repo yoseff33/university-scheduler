@@ -8,16 +8,34 @@ import { AuthProvider } from './features/auth/AuthContext'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import './styles/index.css'
 
-// تسجيل Service Worker الخاص بـ PWA (يتيح التثبيت والتحديثات الفورية)
+/**
+ * تسجيل Service Worker الخاص بـ PWA.
+ * يتم التسجيل فورياً عند تحميل التطبيق،
+ * مع تحديث الصفحة تلقائياً عند توفر إصدار جديد.
+ * 
+ * ملاحظة: يُنصح بتعطيل التسجيل في بيئة التطوير لتجنب مشاكل الكاش،
+ * لكننا نتركه مفعلاً لضمان اختبار كامل لتجربة PWA.
+ */
 registerSW({ immediate: true })
 
-// التأكد من وجود العنصر الجذري قبل محاولة التصيير
+/**
+ * الحصول على العنصر الجذري الذي سيتم تصيير التطبيق داخله.
+ * في حال عدم وجوده، نرمي خطأ واضحاً لمنع تصيير التطبيق في حالة غير مستقرة.
+ */
 const rootElement = document.getElementById('root')
 if (!rootElement) {
-  throw new Error('Failed to find the root element. Ensure your index.html contains <div id="root"></div>')
+  throw new Error(
+    'لم يتم العثور على عنصر الجذر (#root) في ملف HTML. تأكد من أن index.html يحتوي على <div id="root"></div>'
+  )
 }
 
-// تصيير التطبيق داخل StrictMode و ErrorBoundary لتوفير بيئة تطوير آمنة
+/**
+ * تصيير التطبيق بالكامل داخل:
+ * - StrictMode: لمساعدة المطورين في اكتشاف المشاكل المحتملة.
+ * - ErrorBoundary: لالتقاط الأخطاء غير المتوقعة وعرض واجهة بديلة.
+ * - HashRouter: لتوفير نظام توجيه يعتمد على الهاش (مناسب للاستضافة الثابتة).
+ * - AuthProvider: لتوفير سياق المصادقة لجميع المكونات.
+ */
 createRoot(rootElement).render(
   <StrictMode>
     <ErrorBoundary>
@@ -27,5 +45,5 @@ createRoot(rootElement).render(
         </AuthProvider>
       </HashRouter>
     </ErrorBoundary>
-  </StrictMode>,
+  </StrictMode>
 )
