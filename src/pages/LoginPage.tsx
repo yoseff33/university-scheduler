@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
+// src/pages/LoginPage.tsx
+import { useEffect, useMemo, useState, useRef } from 'react'
 import { ArrowLeft, KeyRound, LoaderCircle, Phone, ShieldCheck } from 'lucide-react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Alert } from '../components/Alert'
@@ -22,34 +23,47 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
   const [seconds, setSeconds] = useState(0)
+  // منع الإرسال المتكرر أثناء معالجة الطلب
+  const isSubmitting = useRef(false)
 
   const destination = useMemo(() => {
     const state = location.state as { from?: string } | null
     return state?.from || '/account'
   }, [location.state])
 
+  // عداد إعادة الإرسال
   useEffect(() => {
     if (seconds <= 0) return
-    const timer = window.setInterval(() => setSeconds((current) => Math.max(0, current - 1)), 1000)
+    const timer = window.setInterval(() => {
+      setSeconds((current) => Math.max(0, current - 1))
+    }, 1000)
     return () => window.clearInterval(timer)
   }, [seconds])
 
+  // إذا كان التحميل جارياً أو الجلسة موجودة نعيد التوجيه
   if (authLoading) return <PageLoader label="جاري التحقق من الجلسة..." />
   if (session) return <Navigate to="/account" replace />
 
-  async function sendOtp(phoneValue: string) {
+  // دالة إرسال رمز التحقق (تُستخدم في الخطوة الأولى وإعادة الإرسال)
+  async function sendOtp(phoneValue: string): Promise<boolean> {
+    // منع التداخل
+    if (isSubmitting.current) return false
+    isSubmitting.current = true
+
     setError(null)
     setNotice(null)
 
     const formatted = normalizeSaudiPhone(phoneValue)
     if (!formatted) {
       setError('اكتب رقم جوال سعودي صحيح، مثل 05XXXXXXXX.')
-      return
+      isSubmitting.current = false
+      return false
     }
 
     if (!supabase) {
       setError('خدمة تسجيل الدخول غير مفعلة حالياً. أضف بيانات Supabase في ملف البيئة.')
-      return
+      isSubmitting.current = false
+      return false
     }
 
     setLoading(true)
@@ -61,37 +75,52 @@ export function LoginPage() {
 
       if (authError) {
         setError(getArabicAuthError(authError))
-        return
+        isSubmitting.current = false
+        return false
       }
 
+      // نجاح الإرسال
       setNormalizedPhone(formatted)
       setStep('otp')
       setSeconds(60)
       setNotice('تم إرسال رمز التحقق من مزوّد الرسائل المرتبط بـ Supabase.')
+      isSubmitting.current = false
+      return true
     } catch (requestError) {
       setError(getArabicAuthError(requestError))
+      isSubmitting.current = false
+      return false
     } finally {
       setLoading(false)
     }
   }
 
+  // طلب الرمز (الخطوة الأولى)
   async function requestOtp(event: React.FormEvent) {
     event.preventDefault()
+    // إذا كان هناك طلب جارٍ أو لا يوجد رقم، نمنع الإرسال
+    if (loading || !phone.trim()) return
     await sendOtp(phone)
   }
 
+  // التحقق من الرمز (الخطوة الثانية)
   async function verifyOtp(event: React.FormEvent) {
     event.preventDefault()
+    if (isSubmitting.current) return
+    isSubmitting.current = true
+
     setError(null)
     setNotice(null)
 
     if (!supabase || !normalizedPhone) {
       setError('تعذّر متابعة التحقق. ارجع وأدخل رقم الجوال من جديد.')
+      isSubmitting.current = false
       return
     }
 
     if (!/^\d{6}$/.test(otp)) {
       setError('رمز التحقق لازم يكون 6 أرقام.')
+      isSubmitting.current = false
       return
     }
 
@@ -105,23 +134,38 @@ export function LoginPage() {
 
       if (verifyError) {
         setError(getArabicAuthError(verifyError))
+        isSubmitting.current = false
         return
       }
 
+      // نجاح التحقق – التوجيه
       navigate(destination, { replace: true })
     } catch (requestError) {
       setError(getArabicAuthError(requestError))
     } finally {
       setLoading(false)
+      isSubmitting.current = false
     }
   }
 
+  // العودة إلى خطوة إدخال الرقم
   function resetPhone() {
     setStep('phone')
     setOtp('')
     setError(null)
     setNotice(null)
     setSeconds(0)
+    isSubmitting.current = false
+  }
+
+  // دالة إعادة الإرسال (تُستدعى من الزر)
+  async function handleResendOtp() {
+    if (seconds > 0 || loading) return
+    // نستخدم الرقم الموحد إن وجد، وإلا الرقم الحالي
+    const numberToSend = normalizedPhone ?? phone
+    if (numberToSend) {
+      await sendOtp(numberToSend)
+    }
   }
 
   return (
@@ -184,7 +228,11 @@ export function LoginPage() {
                     </span>
                   </label>
 
-                  <button className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-vibes-800 px-5 font-black text-white transition hover:bg-vibes-700 disabled:cursor-not-allowed disabled:opacity-60" disabled={loading}>
+                  <button
+                    type="submit"
+                    className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-vibes-800 px-5 font-black text-white transition hover:bg-vibes-700 disabled:cursor-not-allowed disabled:opacity-60"
+                    disabled={loading || !phone.trim()}
+                  >
                     {loading ? <LoaderCircle className="size-5 animate-spin" /> : <ArrowLeft className="size-5" />}
                     إرسال رمز التحقق
                   </button>
@@ -209,14 +257,25 @@ export function LoginPage() {
                     </span>
                   </label>
 
-                  <button className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-vibes-800 px-5 font-black text-white transition hover:bg-vibes-700 disabled:cursor-not-allowed disabled:opacity-60" disabled={loading}>
+                  <button
+                    type="submit"
+                    className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-vibes-800 px-5 font-black text-white transition hover:bg-vibes-700 disabled:cursor-not-allowed disabled:opacity-60"
+                    disabled={loading || otp.length !== 6}
+                  >
                     {loading && <LoaderCircle className="size-5 animate-spin" />}
                     تأكيد الدخول
                   </button>
 
                   <div className="flex flex-wrap items-center justify-between gap-3 text-sm font-bold">
-                    <button type="button" className="text-vibes-700 underline underline-offset-4" onClick={resetPhone}>تغيير رقم الجوال</button>
-                    <button type="button" className="text-vibes-700 disabled:text-vibes-300" disabled={seconds > 0 || loading} onClick={() => void sendOtp(normalizedPhone ?? phone)}>
+                    <button type="button" className="text-vibes-700 underline underline-offset-4" onClick={resetPhone}>
+                      تغيير رقم الجوال
+                    </button>
+                    <button
+                      type="button"
+                      className="text-vibes-700 disabled:text-vibes-300"
+                      disabled={seconds > 0 || loading}
+                      onClick={handleResendOtp}
+                    >
                       {seconds > 0 ? `إعادة الإرسال بعد ${seconds}ث` : 'إعادة إرسال الرمز'}
                     </button>
                   </div>
