@@ -1,0 +1,9 @@
+project_id = "replace-with-your-project-ref"
+
+[auth]
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["http://localhost:5173/**", "https://YOUR_USERNAME.github.io/YOUR_REPOSITORY/**"]
+
+[auth.sms]
+enable_signup = true
+enable_confirmations = true
