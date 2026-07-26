@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Segoe UI", Tahoma, Arial, sans-serif;
+  --color-vibes-50: #fff8f1;
+  --color-vibes-100: #fbe9dd;
+  --color-vibes-200: #f2ccb9;
+  --color-vibes-300: #e3a88c;
+  --color-vibes-400: #cb7d67;
+  --color-vibes-500: #a95a56;
+  --color-vibes-600: #7c3f56;
+  --color-vibes-700: #5d2d41;
+  --color-vibes-800: #3b1d2a;
+  --color-vibes-900: #251118;
+}
+
+:root {
+  font-family: var(--font-sans);
+  color: #251118;
+  background: #fff8f1;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: #fff8f1;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(124, 63, 86, 0.35);
+  outline-offset: 2px;
+}
+
+.safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+.card-shadow {
+  box-shadow: 0 24px 70px rgba(59, 29, 42, 0.13);
+}
+
+.bg-vibes-pattern {
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(203, 125, 103, 0.17), transparent 30%),
+    radial-gradient(circle at 85% 5%, rgba(124, 63, 86, 0.14), transparent 33%),
+    linear-gradient(145deg, #fff8f1 0%, #fff 55%, #fbe9dd 100%);
+}
