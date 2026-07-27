@@ -1,17 +1,21 @@
+// src/pages/AccountPage.tsx
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Camera, Check, Coffee, LoaderCircle, LogOut, QrCode, Save, ShieldCheck, UserRound } from 'lucide-react'
+import { Camera, Check, Coffee, LoaderCircle, LogOut, QrCode, Save, ShieldCheck, UserRound, Home, ShoppingBag, ClipboardList, Award, Car, Palette, Users, Store } from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
+import { Link, useNavigate } from 'react-router-dom'
 import { Alert } from '../components/Alert'
 import { BrandMark } from '../components/BrandMark'
 import { PageLoader } from '../components/PageLoader'
 import { ServiceUnavailableCard } from '../components/ServiceUnavailableCard'
 import { useAuth } from '../features/auth/useAuth'
 import { getAvatarSignedUrl, getMyProfile, removeAvatar, updateMyProfile, uploadAvatar } from '../services/profileService'
+import { supabase } from '../lib/supabase'
 import type { Profile } from '../types/database'
 import { maskPhone } from '../utils/phone'
 
 export function AccountPage() {
   const { session, signOut } = useAuth()
+  const navigate = useNavigate()
   const userId = session?.user.id ?? ''
   const fileInput = useRef<HTMLInputElement>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -24,28 +28,57 @@ export function AccountPage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const [userRole, setUserRole] = useState<string | null>(null)
+  const [loyaltyPoints, setLoyaltyPoints] = useState<number>(0)
 
   const membershipLabel = useMemo(() => profile ? `VIB-${profile.membership_number}` : '—', [profile])
 
+  // جلب الملف الشخصي ودور المستخدم ونقاط الولاء
   useEffect(() => {
     if (!userId) return
     let active = true
 
-    void getMyProfile(userId)
-      .then(async (data) => {
+    const fetchData = async () => {
+      try {
+        const profileData = await getMyProfile(userId)
         if (!active) return
-        setProfile(data)
-        setName(data.name ?? '')
-        setMarketingConsent(data.marketing_consent)
-        const signed = await getAvatarSignedUrl(data.avatar_url)
+        setProfile(profileData)
+        setName(profileData.name ?? '')
+        setMarketingConsent(profileData.marketing_consent)
+        const signed = await getAvatarSignedUrl(profileData.avatar_url)
         if (active) setAvatarUrl(signed)
-      })
-      .catch((requestError: unknown) => {
+
+        // جلب نقاط الولاء من جدول loyalty_accounts
+        const { data: loyaltyData, error: loyaltyError } = await supabase
+          .from('loyalty_accounts')
+          .select('points_balance')
+          .eq('user_id', userId)
+          .maybeSingle()
+
+        if (!loyaltyError && loyaltyData) {
+          setLoyaltyPoints(loyaltyData.points_balance || 0)
+        }
+
+        // جلب دور المستخدم
+        const { data: roleData, error: roleError } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', userId)
+          .maybeSingle()
+
+        if (!roleError && roleData) {
+          setUserRole(roleData.role)
+        }
+      } catch (err) {
         if (!active) return
-        if (import.meta.env.DEV) console.error(requestError)
+        if (import.meta.env.DEV) console.error(err)
         setError('تعذّر تحميل الملف الشخصي. تأكد من تشغيل Migration المرحلة الأولى وسياسات RLS.')
-      })
-      .finally(() => active && setLoading(false))
+      } finally {
+        if (active) setLoading(false)
+      }
+    }
+
+    fetchData()
 
     return () => {
       active = false
@@ -128,6 +161,7 @@ export function AccountPage() {
     setError(null)
     try {
       await signOut()
+      navigate('/login', { replace: true })
     } catch {
       setError('تعذّر تسجيل الخروج. جرّب مرة ثانية.')
     }
@@ -136,20 +170,62 @@ export function AccountPage() {
   if (loading) return <PageLoader label="جاري تحميل حساب فايبز..." />
 
   return (
-    <main className="min-h-screen bg-vibes-pattern safe-bottom">
+    <main className="min-h-screen bg-vibes-pattern safe-bottom pb-20">
       <header className="sticky top-0 z-20 border-b border-vibes-100/80 bg-white/85 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
           <BrandMark />
-          <button onClick={() => void handleSignOut()} className="inline-flex items-center gap-2 rounded-2xl border border-vibes-200 bg-white px-4 py-2.5 text-sm font-black text-vibes-800 transition hover:bg-vibes-50">
-            <LogOut className="size-4" />
-            خروج
-          </button>
+          <div className="flex items-center gap-3">
+            <Link to="/home" className="inline-flex items-center gap-1.5 rounded-2xl border border-vibes-200 bg-white px-4 py-2.5 text-sm font-black text-vibes-800 transition hover:bg-vibes-50">
+              <Home className="size-4" />
+              الرئيسية
+            </Link>
+            <button onClick={() => void handleSignOut()} className="inline-flex items-center gap-2 rounded-2xl border border-vibes-200 bg-white px-4 py-2.5 text-sm font-black text-vibes-800 transition hover:bg-vibes-50">
+              <LogOut className="size-4" />
+              خروج
+            </button>
+          </div>
         </div>
       </header>
 
       <div className="mx-auto w-full max-w-6xl px-4 py-7 sm:px-6 sm:py-10">
         {error && <div className="mb-5"><Alert type="error">{error}</Alert></div>}
         {success && <div className="mb-5"><Alert type="success">{success}</Alert></div>}
+
+        {/* روابط سريعة للصفحات الرئيسية */}
+        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          <Link to="/menu" className="flex items-center gap-2 rounded-2xl bg-white p-3 shadow-sm transition hover:shadow-md">
+            <ShoppingBag className="size-5 text-vibes-700" />
+            <span className="text-sm font-bold text-vibes-900">المنيو</span>
+          </Link>
+          <Link to="/orders" className="flex items-center gap-2 rounded-2xl bg-white p-3 shadow-sm transition hover:shadow-md">
+            <ClipboardList className="size-5 text-vibes-700" />
+            <span className="text-sm font-bold text-vibes-900">طلباتي</span>
+          </Link>
+          <Link to="/loyalty" className="flex items-center gap-2 rounded-2xl bg-white p-3 shadow-sm transition hover:shadow-md">
+            <Award className="size-5 text-vibes-700" />
+            <span className="text-sm font-bold text-vibes-900">الولاء</span>
+          </Link>
+          <Link to="/cars" className="flex items-center gap-2 rounded-2xl bg-white p-3 shadow-sm transition hover:shadow-md">
+            <Car className="size-5 text-vibes-700" />
+            <span className="text-sm font-bold text-vibes-900">سياراتي</span>
+          </Link>
+          <Link to="/card-designer" className="flex items-center gap-2 rounded-2xl bg-white p-3 shadow-sm transition hover:shadow-md">
+            <Palette className="size-5 text-vibes-700" />
+            <span className="text-sm font-bold text-vibes-900">تصميم البطاقة</span>
+          </Link>
+          {(userRole === 'cashier' || userRole === 'branch_manager' || userRole === 'admin' || userRole === 'super_admin') && (
+            <Link to="/cashier" className="flex items-center gap-2 rounded-2xl bg-white p-3 shadow-sm transition hover:shadow-md">
+              <Users className="size-5 text-vibes-700" />
+              <span className="text-sm font-bold text-vibes-900">الكاشير</span>
+            </Link>
+          )}
+          {(userRole === 'admin' || userRole === 'super_admin') && (
+            <Link to="/admin" className="flex items-center gap-2 rounded-2xl bg-white p-3 shadow-sm transition hover:shadow-md">
+              <Store className="size-5 text-vibes-700" />
+              <span className="text-sm font-bold text-vibes-900">الإدارة</span>
+            </Link>
+          )}
+        </div>
 
         <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
           <article className="overflow-hidden rounded-[2rem] bg-vibes-800 p-6 text-white card-shadow sm:p-8">
@@ -158,6 +234,11 @@ export function AccountPage() {
                 <p className="text-sm font-bold text-vibes-200">بطاقة عضوية فايبز</p>
                 <h1 className="mt-2 text-3xl font-black sm:text-4xl">{profile?.name?.trim() || 'ضيف فايبز'}</h1>
                 <p className="mt-2 font-semibold text-vibes-200">{maskPhone(profile?.phone ?? null)}</p>
+                <div className="mt-2 flex items-center gap-2">
+                  <span className="rounded-full bg-vibes-700 px-3 py-1 text-xs font-bold text-vibes-200">
+                    🏆 {loyaltyPoints} نقطة
+                  </span>
+                </div>
               </div>
               <div className="grid size-24 place-items-center overflow-hidden rounded-3xl border border-white/20 bg-white/10">
                 {previewUrl || avatarUrl ? (
@@ -181,11 +262,13 @@ export function AccountPage() {
             <div className="mt-8 grid grid-cols-2 gap-3">
               <div className="rounded-2xl bg-white/10 p-4">
                 <p className="text-xs font-bold text-vibes-200">أكواب الولاء</p>
-                <p className="mt-2 text-sm font-black">غير مفعلة حالياً</p>
+                <p className="mt-2 text-sm font-black">{Math.floor(loyaltyPoints / 10)} كوب</p>
               </div>
               <div className="rounded-2xl bg-white/10 p-4">
                 <p className="text-xs font-bold text-vibes-200">حالة المكافأة</p>
-                <p className="mt-2 text-sm font-black">غير مفعلة حالياً</p>
+                <p className="mt-2 text-sm font-black">
+                  {loyaltyPoints >= 100 ? '🟢 مؤهل' : '🔵 قيد التقدم'}
+                </p>
               </div>
             </div>
           </article>
