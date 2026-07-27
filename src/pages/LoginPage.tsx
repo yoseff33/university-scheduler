@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ArrowLeft, Eye, EyeOff, KeyRound, LoaderCircle, Phone, ShieldCheck, UserPlus } from 'lucide-react'
+import { ArrowLeft, Eye, EyeOff, KeyRound, LoaderCircle, Mail, ShieldCheck, UserPlus } from 'lucide-react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Alert } from '../components/Alert'
 import { BrandMark } from '../components/BrandMark'
@@ -8,7 +8,6 @@ import { useAuth } from '../features/auth/useAuth'
 import { appConfig } from '../lib/config'
 import { supabase } from '../lib/supabase'
 import { getArabicAuthError } from '../utils/authError'
-import { normalizeSaudiPhone } from '../utils/phone'
 
 type AuthMode = 'signIn' | 'signUp'
 
@@ -18,14 +17,14 @@ export function LoginPage() {
   const location = useLocation()
 
   const [mode, setMode] = useState<AuthMode>('signIn')
-  const [phone, setPhone] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
 
-  // نقبل مساراً داخلياً فقط حتى ما يصير تحويل إلى رابط خارجي.
+  // تحديد وجهة التوجيه بعد الدخول (تكون داخلية فقط)
   const destination = useMemo(() => {
     const state = location.state as { from?: string } | null
     const requestedPath = state?.from
@@ -51,14 +50,15 @@ export function LoginPage() {
     setError(null)
     setNotice(null)
 
-    const normalizedPhone = normalizeSaudiPhone(phone)
-    if (!normalizedPhone) {
-      setError('اكتب رقم جوال سعودي صحيح، مثل 05XXXXXXXX.')
+    // التحقق من صحة البريد الإلكتروني (بسيط)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!email.trim() || !emailRegex.test(email)) {
+      setError('يرجى إدخال بريد إلكتروني صحيح (مثال: name@domain.com).')
       return
     }
 
     if (password.length < 8) {
-      setError('كلمة المرور لازم تكون 8 خانات على الأقل.')
+      setError('كلمة المرور يجب أن تكون 8 خانات على الأقل.')
       return
     }
 
@@ -71,9 +71,9 @@ export function LoginPage() {
 
     try {
       if (mode === 'signIn') {
-        // دخول مباشر برقم الجوال وكلمة المرور بدون OTP.
+        // تسجيل الدخول بالبريد الإلكتروني وكلمة المرور
         const { data, error: signInError } = await supabase.auth.signInWithPassword({
-          phone: normalizedPhone,
+          email,
           password,
         })
 
@@ -84,20 +84,22 @@ export function LoginPage() {
         return
       }
 
-      // إنشاء حساب جديد برقم الجوال وكلمة المرور.
-      // يلزم تعطيل Confirm phone في Supabase حتى تُنشأ الجلسة مباشرة بدون OTP.
+      // إنشاء حساب جديد بالبريد الإلكتروني وكلمة المرور
       const { data, error: signUpError } = await supabase.auth.signUp({
-        phone: normalizedPhone,
+        email,
         password,
       })
 
       if (signUpError) throw signUpError
 
+      // إذا لم يتم إنشاء جلسة فوراً (لأن Supabase يطلب تأكيد البريد)
       if (!data.session) {
-        setError('تم إنشاء الحساب، لكن Supabase ما أنشأ جلسة دخول. عطّل خيار Confirm phone من إعدادات Phone Auth ثم جرّب بحساب جديد.')
+        setNotice('تم إرسال رابط تأكيد إلى بريدك الإلكتروني. يرجى التحقق منه لتأكيد الحساب ثم تسجيل الدخول.')
+        // لا نعيد التوجيه، نترك المستخدم في الصفحة مع إشعار
         return
       }
 
+      // إذا تم إنشاء جلسة مباشرة (عند تعطيل تأكيد البريد)
       setNotice('تم إنشاء الحساب وتسجيل الدخول بنجاح.')
       navigate(destination, { replace: true })
     } catch (requestError) {
@@ -125,13 +127,13 @@ export function LoginPage() {
                 تجربة كوفي تبدأ من جوالك وتوصل لين سيارتك.
               </h1>
               <p className="mt-6 max-w-lg text-base leading-8 text-vibes-100/80">
-                دخول مباشر وآمن برقم الجوال وكلمة المرور، والجلسة محفوظة فعلياً عن طريق Supabase.
+                دخول مباشر وآمن بالبريد الإلكتروني وكلمة المرور، والجلسة محفوظة فعلياً عن طريق Supabase.
               </p>
             </div>
 
             <div className="flex items-center gap-3 text-sm text-vibes-100/80">
               <ShieldCheck className="size-5" />
-              <span>لا يوجد رمز OTP ولا تسجيل دخول وهمي.</span>
+              <span>معلوماتك محمية ومشفرة.</span>
             </div>
           </section>
 
@@ -147,8 +149,8 @@ export function LoginPage() {
               </h2>
               <p className="mt-3 text-sm leading-7 text-vibes-600">
                 {mode === 'signIn'
-                  ? 'اكتب رقم جوالك وكلمة المرور للدخول مباشرة.'
-                  : 'أنشئ حسابك برقم الجوال وكلمة المرور بدون رمز تحقق.'}
+                  ? 'أدخل بريدك الإلكتروني وكلمة المرور للدخول.'
+                  : 'أنشئ حساباً جديداً بواسطة بريدك الإلكتروني وكلمة مرور قوية.'}
               </p>
 
               <div className="mt-6 grid grid-cols-2 rounded-2xl bg-vibes-50 p-1">
@@ -196,18 +198,18 @@ export function LoginPage() {
 
               <form className="mt-8 space-y-5" onSubmit={handleSubmit} noValidate>
                 <label className="block">
-                  <span className="mb-2 block text-sm font-black text-vibes-900">رقم الجوال</span>
+                  <span className="mb-2 block text-sm font-black text-vibes-900">البريد الإلكتروني</span>
                   <span className="relative block">
-                    <Phone className="absolute right-4 top-1/2 size-5 -translate-y-1/2 text-vibes-500" />
+                    <Mail className="absolute right-4 top-1/2 size-5 -translate-y-1/2 text-vibes-500" />
                     <input
                       className="h-14 w-full rounded-2xl border border-vibes-200 bg-white pr-12 pl-4 text-left text-lg font-bold tracking-wide text-vibes-900 transition focus:border-vibes-600"
                       dir="ltr"
-                      type="tel"
-                      inputMode="tel"
-                      autoComplete="tel"
-                      placeholder="05XXXXXXXX"
-                      value={phone}
-                      onChange={(event) => setPhone(event.target.value)}
+                      type="email"
+                      inputMode="email"
+                      autoComplete="email"
+                      placeholder="name@example.com"
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
                       disabled={loading}
                       required
                     />
@@ -245,7 +247,7 @@ export function LoginPage() {
                 <button
                   type="submit"
                   className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-vibes-800 px-5 font-black text-white transition hover:bg-vibes-700 disabled:cursor-not-allowed disabled:opacity-60"
-                  disabled={loading || !phone.trim() || password.length < 8 || !appConfig.isSupabaseConfigured}
+                  disabled={loading || !email.trim() || password.length < 8 || !appConfig.isSupabaseConfigured}
                 >
                   {loading ? (
                     <LoaderCircle className="size-5 animate-spin" />
@@ -254,7 +256,7 @@ export function LoginPage() {
                   ) : (
                     <UserPlus className="size-5" />
                   )}
-                  {mode === 'signIn' ? 'دخول' : 'إنشاء الحساب والدخول'}
+                  {mode === 'signIn' ? 'دخول' : 'إنشاء الحساب'}
                 </button>
               </form>
             </div>
