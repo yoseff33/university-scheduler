@@ -30,13 +30,13 @@ jobs:
       - name: تجهيز Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
+          node-version: 24
 
+      # نستخدم npm install لأن المشروع ما فيه package-lock.json
       - name: تثبيت المكتبات
-        run: npm ci
+        run: npm install
 
-      # Vite راح يقرأ القيم مباشرة من ملف .env.local الموجود بالمشروع
+      # Vite يقرأ القيم من ملف .env.local الموجود في المستودع
       - name: بناء الموقع
         run: npm run build
 
