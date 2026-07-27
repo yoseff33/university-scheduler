@@ -40,6 +40,7 @@ export function AccountPage() {
 
     const fetchData = async () => {
       try {
+        // 1. جلب الملف الشخصي
         const profileData = await getMyProfile(userId)
         if (!active) return
         setProfile(profileData)
@@ -48,26 +49,38 @@ export function AccountPage() {
         const signed = await getAvatarSignedUrl(profileData.avatar_url)
         if (active) setAvatarUrl(signed)
 
-        // جلب نقاط الولاء من جدول loyalty_accounts
-        const { data: loyaltyData, error: loyaltyError } = await supabase
-          .from('loyalty_accounts')
-          .select('points_balance')
-          .eq('user_id', userId)
-          .maybeSingle()
+        // 2. جلب نقاط الولاء مباشرة من العمود loyalty_points في جدول profiles
+        // لأننا أضفناه في المخطط الأخير
+        if (supabase) {
+          // محاولة جلب من loyalty_accounts إذا كان الجدول موجوداً (للتوافق مع الإصدارات السابقة)
+          // لكننا نفضل استخدام loyalty_points من profiles
+          const { data: loyaltyData, error: loyaltyError } = await supabase
+            .from('loyalty_accounts')
+            .select('points_balance')
+            .eq('user_id', userId)
+            .maybeSingle()
 
-        if (!loyaltyError && loyaltyData) {
-          setLoyaltyPoints(loyaltyData.points_balance || 0)
-        }
+          if (!loyaltyError && loyaltyData) {
+            setLoyaltyPoints(loyaltyData.points_balance || 0)
+          } else {
+            // إذا فشل جلب loyalty_accounts، نستخدم loyalty_points من profiles
+            const points = profileData?.loyalty_points || 0
+            setLoyaltyPoints(points)
+          }
 
-        // جلب دور المستخدم
-        const { data: roleData, error: roleError } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', userId)
-          .maybeSingle()
+          // جلب دور المستخدم
+          const { data: roleData, error: roleError } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', userId)
+            .maybeSingle()
 
-        if (!roleError && roleData) {
-          setUserRole(roleData.role)
+          if (!roleError && roleData) {
+            setUserRole(roleData.role)
+          }
+        } else {
+          // إذا كان supabase غير مهيأ، نعرض قيمة افتراضية أو خطأ
+          setError('خدمة Supabase غير متاحة حالياً')
         }
       } catch (err) {
         if (!active) return
