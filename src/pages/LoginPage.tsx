@@ -1,3 +1,4 @@
+// src/pages/LoginPage.tsx
 import { useMemo, useState } from 'react'
 import { ArrowLeft, Eye, EyeOff, KeyRound, LoaderCircle, Mail, ShieldCheck, UserPlus } from 'lucide-react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
@@ -24,7 +25,6 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [notice, setNotice] = useState<string | null>(null)
 
-  // تحديد وجهة التوجيه بعد الدخول (تكون داخلية فقط)
   const destination = useMemo(() => {
     const state = location.state as { from?: string } | null
     const requestedPath = state?.from
@@ -50,8 +50,8 @@ export function LoginPage() {
     setError(null)
     setNotice(null)
 
-    // التحقق من صحة البريد الإلكتروني (بسيط)
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    // تحقق صارم من البريد الإلكتروني
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     if (!email.trim() || !emailRegex.test(email)) {
       setError('يرجى إدخال بريد إلكتروني صحيح (مثال: name@domain.com).')
       return
@@ -71,7 +71,6 @@ export function LoginPage() {
 
     try {
       if (mode === 'signIn') {
-        // تسجيل الدخول بالبريد الإلكتروني وكلمة المرور
         const { data, error: signInError } = await supabase.auth.signInWithPassword({
           email,
           password,
@@ -84,26 +83,57 @@ export function LoginPage() {
         return
       }
 
-      // إنشاء حساب جديد بالبريد الإلكتروني وكلمة المرور
+      // تسجيل حساب جديد
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          // يمكن إضافة بيانات إضافية إذا لزم الأمر
+        },
       })
 
       if (signUpError) throw signUpError
 
-      // إذا لم يتم إنشاء جلسة فوراً (لأن Supabase يطلب تأكيد البريد)
       if (!data.session) {
+        // إذا تم إرسال رابط تأكيد
         setNotice('تم إرسال رابط تأكيد إلى بريدك الإلكتروني. يرجى التحقق منه لتأكيد الحساب ثم تسجيل الدخول.')
-        // لا نعيد التوجيه، نترك المستخدم في الصفحة مع إشعار
         return
       }
 
-      // إذا تم إنشاء جلسة مباشرة (عند تعطيل تأكيد البريد)
       setNotice('تم إنشاء الحساب وتسجيل الدخول بنجاح.')
       navigate(destination, { replace: true })
-    } catch (requestError) {
-      setError(getArabicAuthError(requestError))
+    } catch (err: unknown) {
+      // نحاول استخراج رسالة مفصلة من الخطأ
+      let errorMessage: string
+      if (err instanceof Error) {
+        errorMessage = err.message
+        // محاولة استخراج رسالة من كائن الخطأ إذا كان يحتوي على تفاصيل
+        const errorObj = err as any
+        if (errorObj?.error?.message) {
+          errorMessage = errorObj.error.message
+        } else if (errorObj?.message) {
+          errorMessage = errorObj.message
+        }
+      } else {
+        errorMessage = String(err)
+      }
+
+      // استخدام دالة الترجمة مع الرسالة المستخرجة
+      const translated = getArabicAuthError(errorMessage)
+      // إذا كانت الرسالة المترجمة هي نفس الرسالة الأصلية (أي لم توجد ترجمة)، نعرض رسالة عامة لـ 422 إن وجدت
+      if (errorMessage.includes('422') || errorMessage.includes('Unprocessable Entity')) {
+        // في كثير من الأحيان يكون السبب هو بريد موجود أو كلمة مرور ضعيفة
+        // يمكننا تمييز السبب من الرسالة إن أمكن
+        if (errorMessage.toLowerCase().includes('email') && errorMessage.toLowerCase().includes('already')) {
+          setError('هذا البريد الإلكتروني مسجل مسبقاً. يرجى استخدام بريد آخر أو تسجيل الدخول.')
+        } else if (errorMessage.toLowerCase().includes('password')) {
+          setError('كلمة المرور ضعيفة جداً. يرجى استخدام كلمة مرور أقوى (8 خانات على الأقل، تحتوي على أحرف وأرقام).')
+        } else {
+          setError('حدث خطأ في إنشاء الحساب. تأكد من صحة البريد وكلمة المرور (8 خانات على الأقل).')
+        }
+      } else {
+        setError(translated)
+      }
     } finally {
       setLoading(false)
     }
@@ -247,7 +277,12 @@ export function LoginPage() {
                 <button
                   type="submit"
                   className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-vibes-800 px-5 font-black text-white transition hover:bg-vibes-700 disabled:cursor-not-allowed disabled:opacity-60"
-                  disabled={loading || !email.trim() || password.length < 8 || !appConfig.isSupabaseConfigured}
+                  disabled={
+                    loading ||
+                    !email.trim() ||
+                    password.length < 8 ||
+                    !appConfig.isSupabaseConfigured
+                  }
                 >
                   {loading ? (
                     <LoaderCircle className="size-5 animate-spin" />
