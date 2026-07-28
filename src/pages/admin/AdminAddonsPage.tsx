@@ -34,9 +34,20 @@ type Group = {
   addon_options: AddonOption[];
 };
 
-const emptyGroup = {
+// تحديد نوع form بشكل صريح لتجنب مشاكل الاتحاد
+type FormState = {
+  name: string;
+  selection_type: 'single' | 'multiple';
+  min_selection: string;
+  max_selection: string;
+  is_required: boolean;
+  sort_order: string;
+  is_active: boolean;
+};
+
+const emptyGroup: FormState = {
   name: '',
-  selection_type: 'single' as const,
+  selection_type: 'single', // القيمة الافتراضية
   min_selection: '0',
   max_selection: '1',
   is_required: false,
@@ -47,7 +58,7 @@ const emptyGroup = {
 // --- المكون الرئيسي ---
 export function AdminAddonsPage() {
   const [groups, setGroups] = useState<Group[]>([]);
-  const [form, setForm] = useState(emptyGroup);
+  const [form, setForm] = useState<FormState>(emptyGroup);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -115,7 +126,7 @@ export function AdminAddonsPage() {
 
       const payload = {
         name,
-        selection_type: form.selection_type,
+        selection_type: form.selection_type, // الآن النوع مطابق
         min_selection: Number(form.min_selection) || 0,
         max_selection: Math.max(1, Number(form.max_selection) || 1),
         is_required: form.is_required,
@@ -171,7 +182,6 @@ export function AdminAddonsPage() {
         return;
       }
 
-      // مسح الحقول
       setOptionName((prev) => ({ ...prev, [groupId]: '' }));
       setOptionPrice((prev) => ({ ...prev, [groupId]: '' }));
       await loadGroups();
