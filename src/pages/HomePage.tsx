@@ -16,7 +16,8 @@ interface Profile {
 interface Branch {
   id: string
   name: string
-  is_open: boolean
+  // is_open: boolean  // إذا كان العمود موجوداً، استخدمه. سنفترض وجوده
+  is_open?: boolean  // اختياري لتجنب الأخطاء
 }
 
 export function HomePage() {
@@ -27,11 +28,10 @@ export function HomePage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!session) return
+    if (!session || !supabase) return
 
     const fetchData = async () => {
       try {
-        // جلب الملف الشخصي
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('name, membership_number, loyalty_points')
@@ -41,10 +41,9 @@ export function HomePage() {
         if (profileError) throw profileError
         setProfile(profileData)
 
-        // جلب الفرع الافتراضي (أول فرع نشط)
         const { data: branchData, error: branchError } = await supabase
           .from('branches')
-          .select('id, name, is_open')
+          .select('id, name, is_open')  // تأكد من وجود العمود
           .eq('is_active', true)
           .order('name')
           .limit(1)
@@ -70,7 +69,6 @@ export function HomePage() {
   return (
     <main className="min-h-screen bg-vibes-pattern px-4 py-6 pb-20">
       <div className="mx-auto max-w-6xl">
-        {/* الهيدر */}
         <header className="flex items-center justify-between py-4">
           <BrandMark />
           <Link to="/account" className="rounded-full bg-white p-2 shadow-md">
@@ -86,7 +84,6 @@ export function HomePage() {
           </Link>
         </header>
 
-        {/* بطاقة الترحيب */}
         <section className="mt-4 rounded-3xl bg-vibes-800 p-6 text-white shadow-lg">
           <div className="flex items-start justify-between">
             <div>
@@ -110,7 +107,6 @@ export function HomePage() {
           </div>
         </section>
 
-        {/* حالة الفرع */}
         {branch && (
           <section className="mt-4 rounded-2xl bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between">
@@ -132,7 +128,6 @@ export function HomePage() {
           </section>
         )}
 
-        {/* تصنيفات سريعة */}
         <section className="mt-6">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-black text-vibes-900">التصنيفات</h2>
@@ -152,7 +147,6 @@ export function HomePage() {
           </div>
         </section>
 
-        {/* عروض / منتجات مميزة (سيتم جلبها من Supabase) */}
         <section className="mt-6">
           <h2 className="text-lg font-black text-vibes-900">الأكثر طلباً</h2>
           <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
