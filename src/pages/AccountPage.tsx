@@ -130,7 +130,7 @@ function accountReducer(state: AccountState, action: AccountAction): AccountStat
   }
 }
 
-// --- Hook مخصص لجلب بيانات الحساب (مع دعم إلغاء الطلبات) ---
+// --- Hook مخصص لجلب بيانات الحساب (مع دعم الإلغاء عبر التحقق من signal) ---
 function useProfileData(userId: string) {
   const [state, dispatch] = useReducer(accountReducer, initialState);
 
@@ -157,13 +157,12 @@ function useProfileData(userId: string) {
           dispatch({ type: 'SET_AVATAR_URL', payload: signedUrl });
         }
 
-        // 3. جلب دور المستخدم
+        // 3. جلب دور المستخدم (بدون abortSignal، نعتمد على التحقق اليدوي)
         const { data: roleData, error: roleError } = await supabaseClient
           .from('user_roles')
           .select('role')
           .eq('user_id', userId)
-          .maybeSingle()
-          .abortSignal(signal);
+          .maybeSingle(); // 'single' هو الافتراضي
 
         if (!signal.aborted && !roleError && roleData) {
           dispatch({ type: 'SET_USER_ROLE', payload: roleData.role });
@@ -174,8 +173,7 @@ function useProfileData(userId: string) {
           .from('loyalty_accounts')
           .select('points_balance, lifetime_points')
           .eq('user_id', userId)
-          .maybeSingle()
-          .abortSignal(signal);
+          .maybeSingle(); // 'single' هو الافتراضي
 
         if (!signal.aborted) {
           if (loyaltyError) {
@@ -206,7 +204,7 @@ function useProfileData(userId: string) {
     fetchData();
 
     return () => {
-      abortController.abort();
+      abortController.abort(); // يمنع تحديث الحالة بعد فك التركيب
     };
   }, [userId]);
 
@@ -366,7 +364,7 @@ export function AccountPage() {
       dispatch({ type: 'SET_PENDING_AVATAR', payload: file });
       dispatch({ type: 'SET_PREVIEW_URL', payload: URL.createObjectURL(file) });
     },
-    [previewUrl], // dispatch ثابت ولا داعي لإضافته
+    [previewUrl],
   );
 
   const saveProfile = useCallback(
@@ -419,7 +417,7 @@ export function AccountPage() {
         dispatch({ type: 'SET_SAVING', payload: false });
       }
     },
-    [profile, userId, pendingAvatar, name, marketingConsent], // dispatch ثابت
+    [profile, userId, pendingAvatar, name, marketingConsent],
   );
 
   const handleSignOut = useCallback(async () => {
@@ -531,7 +529,6 @@ export function AccountPage() {
               <span className="text-sm font-bold text-vibes-900">الكاشير</span>
             </Link>
           )}
-          {/* ملاحظة: تأكد من أن Route /admin يسمح لـ branch_manager أيضاً */}
           {['branch_manager', 'admin', 'super_admin'].includes(userRole ?? '') && (
             <Link
               to="/admin"
