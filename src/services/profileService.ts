@@ -1,3 +1,4 @@
+// src/services/profileService.ts
 import { supabase } from '../lib/supabase'
 import type { Profile } from '../types/database'
 
@@ -6,7 +7,7 @@ export async function getMyProfile(userId: string): Promise<Profile> {
 
   const { data, error } = await supabase
     .from('profiles')
-    .select('id, phone, membership_number, name, avatar_url, preferred_branch_id, marketing_consent, created_at, updated_at')
+    .select('id, phone, membership_number, name, avatar_url, preferred_branch_id, marketing_consent, loyalty_points, created_at, updated_at')
     .eq('id', userId)
     .single()
 
