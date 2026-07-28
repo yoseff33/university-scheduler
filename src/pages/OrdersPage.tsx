@@ -9,7 +9,7 @@ import { ArrowRight, Clock, CheckCircle, XCircle, Package } from 'lucide-react'
 interface Order {
   id: string
   order_number: string
-  branch: { name: string }
+  branch: { name: string } | null  // قد يكون null
   status: string
   total: number
   created_at: string
@@ -32,7 +32,7 @@ export function OrdersPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!session) return
+    if (!session || !supabase) return
 
     const fetchOrders = async () => {
       try {
