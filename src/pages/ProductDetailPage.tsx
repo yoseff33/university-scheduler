@@ -6,6 +6,8 @@ import { useAuth } from '../features/auth/useAuth'
 import { PageLoader } from '../components/PageLoader'
 import { Alert } from '../components/Alert'
 import { ArrowRight, Minus, Plus, ShoppingCart } from 'lucide-react'
+// استيراد صفحة 404 (افترض وجودها)
+import { NotFoundPage } from './NotFoundPage' // غير المسار حسب هيكل مشروعك
 
 interface Product {
   id: string
@@ -14,7 +16,7 @@ interface Product {
   base_price: number
   image_url: string | null
   is_available: boolean
-  category_id: string
+  category_id: string | null  // قد يكون null
   preparation_minutes: number | null
 }
 
@@ -57,13 +59,11 @@ export function ProductDetailPage() {
   const [success, setSuccess] = useState<string | null>(null)
   const [addingToCart, setAddingToCart] = useState(false)
 
-  // حساب السعر النهائي
   const calculatePrice = () => {
     if (!product) return 0
     let price = product.base_price
     const size = sizes.find(s => s.id === selectedSize)
     if (size) price += size.price_adjustment
-    // إضافة أسعار الإضافات المختارة
     Object.entries(selectedAddons).forEach(([groupId, optionIds]) => {
       const group = addonGroups.find(g => g.id === groupId)
       if (group) {
@@ -77,11 +77,10 @@ export function ProductDetailPage() {
   }
 
   useEffect(() => {
-    if (!productId) return
+    if (!productId || !supabase) return
 
     const fetchProduct = async () => {
       try {
-        // جلب بيانات المنتج
         const { data: prod, error: prodError } = await supabase
           .from('products')
           .select('*')
@@ -119,16 +118,20 @@ export function ProductDetailPage() {
 
         if (groupsError) throw groupsError
 
-        const parsedGroups = groups
-          ?.map(g => g.addon_groups)
-          .filter(g => g !== null) as AddonGroup[]
+        // تحويل البيانات: نأخذ addon_groups ونحولها إلى AddonGroup[]
+        const parsedGroups: AddonGroup[] = (groups || [])
+          .map((item: any) => item.addon_groups)
+          .filter((g: any) => g !== null)
+          .map((g: any) => ({
+            ...g,
+            options: g.addon_options || [] // إعادة تسمية addon_options إلى options
+          }))
 
-        setAddonGroups(parsedGroups || [])
+        setAddonGroups(parsedGroups)
 
         // تهيئة الاختيارات الافتراضية
         const defaultSelections: Record<string, string[]> = {}
-        parsedGroups?.forEach(group => {
-          // اختيار أول خيار إذا كان مطلوباً واختيار مفرد
+        parsedGroups.forEach(group => {
           if (group.is_required && group.selection_type === 'single' && group.options.length > 0) {
             defaultSelections[group.id] = [group.options[0].id]
           } else {
@@ -154,10 +157,8 @@ export function ProductDetailPage() {
       if (!group) return prev
 
       if (group.selection_type === 'single') {
-        // اختيار مفرد: نستبدل بالخيار الجديد
         return { ...prev, [groupId]: [optionId] }
       } else {
-        // اختيار متعدد: نتبدل
         const exists = current.includes(optionId)
         const newSelection = exists
           ? current.filter(id => id !== optionId)
@@ -173,14 +174,16 @@ export function ProductDetailPage() {
       return
     }
     if (!product) return
+    if (!supabase) {
+      setError('خطأ في الاتصال بقاعدة البيانات')
+      return
+    }
 
-    // التحقق من اختيار الحجم
     if (sizes.length > 0 && !selectedSize) {
       setError('الرجاء اختيار الحجم')
       return
     }
 
-    // التحقق من الإضافات المطلوبة
     for (const group of addonGroups) {
       if (group.is_required) {
         const selected = selectedAddons[group.id] || []
@@ -199,11 +202,7 @@ export function ProductDetailPage() {
     setAddingToCart(true)
 
     try {
-      // هنا سنقوم بإضافة المنتج إلى السلة (سنفترض وجود جدول carts و cart_items)
-      // ولكن في هذه المرحلة سنقوم بإنشاء سلة إذا لم توجد، ثم إضافة العنصر
-      // هذا مجرد نموذج، يجب تحسينه لاحقاً
-
-      // 1. البحث عن سلة مفتوحة للمستخدم
+      // 1. البحث عن سلة مفتوحة
       let { data: cart, error: cartError } = await supabase
         .from('carts')
         .select('id')
@@ -213,7 +212,6 @@ export function ProductDetailPage() {
 
       if (cartError) throw cartError
 
-      // 2. إنشاء سلة جديدة إذا لم توجد
       if (!cart) {
         const { data: newCart, error: newCartError } = await supabase
           .from('carts')
@@ -225,8 +223,7 @@ export function ProductDetailPage() {
         cart = newCart
       }
 
-      // 3. إضافة العنصر إلى السلة
-      const price = calculatePrice() / quantity // سعر الوحدة
+      const price = calculatePrice() / quantity
       const { error: itemError } = await supabase
         .from('cart_items')
         .insert({
@@ -240,8 +237,8 @@ export function ProductDetailPage() {
 
       if (itemError) throw itemError
 
-      // 4. إضافة الإضافات المختارة
-      const cartItem = await supabase
+      // جلب العنصر المضاف حديثاً
+      const { data: cartItem, error: cartItemError } = await supabase
         .from('cart_items')
         .select('id')
         .eq('cart_id', cart.id)
@@ -250,10 +247,12 @@ export function ProductDetailPage() {
         .limit(1)
         .single()
 
-      if (cartItem.data) {
+      if (cartItemError) throw cartItemError
+
+      if (cartItem) {
         const addonInserts = Object.entries(selectedAddons).flatMap(([groupId, optionIds]) =>
           optionIds.map(optId => ({
-            cart_item_id: cartItem.data.id,
+            cart_item_id: cartItem.id,
             addon_option_id: optId,
           }))
         )
@@ -266,7 +265,6 @@ export function ProductDetailPage() {
       }
 
       setSuccess('تمت إضافة المنتج إلى السلة')
-      // نذهب إلى السلة بعد ثانية
       setTimeout(() => navigate('/cart'), 1000)
     } catch (err) {
       console.error(err)
@@ -278,12 +276,11 @@ export function ProductDetailPage() {
 
   if (loading) return <PageLoader label="جاري تحميل المنتج..." />
   if (error && !product) return <div className="p-4 text-center text-red-600">{error}</div>
-  if (!product) return <NotFoundPage /> // يمكن استيراد NotFoundPage
+  if (!product) return <NotFoundPage />
 
   return (
     <main className="min-h-screen bg-vibes-pattern px-4 py-6 pb-20">
       <div className="mx-auto max-w-3xl">
-        {/* رجوع */}
         <div className="flex items-center gap-4 py-4">
           <Link to="/menu" className="rounded-full bg-white p-2 shadow">
             <ArrowRight className="size-5 text-vibes-800" />
@@ -291,7 +288,6 @@ export function ProductDetailPage() {
           <h1 className="text-xl font-black text-vibes-900">تفاصيل المنتج</h1>
         </div>
 
-        {/* صورة المنتج */}
         <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
           <div className="aspect-video w-full bg-vibes-100">
             {product.image_url ? (
@@ -302,7 +298,6 @@ export function ProductDetailPage() {
           </div>
         </div>
 
-        {/* المعلومات */}
         <div className="mt-4 rounded-3xl bg-white p-6 shadow-sm">
           <h2 className="text-2xl font-black text-vibes-900">{product.name}</h2>
           {product.description && <p className="mt-1 text-sm text-vibes-600">{product.description}</p>}
@@ -315,7 +310,6 @@ export function ProductDetailPage() {
           )}
         </div>
 
-        {/* الأحجام */}
         {sizes.length > 0 && (
           <div className="mt-4 rounded-3xl bg-white p-6 shadow-sm">
             <h3 className="font-bold text-vibes-900">اختر الحجم</h3>
@@ -337,7 +331,6 @@ export function ProductDetailPage() {
           </div>
         )}
 
-        {/* الإضافات */}
         {addonGroups.map(group => (
           <div key={group.id} className="mt-4 rounded-3xl bg-white p-6 shadow-sm">
             <h3 className="font-bold text-vibes-900">
@@ -369,7 +362,6 @@ export function ProductDetailPage() {
           </div>
         ))}
 
-        {/* الكمية والإضافة للسلة */}
         <div className="mt-6 flex items-center gap-4">
           <div className="flex items-center rounded-2xl bg-white shadow-sm">
             <button
