@@ -1,4 +1,3 @@
-src/pages/ProductDetailPage.tsx
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowRight, Minus, Plus, ShoppingCart } from 'lucide-react'
@@ -326,9 +325,7 @@ export function ProductDetailPage() {
             <p className="mt-1 text-sm text-vibes-500">⏱️ وقت التحضير: {product.preparation_minutes} دقيقة</p>
           )}
           {!product.is_available && (
-            <div className="mt-3">
-              <Alert type="error">هذا المنتج غير متوفر حالياً</Alert>
-            </div>
+            <div className="mt-3"><Alert type="error">هذا المنتج غير متوفر حالياً</Alert></div>
           )}
         </div>
 
@@ -416,16 +413,8 @@ export function ProductDetailPage() {
           </button>
         </div>
 
-        {error && (
-          <div className="mt-3">
-            <Alert type="error">{error}</Alert>
-          </div>
-        )}
-        {success && (
-          <div className="mt-3">
-            <Alert type="success">{success}</Alert>
-          </div>
-        )}
+        {error && <div className="mt-3"><Alert type="error">{error}</Alert></div>}
+        {success && <div className="mt-3"><Alert type="success">{success}</Alert></div>}
       </div>
     </main>
   )
