@@ -20,47 +20,53 @@ export interface LoyaltyReward {
   used_at: string | null
 }
 
-export async function getActiveCups(userId: string): Promise<LoyaltyCup[]> {
+// دالة مساعدة للتحقق من وجود supabase
+function getClient() {
   if (!supabase) throw new Error('Supabase not configured')
-  const { data, error } = await (supabase as any)
+  return supabase
+}
+
+export async function getActiveCups(userId: string): Promise<LoyaltyCup[]> {
+  const client = getClient()
+  const { data, error } = await (client as any)
     .from('loyalty_cups')
     .select('*')
     .eq('customer_id', userId)
     .eq('status', 'active')
     .order('created_at', { ascending: false })
   if (error) throw error
-  return data ?? []
+  return (data as LoyaltyCup[]) ?? []
 }
 
 export async function getAllCups(userId: string): Promise<LoyaltyCup[]> {
-  if (!supabase) throw new Error('Supabase not configured')
-  const { data, error } = await (supabase as any)
+  const client = getClient()
+  const { data, error } = await (client as any)
     .from('loyalty_cups')
     .select('*')
     .eq('customer_id', userId)
     .order('created_at', { ascending: false })
   if (error) throw error
-  return data ?? []
+  return (data as LoyaltyCup[]) ?? []
 }
 
 export async function getActiveRewards(userId: string): Promise<LoyaltyReward[]> {
-  if (!supabase) throw new Error('Supabase not configured')
-  const { data, error } = await (supabase as any)
+  const client = getClient()
+  const { data, error } = await (client as any)
     .from('loyalty_rewards')
     .select('*')
     .eq('customer_id', userId)
     .eq('status', 'active')
     .order('created_at', { ascending: false })
   if (error) throw error
-  return data ?? []
+  return (data as LoyaltyReward[]) ?? []
 }
 
 export async function grantCup(userId: string, orderId: string, orderTotal: number): Promise<LoyaltyCup> {
-  if (!supabase) throw new Error('Supabase not configured')
+  const client = getClient()
   if (orderTotal < 12) {
     throw new Error('قيمة الطلب أقل من الحد الأدنى لمنح الكوب')
   }
-  const { data, error } = await (supabase as any).rpc('grant_cup', {
+  const { data, error } = await (client as any).rpc('grant_cup', {
     p_customer_id: userId,
     p_order_id: orderId,
     p_order_total: orderTotal,
@@ -70,8 +76,8 @@ export async function grantCup(userId: string, orderId: string, orderTotal: numb
 }
 
 export async function redeemReward(userId: string): Promise<LoyaltyReward> {
-  if (!supabase) throw new Error('Supabase not configured')
-  const { data, error } = await (supabase as any).rpc('redeem_reward', {
+  const client = getClient()
+  const { data, error } = await (client as any).rpc('redeem_reward', {
     p_customer_id: userId,
   })
   if (error) throw error
@@ -79,8 +85,8 @@ export async function redeemReward(userId: string): Promise<LoyaltyReward> {
 }
 
 export async function revokeCup(cupId: string): Promise<void> {
-  if (!supabase) throw new Error('Supabase not configured')
-  const { error } = await (supabase as any).rpc('revoke_cup', {
+  const client = getClient()
+  const { error } = await (client as any).rpc('revoke_cup', {
     p_cup_id: cupId,
   })
   if (error) throw error
