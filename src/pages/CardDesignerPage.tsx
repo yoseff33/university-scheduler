@@ -28,10 +28,6 @@ interface PlacedSticker {
   rotation: number
 }
 
-interface DesignData {
-  stickers: PlacedSticker[]
-}
-
 // دوال مساعدة للتحويل من Json إلى PlacedSticker[]
 function parsePlacedSticker(value: Json): PlacedSticker | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null
@@ -176,7 +172,7 @@ export function CardDesignerPage() {
         await new Promise<void>((resolve) => {
           fabric.Image.fromURL(stickerData.image_url, (img: fabric.Image) => {
             img.set({
-              left: ps.x - 30 * ps.scale, // لضبط المركز
+              left: ps.x - 30 * ps.scale,
               top: ps.y - 30 * ps.scale,
               scaleX: ps.scale,
               scaleY: ps.scale,
@@ -220,9 +216,6 @@ export function CardDesignerPage() {
       fabricCanvas.add(img)
       fabricCanvas.setActiveObject(img)
       fabricCanvas.renderAll()
-
-      // تحديث placedStickers بعد الإضافة (سنقوم بحفظها لاحقاً)
-      // يمكننا استخراج الموضع من الكائن بعد التعديل
     }, { crossOrigin: 'anonymous' })
   }
 
@@ -254,19 +247,13 @@ export function CardDesignerPage() {
     setSuccess(null)
 
     try {
-      // استخراج جميع كائنات الملصقات (نفترض أن كل الكائنات القابلة للتحديد هي ملصقات)
       const objects = fabricCanvas.getObjects()
       const stickersData: PlacedSticker[] = []
       for (const obj of objects) {
-        // نتجاهل الخلفية (غير قابلة للتحديد)
         if (!obj.selectable) continue
-        // نبحث عن id الملصق من اسم الصورة أو نستخدم معرف وهمي (سنحسن لاحقاً)
-        // للتبسيط، نأخذ معرف من الصورة (نفترض أن الصورة تحمل معرفاً في الـ src)
         const src = (obj as fabric.Image).getSrc?.() || ''
         const sticker = stickers.find(s => s.image_url === src)
         if (!sticker) continue
-
-        // الحصول على المركز
         const center = obj.getCenterPoint()
         stickersData.push({
           id: sticker.id,
@@ -279,7 +266,6 @@ export function CardDesignerPage() {
 
       const designJson = toDesignJson(stickersData)
 
-      // حفظ في قاعدة البيانات
       const { data: existing, error: checkErr } = await supabase
         .from('customer_card_designs')
         .select('id')
