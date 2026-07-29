@@ -39,7 +39,7 @@ import type { Profile } from '../types/database';
 import { maskPhone } from '../utils/phone';
 
 // --- الثوابت ---
-const DEFAULT_CUPS_FOR_REWARD = 6; // القيمة الافتراضية إذا لم توجد إعدادات
+const DEFAULT_CUPS_FOR_REWARD = 6;
 
 // --- دالة مساعدة للتحقق من وجود supabase ---
 function requireSupabase() {
@@ -149,18 +149,15 @@ function useProfileData(userId: string) {
       try {
         const supabaseClient = requireSupabase();
 
-        // 1. جلب الملف الشخصي
         const profile = await getMyProfile(userId);
         if (signal.aborted) return;
         dispatch({ type: 'SET_PROFILE', payload: profile });
 
-        // 2. جلب الصورة
         const signedUrl = await getAvatarSignedUrl(profile.avatar_url);
         if (!signal.aborted) {
           dispatch({ type: 'SET_AVATAR_URL', payload: signedUrl });
         }
 
-        // 3. جلب دور المستخدم
         const { data: roleData, error: roleError } = await supabaseClient
           .from('user_roles')
           .select('role')
@@ -171,7 +168,7 @@ function useProfileData(userId: string) {
           dispatch({ type: 'SET_USER_ROLE', payload: roleData.role });
         }
 
-        // 4. جلب الأكواب النشطة من loyalty_accounts (الآن الأنواع محدثة)
+        // جلب الأكواب النشطة
         const { data: loyaltyData, error: loyaltyError } = await supabaseClient
           .from('loyalty_accounts')
           .select('active_cups')
@@ -186,7 +183,7 @@ function useProfileData(userId: string) {
           }
         }
 
-        // 5. جلب الهدف من loyalty_settings (استخدم cups_required)
+        // جلب الهدف من loyalty_settings (cups_required)
         const { data: settingsData, error: settingsError } = await supabaseClient
           .from('loyalty_settings')
           .select('cups_required')
@@ -347,7 +344,6 @@ export function AccountPage() {
     success,
   } = state;
 
-  // دالة لتنسيق رقم العضوية – منع تكرار البادئة
   const formatMembership = useCallback((number: string | null | undefined): string => {
     if (!number) return '—';
     const trimmed = number.trim();
@@ -360,7 +356,6 @@ export function AccountPage() {
     [profile?.membership_number, formatMembership]
   );
 
-  // قيمة QR – استخلاص الرقم بدون بادئة مكررة
   const qrValue = useMemo(() => {
     const number = profile?.membership_number;
     if (!number) return '';
@@ -368,7 +363,6 @@ export function AccountPage() {
     return `VIB:${clean}`;
   }, [profile?.membership_number]);
 
-  // حساب الأكواب المتبقية
   const cupsRemaining = Math.max(targetCups - activeCups, 0);
   const isEligible = activeCups >= targetCups;
 
@@ -468,7 +462,6 @@ export function AccountPage() {
 
   return (
     <main className="min-h-screen bg-vibes-pattern safe-bottom pb-20">
-      {/* الهيدر */}
       <header className="sticky top-0 z-20 border-b border-vibes-100/80 bg-white/85 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
           <BrandMark />
@@ -510,7 +503,6 @@ export function AccountPage() {
           </div>
         )}
 
-        {/* روابط سريعة */}
         <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           <Link
             to="/menu"
@@ -568,7 +560,6 @@ export function AccountPage() {
         </div>
 
         <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-          {/* بطاقة العضوية */}
           <article className="overflow-hidden rounded-[2rem] bg-vibes-800 p-6 text-white card-shadow sm:p-8">
             <div className="flex flex-wrap items-start justify-between gap-5">
               <div>
@@ -627,7 +618,6 @@ export function AccountPage() {
               </div>
             </div>
 
-            {/* شريط تقدم الأكواب – مع اتجاه RTL */}
             <div className="mt-6">
               <div className="flex justify-between text-xs font-bold text-vibes-200">
                 <span>الأكواب النشطة</span>
@@ -660,7 +650,6 @@ export function AccountPage() {
             </div>
           </article>
 
-          {/* نموذج تحرير البيانات */}
           <form
             className="rounded-[2rem] border border-white bg-white/90 p-6 card-shadow sm:p-8"
             onSubmit={saveProfile}
@@ -746,7 +735,6 @@ export function AccountPage() {
           </form>
         </section>
 
-        {/* ملاحظة محدثة */}
         <section className="mt-8 rounded-3xl border border-vibes-100 bg-white/80 p-5">
           <div className="flex items-start gap-3">
             <Check className="mt-1 size-5 shrink-0 text-emerald-600" />
@@ -757,7 +745,6 @@ export function AccountPage() {
         </section>
       </div>
 
-      {/* مودال تغيير كلمة المرور */}
       <ChangePasswordModal
         isOpen={isPasswordModalOpen}
         onClose={() => setPasswordModalOpen(false)}
