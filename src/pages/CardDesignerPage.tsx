@@ -28,14 +28,19 @@ import {
   Trash2,
   Undo2,
   Upload,
-  Zap,
-  Sparkles,
+  X,
+  Eye,
+  EyeOff,
   Palette,
-  Grid3x3,
-  FolderOpen,
-  Image as ImageIcon,
-  Sliders,
-  ExternalLink,
+  Sparkles,
+  Crown,
+  Zap,
+  Maximize2,
+  Minimize2,
+  Move,
+  RotateCw,
+  Contrast,
+  Image,
   AlertCircle,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
@@ -44,7 +49,9 @@ import { PageLoader } from '../components/PageLoader'
 import { Alert } from '../components/Alert'
 import type { Json } from '../types/database'
 
-// ===================== الثوابت والإعدادات =====================
+// ============================================================
+//  الثوابت والإعدادات
+// ============================================================
 const CARD_WIDTH = 1015
 const CARD_HEIGHT = 640
 const MAX_OBJECTS = 30
@@ -53,7 +60,7 @@ const MIN_OBJECT_SIZE = 48
 const MAX_OBJECT_SIZE = 420
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 const MAX_CUSTOMER_STICKERS = 50
-const ALLOWED_IMAGE_TYPES = ['image/png'] // PNG فقط
+const ALLOWED_IMAGE_TYPES = ['image/png'] // ✅ PNG فقط
 
 type StickerSourceType = 'official' | 'customer'
 
@@ -142,7 +149,9 @@ type StickerObject = FabricImage & {
   lastValid?: TransformSnapshot
 }
 
-// ===================== مناطق الحماية =====================
+// ============================================================
+//  المناطق المحمية (بيانات البطاقة و QR)
+// ============================================================
 const PROTECTED_ZONES: ProtectedZone[] = [
   { id: 'brand', x: 610, y: 34, width: 360, height: 125 },
   { id: 'cups', x: 44, y: 34, width: 360, height: 118 },
@@ -150,15 +159,17 @@ const PROTECTED_ZONES: ProtectedZone[] = [
   { id: 'qr', x: 44, y: 390, width: 205, height: 205 },
 ]
 
-// ===================== دوال مساعدة =====================
+// ============================================================
+//  دوال مساعدة
+// ============================================================
 function formatMembershipNumber(value: string) {
   if (!value) return '—'
   return value.startsWith('VIB-') ? value : `VIB-${value}`
 }
 
 function extensionFor(file: File) {
-  if (file.type === 'image/png') return 'png'
-  return 'png' // فقط PNG
+  // الآن نسمح فقط PNG
+  return 'png'
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -167,8 +178,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function parseSavedSticker(value: unknown): SavedSticker | null {
   if (!isRecord(value)) return null
+
   const sourceType = value.source_type
   if (sourceType !== 'official' && sourceType !== 'customer') return null
+
   if (
     typeof value.source_id !== 'string' ||
     typeof value.left !== 'number' ||
@@ -183,6 +196,7 @@ function parseSavedSticker(value: unknown): SavedSticker | null {
   ) {
     return null
   }
+
   return {
     width: value.width,
     height: value.height,
@@ -201,10 +215,12 @@ function parseSavedSticker(value: unknown): SavedSticker | null {
 
 function parseDesignData(value: Json): CardDesignData | null {
   if (!isRecord(value) || value.version !== 1 || !Array.isArray(value.stickers)) return null
+
   const stickers = value.stickers
     .map(parseSavedSticker)
     .filter((sticker): sticker is SavedSticker => sticker !== null)
     .slice(0, MAX_OBJECTS)
+
   return {
     version: 1,
     background_id: typeof value.background_id === 'string' ? value.background_id : null,
@@ -232,18 +248,20 @@ function restoreObjectSnapshot(object: StickerObject, snapshot: TransformSnapsho
 function intersectsProtectedZone(object: StickerObject) {
   object.setCoords()
   const rect = object.getBoundingRect()
+
   return PROTECTED_ZONES.some(
     (zone) =>
       rect.left < zone.x + zone.width &&
       rect.left + rect.width > zone.x &&
       rect.top < zone.y + zone.height &&
-      rect.top + rect.height > zone.y
+      rect.top + rect.height > zone.y,
   )
 }
 
 function remainsPartlyInsideCard(object: StickerObject) {
   const rect = object.getBoundingRect()
   const minimumVisible = 38
+
   return !(
     rect.left + rect.width < minimumVisible ||
     rect.top + rect.height < minimumVisible ||
@@ -257,6 +275,7 @@ function extractRpcRow(value: unknown): Record<string, unknown> | null {
     const first = value[0]
     return isRecord(first) ? first : null
   }
+
   return isRecord(value) ? value : null
 }
 
@@ -271,6 +290,7 @@ function parseDesignRow(value: unknown): DesignRow | null {
   ) {
     return null
   }
+
   return {
     id: value.id,
     design_name: value.design_name,
@@ -282,7 +302,9 @@ function parseDesignRow(value: unknown): DesignRow | null {
   }
 }
 
-// ===================== المكون الرئيسي =====================
+// ============================================================
+//  المكون الرئيسي
+// ============================================================
 export function CardDesignerPage() {
   const { session } = useAuth()
   const userId = session?.user.id ?? ''
@@ -297,6 +319,7 @@ export function CardDesignerPage() {
   const historyIndexRef = useRef(-1)
   const initialDesignLoadedRef = useRef(false)
 
+  // ===== حالة الصفحة =====
   const [profile, setProfile] = useState<CardProfile | null>(null)
   const [activeCups, setActiveCups] = useState(0)
   const [cupsRequired, setCupsRequired] = useState(0)
@@ -316,20 +339,19 @@ export function CardDesignerPage() {
   const [exporting, setExporting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<'backgrounds' | 'official' | 'customer' | 'designs' | 'properties'>('official')
 
-  // ===== حساب المصادر =====
+  // ===== صنع المصادر =====
   const officialSources = useMemo<StickerSource[]>(
     () =>
       officialStickers.map((sticker) => ({
         id: sticker.id,
         name: sticker.name,
         url: sticker.image_url,
-        sourceType: 'official' as const,
+        sourceType: 'official',
         sourcePath: null,
         category: sticker.category,
       })),
-    [officialStickers]
+    [officialStickers],
   )
 
   const customerSources = useMemo<StickerSource[]>(
@@ -338,25 +360,25 @@ export function CardDesignerPage() {
         id: sticker.id,
         name: sticker.original_file_name || 'ملصقي',
         url: sticker.signed_url,
-        sourceType: 'customer' as const,
+        sourceType: 'customer',
         sourcePath: sticker.storage_path,
         category: 'ملصقاتي',
       })),
-    [customerStickers]
+    [customerStickers],
   )
 
   const allSources = useMemo(
     () => [...officialSources, ...customerSources],
-    [officialSources, customerSources]
+    [officialSources, customerSources],
   )
 
   useEffect(() => {
     sourceMapRef.current = new Map(
-      allSources.map((source) => [`${source.sourceType}:${source.id}`, source])
+      allSources.map((source) => [`${source.sourceType}:${source.id}`, source]),
     )
   }, [allSources])
 
-  // ===== عمليات التصميم =====
+  // ===== دوال التعامل مع الكانفاس =====
   const serializeCurrentDesign = useCallback((): CardDesignData => {
     const canvas = fabricCanvasRef.current
     const stickers = (canvas?.getObjects() ?? [])
@@ -364,7 +386,7 @@ export function CardDesignerPage() {
       .filter(
         (object) =>
           (object.sourceType === 'official' || object.sourceType === 'customer') &&
-          typeof object.sourceId === 'string'
+          typeof object.sourceId === 'string',
       )
       .slice(0, MAX_OBJECTS)
       .map<SavedSticker>((object) => ({
@@ -375,6 +397,7 @@ export function CardDesignerPage() {
         source_path: object.sourcePath ?? null,
         ...snapshotObject(object),
       }))
+
     return {
       version: 1,
       background_id: selectedBackgroundRef.current,
@@ -384,13 +407,17 @@ export function CardDesignerPage() {
 
   const pushHistory = useCallback(() => {
     if (suppressHistoryRef.current) return
+
     const snapshot = serializeCurrentDesign()
     const serialized = JSON.stringify(snapshot)
     const current = historyRef.current[historyIndexRef.current]
     if (current && JSON.stringify(current) === serialized) return
+
     const nextHistory = historyRef.current.slice(0, historyIndexRef.current + 1)
     nextHistory.push(snapshot)
+
     if (nextHistory.length > MAX_HISTORY) nextHistory.shift()
+
     historyRef.current = nextHistory
     historyIndexRef.current = nextHistory.length - 1
   }, [serializeCurrentDesign])
@@ -403,11 +430,18 @@ export function CardDesignerPage() {
 
     if (largestSide > MAX_OBJECT_SIZE) {
       const factor = MAX_OBJECT_SIZE / largestSide
-      object.set({ scaleX: object.scaleX * factor, scaleY: object.scaleY * factor })
+      object.set({
+        scaleX: object.scaleX * factor,
+        scaleY: object.scaleY * factor,
+      })
     } else if (smallestSide < MIN_OBJECT_SIZE) {
       const factor = MIN_OBJECT_SIZE / Math.max(smallestSide, 1)
-      object.set({ scaleX: object.scaleX * factor, scaleY: object.scaleY * factor })
+      object.set({
+        scaleX: object.scaleX * factor,
+        scaleY: object.scaleY * factor,
+      })
     }
+
     object.set({ opacity: Math.max(0.15, Math.min(object.opacity, 1)) })
     object.setCoords()
 
@@ -427,9 +461,11 @@ export function CardDesignerPage() {
         object.setCoords()
         object.lastValid = snapshotObject(object)
       }
+
       if (notify) setError('لا يمكن وضع الملصق فوق بيانات البطاقة أو خارج البطاقة بالكامل.')
       return false
     }
+
     object.lastValid = snapshotObject(object)
     return true
   }, [])
@@ -438,10 +474,12 @@ export function CardDesignerPage() {
     async (source: StickerSource, saved?: SavedSticker) => {
       const canvas = fabricCanvasRef.current
       if (!canvas) return
+
       if (!saved && canvas.getObjects().length >= MAX_OBJECTS) {
         setError(`الحد الأعلى ${MAX_OBJECTS} ملصقاً لكل تصميم.`)
         return
       }
+
       try {
         const image = (await FabricImage.fromURL(source.url, {
           crossOrigin: 'anonymous',
@@ -486,7 +524,7 @@ export function CardDesignerPage() {
         setError('تعذر تحميل صورة الملصق. تأكد من إعدادات CORS في Supabase Storage.')
       }
     },
-    [applyObjectConstraints, pushHistory]
+    [applyObjectConstraints, pushHistory],
   )
 
   const restoreDesign = useCallback(
@@ -517,12 +555,80 @@ export function CardDesignerPage() {
         historyIndexRef.current = 0
       }
     },
-    [addSourceToCanvas, serializeCurrentDesign]
+    [addSourceToCanvas, serializeCurrentDesign],
   )
 
-  // ===== تحميل البيانات =====
+  // ===== تهيئة Fabric Canvas =====
+  useEffect(() => {
+    const element = htmlCanvasRef.current
+    if (!element) return
+
+    const canvas = new Canvas(element, {
+      width: CARD_WIDTH,
+      height: CARD_HEIGHT,
+      preserveObjectStacking: true,
+      selection: true,
+    })
+
+    fabricCanvasRef.current = canvas
+    canvas.wrapperEl.style.position = 'absolute'
+    canvas.wrapperEl.style.inset = '0'
+    canvas.wrapperEl.style.zIndex = '10'
+    canvas.wrapperEl.style.touchAction = 'none'
+    canvas.upperCanvasEl.style.touchAction = 'none'
+
+    const updateSelection = () => {
+      const active = canvas.getActiveObject() as StickerObject | undefined
+      setSelectedObject(active ?? null)
+      setSelectedOpacity(active?.opacity ?? 1)
+    }
+
+    const validateTransform = (event: { target?: FabricObject }) => {
+      const target = event.target as StickerObject | undefined
+      if (!target) return
+      applyObjectConstraints(target)
+      canvas.requestRenderAll()
+    }
+
+    canvas.on('selection:created', updateSelection)
+    canvas.on('selection:updated', updateSelection)
+    canvas.on('selection:cleared', updateSelection)
+    canvas.on('object:moving', validateTransform)
+    canvas.on('object:scaling', validateTransform)
+    canvas.on('object:rotating', validateTransform)
+    canvas.on('object:modified', (event) => {
+      validateTransform(event)
+      pushHistory()
+    })
+    canvas.on('object:added', pushHistory)
+    canvas.on('object:removed', pushHistory)
+
+    const resize = () => {
+      const parentWidth = canvas.wrapperEl.parentElement?.clientWidth ?? CARD_WIDTH
+      const cssWidth = Math.min(parentWidth, CARD_WIDTH)
+      const cssHeight = cssWidth * (CARD_HEIGHT / CARD_WIDTH)
+      canvas.setDimensions({ width: `${cssWidth}px`, height: `${cssHeight}px` }, { cssOnly: true })
+      canvas.calcOffset()
+    }
+
+    resize()
+    const observer = new ResizeObserver(resize)
+    if (canvas.wrapperEl.parentElement) observer.observe(canvas.wrapperEl.parentElement)
+
+    setCanvasReady(true)
+
+    return () => {
+      observer.disconnect()
+      setCanvasReady(false)
+      fabricCanvasRef.current = null
+      canvas.dispose()
+    }
+  }, [applyObjectConstraints, pushHistory])
+
+  // ===== جلب البيانات =====
   const loadData = useCallback(async () => {
     if (!session) return
+
     const client = supabase
     if (!client) {
       setError('الخدمة غير مفعلة حالياً.')
@@ -620,7 +726,7 @@ export function CardDesignerPage() {
             ...sticker,
             signed_url: signedUrlByPath.get(sticker.storage_path) ?? '',
           }))
-          .filter((sticker) => sticker.signed_url)
+          .filter((sticker) => sticker.signed_url),
       )
       setDesigns(designRows)
       setActiveDesign(design)
@@ -639,82 +745,16 @@ export function CardDesignerPage() {
     void loadData()
   }, [loadData])
 
-  // ===== تهيئة الفابريك =====
-  useEffect(() => {
-    const element = htmlCanvasRef.current
-    if (!element) return
-
-    const canvas = new Canvas(element, {
-      width: CARD_WIDTH,
-      height: CARD_HEIGHT,
-      preserveObjectStacking: true,
-      selection: true,
-    })
-
-    fabricCanvasRef.current = canvas
-    canvas.wrapperEl.style.position = 'absolute'
-    canvas.wrapperEl.style.inset = '0'
-    canvas.wrapperEl.style.zIndex = '10'
-    canvas.wrapperEl.style.touchAction = 'none'
-    canvas.upperCanvasEl.style.touchAction = 'none'
-
-    const updateSelection = () => {
-      const active = canvas.getActiveObject() as StickerObject | undefined
-      setSelectedObject(active ?? null)
-      setSelectedOpacity(active?.opacity ?? 1)
-    }
-
-    const validateTransform = (event: { target?: FabricObject }) => {
-      const target = event.target as StickerObject | undefined
-      if (!target) return
-      applyObjectConstraints(target)
-      canvas.requestRenderAll()
-    }
-
-    canvas.on('selection:created', updateSelection)
-    canvas.on('selection:updated', updateSelection)
-    canvas.on('selection:cleared', updateSelection)
-    canvas.on('object:moving', validateTransform)
-    canvas.on('object:scaling', validateTransform)
-    canvas.on('object:rotating', validateTransform)
-    canvas.on('object:modified', (event) => {
-      validateTransform(event)
-      pushHistory()
-    })
-    canvas.on('object:added', pushHistory)
-    canvas.on('object:removed', pushHistory)
-
-    const resize = () => {
-      const parentWidth = canvas.wrapperEl.parentElement?.clientWidth ?? CARD_WIDTH
-      const cssWidth = Math.min(parentWidth, CARD_WIDTH)
-      const cssHeight = cssWidth * (CARD_HEIGHT / CARD_WIDTH)
-      canvas.setDimensions({ width: `${cssWidth}px`, height: `${cssHeight}px` }, { cssOnly: true })
-      canvas.calcOffset()
-    }
-
-    resize()
-    const observer = new ResizeObserver(resize)
-    if (canvas.wrapperEl.parentElement) observer.observe(canvas.wrapperEl.parentElement)
-
-    setCanvasReady(true)
-
-    return () => {
-      observer.disconnect()
-      setCanvasReady(false)
-      fabricCanvasRef.current = null
-      canvas.dispose()
-    }
-  }, [applyObjectConstraints, pushHistory])
-
-  // ===== استعادة التصميم الأولي =====
   useEffect(() => {
     if (!canvasReady || loading || initialDesignLoadedRef.current) return
+
     const design = activeDesign ? parseDesignData(activeDesign.design_data) : null
     const emptyDesign: CardDesignData = {
       version: 1,
       background_id: selectedBackgroundRef.current,
       stickers: [],
     }
+
     initialDesignLoadedRef.current = true
     void restoreDesign(design ?? emptyDesign, true)
   }, [activeDesign, canvasReady, loading, restoreDesign])
@@ -730,6 +770,7 @@ export function CardDesignerPage() {
     const canvas = fabricCanvasRef.current
     const active = canvas?.getActiveObject()
     if (!canvas || !active) return
+
     canvas.remove(active)
     canvas.discardActiveObject()
     canvas.requestRenderAll()
@@ -739,10 +780,12 @@ export function CardDesignerPage() {
     const canvas = fabricCanvasRef.current
     const active = canvas?.getActiveObject() as StickerObject | undefined
     if (!canvas || !active) return
+
     if (canvas.getObjects().length >= MAX_OBJECTS) {
       setError(`الحد الأعلى ${MAX_OBJECTS} ملصقاً لكل تصميم.`)
       return
     }
+
     const clone = (await active.clone()) as StickerObject
     clone.set({ left: active.left + 28, top: active.top + 28 })
     clone.sourceType = active.sourceType
@@ -763,6 +806,7 @@ export function CardDesignerPage() {
     const canvas = fabricCanvasRef.current
     const active = canvas?.getActiveObject() as StickerObject | undefined
     if (!canvas || !active) return
+
     active.set({ flipX: !active.flipX })
     active.setCoords()
     active.lastValid = snapshotObject(active)
@@ -774,8 +818,10 @@ export function CardDesignerPage() {
     const canvas = fabricCanvasRef.current
     const active = canvas?.getActiveObject()
     if (!canvas || !active) return
+
     if (direction === 'forward') canvas.bringObjectForward(active)
     else canvas.sendObjectBackwards(active)
+
     canvas.requestRenderAll()
     pushHistory()
   }
@@ -784,6 +830,7 @@ export function CardDesignerPage() {
     const canvas = fabricCanvasRef.current
     const active = canvas?.getActiveObject() as StickerObject | undefined
     if (!canvas || !active) return
+
     const opacity = Math.max(0.15, Math.min(value, 1))
     active.set({ opacity })
     active.lastValid = snapshotObject(active)
@@ -807,37 +854,40 @@ export function CardDesignerPage() {
 
   const resetDesign = async () => {
     if (!window.confirm('إرجاع التصميم للوضع الافتراضي وحذف الملصقات من البطاقة؟')) return
+
     await restoreDesign(
       {
         version: 1,
         background_id: backgrounds[0]?.id ?? null,
         stickers: [],
       },
-      false
+      false,
     )
     pushHistory()
   }
 
-  // ===== رفع الملصق (PNG فقط) =====
+  // ===== رفع ملصق خاص (PNG فقط) =====
   const uploadCustomerSticker = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     event.target.value = ''
     if (!file || !session) return
 
-    if (customerStickers.length >= MAX_CUSTOMER_STICKERS) {
-      setError(`وصلت للحد الأعلى: ${MAX_CUSTOMER_STICKERS} ملصقاً شخصياً.`)
+    // ✅ التحقق من الصيغة PNG فقط
+    if (file.type !== 'image/png') {
+      setError(
+        '⚠️ عشان تطلع بطاقتك كشخة وبدون خلفية تخرب التصميم، ارفع صورة بصيغة PNG شفافة فقط. يمكنك إزالة خلفية صورتك بنقرة واحدة عبر هذا الموقع:'
+      )
+      // عرض رابط remove.bg في التنبيه
+      setTimeout(() => {
+        if (window.confirm('افتح موقع remove.bg لإزالة الخلفية؟')) {
+          window.open('https://www.remove.bg/ar', '_blank')
+        }
+      }, 500)
       return
     }
 
-    // PNG فقط
-    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-      setError(
-        'عشان تطلع بطاقتك كشخة وبدون خلفية تخرب التصميم، ارفع صورة بصيغة PNG شفافة فقط. يمكنك إزالة خلفية صورتك بنقرة واحدة عبر هذا الموقع:'
-      )
-      // عرض رابط إزالة الخلفية
-      if (window.confirm('افتح remove.bg لإزالة الخلفية؟')) {
-        window.open('https://www.remove.bg/ar', '_blank')
-      }
+    if (customerStickers.length >= MAX_CUSTOMER_STICKERS) {
+      setError(`وصلت للحد الأعلى: ${MAX_CUSTOMER_STICKERS} ملصقاً شخصياً.`)
       return
     }
 
@@ -864,7 +914,7 @@ export function CardDesignerPage() {
         .from('customer-stickers')
         .upload(path, file, {
           upsert: false,
-          contentType: file.type,
+          contentType: 'image/png',
           cacheControl: '3600',
         })
 
@@ -898,7 +948,7 @@ export function CardDesignerPage() {
       }
 
       setCustomerStickers((current) => [sticker, ...current])
-      setSuccess('تم رفع ملصقك. تقدر تضيفه للبطاقة الآن.')
+      setSuccess('تم رفع ملصقك الشفاف. تقدر تضيفه للبطاقة الآن.')
     } catch (err) {
       if (insertedStickerId) {
         void client
@@ -917,6 +967,7 @@ export function CardDesignerPage() {
 
   const deleteCustomerSticker = async (sticker: CustomerSticker) => {
     if (!window.confirm('حذف هذا الملصق من مكتبتك ومن التصميم الحالي؟')) return
+
     const client = supabase
     const canvas = fabricCanvasRef.current
     if (!client || !canvas) return
@@ -954,14 +1005,16 @@ export function CardDesignerPage() {
     setSuccess('تم حذف الملصق.')
   }
 
-  // ===== تصدير وحفظ =====
+  // ===== تصدير البطاقة =====
   const captureCard = async () => {
     const card = cardRef.current
     const canvas = fabricCanvasRef.current
     if (!card || !canvas) throw new Error('البطاقة غير جاهزة')
+
     await document.fonts.ready
     canvas.discardActiveObject()
     canvas.requestRenderAll()
+
     return html2canvas(card, {
       useCORS: true,
       backgroundColor: '#ffffff',
@@ -978,11 +1031,14 @@ export function CardDesignerPage() {
         else reject(new Error('تعذر إنشاء صورة البطاقة'))
       }, 'image/png')
     })
+
     return blob
   }
 
+  // ===== حفظ التصميم =====
   const saveDesign = async (saveAsNew: boolean) => {
     if (!session || saving) return
+
     const client = supabase
     if (!client) {
       setError('الخدمة غير مفعلة حالياً.')
@@ -1081,6 +1137,7 @@ export function CardDesignerPage() {
       setError('بيانات هذا التصميم غير صالحة أو من إصدار غير مدعوم.')
       return
     }
+
     setError(null)
     setSuccess(null)
     setActiveDesign(design)
@@ -1091,14 +1148,17 @@ export function CardDesignerPage() {
   const activateDesign = async (design: DesignRow) => {
     const client = supabase
     if (!client || saving) return
+
     const parsed = parseDesignData(design.design_data)
     if (!parsed) {
       setError('بيانات هذا التصميم غير صالحة أو من إصدار غير مدعوم.')
       return
     }
+
     setSaving(true)
     setError(null)
     setSuccess(null)
+
     try {
       const { data, error: activateError } = await client.rpc('save_loyalty_card_design', {
         p_design_id: design.id,
@@ -1107,14 +1167,16 @@ export function CardDesignerPage() {
         p_preview_image_url: design.preview_image_url,
         p_activate: true,
       })
+
       if (activateError) throw activateError
       const activated = parseDesignRow(extractRpcRow(data))
       if (!activated) throw new Error('استجابة تفعيل التصميم غير صالحة')
+
       setDesigns((current) =>
         current.map((item) => ({
           ...(item.id === activated.id ? activated : item),
           is_active: item.id === activated.id,
-        }))
+        })),
       )
       setActiveDesign(activated)
       setDesignName(activated.design_name)
@@ -1133,31 +1195,40 @@ export function CardDesignerPage() {
       setError('فعّل تصميماً آخر قبل حذف التصميم النشط.')
       return
     }
+
     if (!window.confirm(`حذف تصميم "${design.design_name}" نهائياً؟`)) return
+
     const client = supabase
     if (!client) return
+
     setError(null)
     setSuccess(null)
+
     const { error: deleteError } = await client
       .from('loyalty_card_designs')
       .delete()
       .eq('id', design.id)
       .eq('customer_id', userId)
+
     if (deleteError) {
       setError('تعذر حذف التصميم.')
       return
     }
+
     if (design.preview_image_url) {
       void client.storage.from('card-previews').remove([design.preview_image_url])
     }
+
     setDesigns((current) => current.filter((item) => item.id !== design.id))
     setSuccess('تم حذف التصميم.')
   }
 
   const downloadCard = async () => {
     if (exporting || !profile) return
+
     setExporting(true)
     setError(null)
+
     try {
       const exportedCanvas = await captureCard()
       const link = document.createElement('a')
@@ -1174,15 +1245,18 @@ export function CardDesignerPage() {
 
   const shareCard = async () => {
     if (exporting || !profile) return
+
     setExporting(true)
     setError(null)
+
     try {
       const blob = await captureCardBlob()
       const file = new File(
         [blob],
         `vibes-card-${formatMembershipNumber(profile.membership_number)}.png`,
-        { type: 'image/png' }
+        { type: 'image/png' },
       )
+
       if (navigator.share && navigator.canShare?.({ files: [file] })) {
         await navigator.share({
           title: 'بطاقة عضوية فايبز',
@@ -1206,7 +1280,13 @@ export function CardDesignerPage() {
     }
   }
 
-  // ===== التحميل الأولي =====
+  // ===== تحضير بيانات الخلفية المختارة =====
+  const selectedBackgroundData = useMemo(
+    () => backgrounds.find((bg) => bg.id === selectedBackground),
+    [backgrounds, selectedBackground]
+  )
+
+  // ===== التصيير =====
   if (loading) return <PageLoader label="جاري تحميل مصمم البطاقة..." />
 
   if (!profile) {
@@ -1219,361 +1299,194 @@ export function CardDesignerPage() {
     )
   }
 
-  // ===== العرض =====
+  // ===== واجهة المستخدم الفخمة =====
   return (
-    <main className="min-h-screen bg-gradient-to-br from-vibes-50 to-vibes-100/50 px-4 py-6 pb-28">
+    <main className="min-h-screen bg-gradient-to-br from-vibes-50 via-white to-vibes-100/50 px-4 py-6 pb-28">
       <div className="mx-auto max-w-7xl">
-        {/* رأس الصفحة */}
-        <header className="flex flex-wrap items-center gap-3 py-4">
-          <Link to="/loyalty" className="rounded-full bg-white/80 p-2 shadow-lg backdrop-blur-sm">
-            <ArrowRight className="size-5 text-vibes-800" />
-          </Link>
-          <div className="min-w-0 flex-1">
-            <h1 className="text-3xl font-black text-vibes-900 flex items-center gap-2">
-              <Sparkles className="size-7 text-vibes-600" />
-              مصمم البطاقة الفاخر
-            </h1>
-            <p className="mt-1 text-sm text-vibes-600">حرّك الملصقات، غيّر الخلفية، وأضف لمساتك الخاصة</p>
+        {/* الهيدر الفخم */}
+        <header className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-white/80 p-4 shadow-lg backdrop-blur-xl border border-white/30">
+          <div className="flex items-center gap-4">
+            <Link to="/loyalty" className="rounded-full bg-vibes-100 p-3 text-vibes-700 transition hover:bg-vibes-200">
+              <ArrowRight className="size-5" />
+            </Link>
+            <div>
+              <h1 className="text-3xl font-black bg-gradient-to-r from-vibes-800 via-vibes-600 to-vibes-800 bg-clip-text text-transparent">
+                مصمم البطاقة الفاخرة
+              </h1>
+              <p className="text-sm text-vibes-600 flex items-center gap-2">
+                <Sparkles className="size-4" />
+                أضف لمساتك الخاصة بكل احترافية
+              </p>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => void saveDesign(false)}
               disabled={saving}
-              className="inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-r from-vibes-800 to-vibes-600 px-6 font-black text-white shadow-lg transition hover:scale-105 disabled:opacity-60"
+              className="inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-r from-vibes-700 to-vibes-900 px-6 font-black text-white shadow-lg transition hover:scale-105 disabled:opacity-60"
             >
               {saving ? <LoaderCircle className="size-5 animate-spin" /> : <Save className="size-5" />}
-              حفظ
+              حفظ التصميم
             </button>
             <button
               type="button"
               onClick={() => void downloadCard()}
               disabled={exporting}
-              className="inline-flex h-12 items-center gap-2 rounded-2xl bg-white/80 px-4 font-black text-vibes-800 shadow-lg backdrop-blur-sm transition hover:scale-105 disabled:opacity-60"
+              className="inline-flex h-12 items-center gap-2 rounded-2xl bg-white px-4 font-black text-vibes-800 shadow-lg border-2 border-vibes-200 transition hover:bg-vibes-50 disabled:opacity-60"
             >
-              <Download className="size-5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => void shareCard()}
-              disabled={exporting}
-              className="inline-flex h-12 items-center gap-2 rounded-2xl bg-white/80 px-4 font-black text-vibes-800 shadow-lg backdrop-blur-sm transition hover:scale-105 disabled:opacity-60"
-            >
-              <Share2 className="size-5" />
+              {exporting ? <LoaderCircle className="size-5 animate-spin" /> : <Download className="size-5" />}
+              تحميل
             </button>
           </div>
         </header>
 
-        {error && <div className="mb-4"><Alert type="error">{error}</Alert></div>}
-        {success && <div className="mb-4"><Alert type="success">{success}</Alert></div>}
-
-        {/* شبكة الصفحة: جانبية + وسط */}
-        <div className="grid gap-6 lg:grid-cols-[320px,minmax(0,1fr)]">
-          {/* القائمة الجانبية المبوّبة */}
-          <aside className="order-2 lg:order-1">
-            <div className="rounded-3xl bg-white/80 p-4 shadow-xl backdrop-blur-md">
-              <div className="flex flex-wrap gap-1 border-b border-vibes-100 pb-2">
-                <button
-                  onClick={() => setActiveTab('backgrounds')}
-                  className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-black transition ${
-                    activeTab === 'backgrounds'
-                      ? 'bg-vibes-800 text-white'
-                      : 'text-vibes-600 hover:bg-vibes-50'
-                  }`}
-                >
-                  <Palette className="size-4" />
-                  خلفيات
-                </button>
-                <button
-                  onClick={() => setActiveTab('official')}
-                  className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-black transition ${
-                    activeTab === 'official'
-                      ? 'bg-vibes-800 text-white'
-                      : 'text-vibes-600 hover:bg-vibes-50'
-                  }`}
-                >
-                  <Grid3x3 className="size-4" />
-                  ملصقات
-                </button>
-                <button
-                  onClick={() => setActiveTab('customer')}
-                  className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-black transition ${
-                    activeTab === 'customer'
-                      ? 'bg-vibes-800 text-white'
-                      : 'text-vibes-600 hover:bg-vibes-50'
-                  }`}
-                >
-                  <ImagePlus className="size-4" />
-                  ملصقاتي
-                </button>
-                <button
-                  onClick={() => setActiveTab('designs')}
-                  className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-black transition ${
-                    activeTab === 'designs'
-                      ? 'bg-vibes-800 text-white'
-                      : 'text-vibes-600 hover:bg-vibes-50'
-                  }`}
-                >
-                  <FolderOpen className="size-4" />
-                  تصاميمي
-                </button>
-                <button
-                  onClick={() => setActiveTab('properties')}
-                  className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-black transition ${
-                    activeTab === 'properties'
-                      ? 'bg-vibes-800 text-white'
-                      : 'text-vibes-600 hover:bg-vibes-50'
-                  }`}
-                >
-                  <Sliders className="size-4" />
-                  خصائص
-                </button>
-              </div>
-
-              <div className="mt-4 max-h-[70vh] overflow-y-auto">
-                {/* تبويب الخلفيات */}
-                {activeTab === 'backgrounds' && (
-                  <div>
-                    {backgrounds.length === 0 ? (
-                      <p className="rounded-2xl bg-vibes-50 p-4 text-sm text-vibes-600">ما فيه خلفيات مفعلة.</p>
-                    ) : (
-                      <div className="grid grid-cols-2 gap-3">
-                        {backgrounds.map((bg) => (
-                          <button
-                            key={bg.id}
-                            onClick={() => changeBackground(bg.id)}
-                            className={`aspect-[1.586/1] overflow-hidden rounded-2xl border-2 transition hover:scale-105 ${
-                              selectedBackground === bg.id
-                                ? 'border-vibes-700 shadow-lg shadow-vibes-200'
-                                : 'border-transparent hover:border-vibes-300'
-                            }`}
-                          >
-                            <img src={bg.image_url} alt={bg.name} className="size-full object-cover" />
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* تبويب الملصقات الرسمية */}
-                {activeTab === 'official' && (
-                  <div>
-                    {officialSources.length === 0 ? (
-                      <p className="rounded-2xl bg-vibes-50 p-4 text-sm text-vibes-600">ما فيه ملصقات رسمية مفعلة.</p>
-                    ) : (
-                      <div className="grid grid-cols-3 gap-3">
-                        {officialSources.map((source) => (
-                          <button
-                            key={source.id}
-                            onClick={() => void addSourceToCanvas(source)}
-                            className="aspect-square rounded-2xl border border-vibes-100 bg-vibes-50 p-2 transition hover:scale-105 hover:border-vibes-400 hover:shadow-lg"
-                            title={source.name}
-                          >
-                            <img src={source.url} alt={source.name} className="size-full object-contain" />
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* تبويب ملصقاتي */}
-                {activeTab === 'customer' && (
-                  <div>
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-sm font-bold text-vibes-600">
-                        {customerStickers.length} / {MAX_CUSTOMER_STICKERS}
-                      </span>
-                      <button
-                        onClick={() => uploadInputRef.current?.click()}
-                        disabled={uploading}
-                        className="inline-flex items-center gap-1 rounded-xl bg-vibes-100 px-4 py-2 text-sm font-black text-vibes-800 transition hover:bg-vibes-200 disabled:opacity-60"
-                      >
-                        {uploading ? <LoaderCircle className="size-4 animate-spin" /> : <Upload className="size-4" />}
-                        رفع
-                      </button>
-                      <input
-                        ref={uploadInputRef}
-                        type="file"
-                        accept="image/png"
-                        className="hidden"
-                        onChange={(event) => void uploadCustomerSticker(event)}
-                      />
-                    </div>
-
-                    {customerSources.length === 0 ? (
-                      <button
-                        onClick={() => uploadInputRef.current?.click()}
-                        className="mt-4 flex min-h-32 w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed border-vibes-300 bg-vibes-50 text-vibes-700 transition hover:bg-vibes-100"
-                      >
-                        <ImagePlus className="size-8" />
-                        <span className="mt-2 text-sm font-black">ارفع أول ملصق PNG شفاف</span>
-                      </button>
-                    ) : (
-                      <div className="mt-4 grid grid-cols-3 gap-3">
-                        {customerStickers.map((sticker) => {
-                          const source = customerSources.find((s) => s.id === sticker.id)
-                          if (!source) return null
-                          return (
-                            <div key={sticker.id} className="group relative aspect-square rounded-2xl border border-vibes-100 bg-vibes-50 p-2">
-                              <button onClick={() => void addSourceToCanvas(source)} className="size-full">
-                                <img src={source.url} alt={source.name} className="size-full object-contain" />
-                              </button>
-                              <button
-                                onClick={() => void deleteCustomerSticker(sticker)}
-                                className="absolute left-1 top-1 grid size-7 place-items-center rounded-full bg-red-600 text-white opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
-                              >
-                                <Trash2 className="size-3.5" />
-                              </button>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    )}
-                    <p className="mt-3 text-xs text-vibes-500 flex items-center gap-1">
-                      <AlertCircle className="size-3" />
-                      PNG شفافة فقط
+        {/* التنبيهات */}
+        {error && (
+          <div className="mt-4 relative">
+            <Alert type="error" className="rounded-2xl shadow-xl border border-red-200">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="size-6 text-red-600 shrink-0 mt-1" />
+                <div>
+                  <p className="font-bold">{error}</p>
+                  {error.includes('PNG') && (
+                    <div className="mt-2">
                       <a
                         href="https://www.remove.bg/ar"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-vibes-700 underline"
+                        className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-bold text-vibes-800 shadow hover:bg-vibes-50"
                       >
-                        إزالة الخلفية <ExternalLink className="size-3" />
+                        <Image className="size-4" />
+                        اذهب إلى remove.bg لإزالة الخلفية
                       </a>
-                    </p>
-                  </div>
-                )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Alert>
+          </div>
+        )}
+        {success && (
+          <div className="mt-4">
+            <Alert type="success" className="rounded-2xl shadow-xl border border-emerald-200">
+              {success}
+            </Alert>
+          </div>
+        )}
 
-                {/* تبويب تصاميمي */}
-                {activeTab === 'designs' && (
-                  <div>
-                    {designs.length === 0 ? (
-                      <p className="rounded-2xl bg-vibes-50 p-4 text-sm text-vibes-600">احفظ أول تصميم عشان يظهر هنا.</p>
-                    ) : (
-                      <div className="space-y-3">
-                        {designs.map((design) => (
-                          <article
-                            key={design.id}
-                            className={`rounded-2xl border p-3 transition ${
-                              design.is_active
-                                ? 'border-vibes-500 bg-vibes-50 shadow-lg'
-                                : 'border-vibes-100 bg-white hover:shadow-md'
-                            }`}
-                          >
-                            <div className="flex items-start justify-between gap-2">
-                              <div className="min-w-0">
-                                <h3 className="truncate text-sm font-black text-vibes-900">
-                                  {design.design_name}
-                                </h3>
-                                <p className="mt-1 text-xs text-vibes-500">
-                                  {new Intl.DateTimeFormat('ar-SA', { dateStyle: 'short' }).format(
-                                    new Date(design.updated_at)
-                                  )}
-                                </p>
-                              </div>
-                              {design.is_active && (
-                                <span className="rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-black text-emerald-700">
-                                  نشط
-                                </span>
-                              )}
-                            </div>
-                            <div className="mt-3 grid grid-cols-3 gap-1.5">
-                              <button
-                                onClick={() => void openDesign(design)}
-                                className="rounded-xl border border-vibes-200 py-1.5 text-xs font-black text-vibes-800 transition hover:bg-vibes-50"
-                              >
-                                فتح
-                              </button>
-                              <button
-                                disabled={design.is_active || saving}
-                                onClick={() => void activateDesign(design)}
-                                className="rounded-xl bg-vibes-800 py-1.5 text-xs font-black text-white transition hover:bg-vibes-700 disabled:opacity-40"
-                              >
-                                تفعيل
-                              </button>
-                              <button
-                                disabled={design.is_active}
-                                onClick={() => void deleteDesign(design)}
-                                className="rounded-xl bg-red-50 py-1.5 text-xs font-black text-red-700 transition hover:bg-red-100 disabled:opacity-40"
-                              >
-                                حذف
-                              </button>
-                            </div>
-                          </article>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
+        {/* التخطيط الرئيسي */}
+        <div className="mt-6 grid gap-6 xl:grid-cols-[320px,minmax(0,1fr),300px]">
+          {/* الشريط الجانبي الأيسر - مكتبة الملصقات */}
+          <aside className="space-y-5 order-2 xl:order-1">
+            {/* الملصقات الرسمية */}
+            <section className="rounded-3xl bg-white/80 p-5 shadow-xl backdrop-blur-xl border border-white/50">
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <h2 className="text-lg font-black text-vibes-900 flex items-center gap-2">
+                  <Crown className="size-5 text-vibes-700" />
+                  مكتبة فايبز
+                </h2>
+                <Layers className="size-5 text-vibes-600" />
+              </div>
+              {officialSources.length === 0 ? (
+                <p className="rounded-2xl bg-vibes-50 p-4 text-sm text-vib-600">ما فيه ملصقات رسمية مفعلة.</p>
+              ) : (
+                <div className="grid grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-1">
+                  {officialSources.map((source) => (
+                    <button
+                      key={source.id}
+                      type="button"
+                      onClick={() => void addSourceToCanvas(source)}
+                      className="group relative aspect-square rounded-2xl border-2 border-vibes-100 bg-white p-2 transition hover:border-vibes-400 hover:shadow-lg"
+                      title={source.name}
+                    >
+                      <img src={source.url} alt={source.name} className="size-full object-contain" />
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-vibes-900/10 to-transparent opacity-0 transition group-hover:opacity-100" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </section>
 
-                {/* تبويب الخصائص */}
-                {activeTab === 'properties' && (
-                  <div>
-                    {!selectedObject ? (
-                      <div className="rounded-2xl bg-vibes-50 p-6 text-center text-vibes-600">
-                        <Zap className="mx-auto size-8 text-vibes-300" />
-                        <p className="mt-2 text-sm font-bold">اضغط على ملصق داخل البطاقة</p>
-                        <p className="text-xs">لضبط الشفافية، الدوران، والتكبير</p>
-                      </div>
-                    ) : (
-                      <div className="space-y-5">
-                        <div>
-                          <label className="mb-2 flex items-center justify-between text-sm font-bold text-vibes-800">
-                            <span>الشفافية</span>
-                            <span>{Math.round(selectedOpacity * 100)}%</span>
-                          </label>
-                          <input
-                            type="range"
-                            min="0.15"
-                            max="1"
-                            step="0.05"
-                            value={selectedOpacity}
-                            onChange={(e) => changeOpacity(Number(e.target.value))}
-                            onPointerUp={commitOpacity}
-                            className="w-full accent-vibes-700"
-                          />
-                        </div>
+            {/* الملصقات الشخصية */}
+            <section className="rounded-3xl bg-white/80 p-5 shadow-xl backdrop-blur-xl border border-white/50">
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <div>
+                  <h2 className="text-lg font-black text-vibes-900 flex items-center gap-2">
+                    <ImagePlus className="size-5 text-vibes-700" />
+                    ملصقاتي
+                  </h2>
+                  <p className="text-[11px] font-bold text-vibes-500">
+                    {customerStickers.length} / {MAX_CUSTOMER_STICKERS}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => uploadInputRef.current?.click()}
+                  disabled={uploading}
+                  className="inline-flex items-center gap-1 rounded-xl bg-gradient-to-r from-vibes-600 to-vibes-800 px-4 py-2 text-xs font-black text-white shadow transition hover:scale-105 disabled:opacity-60"
+                >
+                  {uploading ? <LoaderCircle className="size-4 animate-spin" /> : <Upload className="size-4" />}
+                  رفع PNG
+                </button>
+                <input
+                  ref={uploadInputRef}
+                  type="file"
+                  accept="image/png"
+                  className="hidden"
+                  onChange={(event) => void uploadCustomerSticker(event)}
+                />
+              </div>
 
-                        <div className="grid grid-cols-2 gap-2">
-                          <button onClick={() => void cloneSelected()} className="rounded-2xl border border-vibes-200 p-3 text-sm font-black text-vibes-800 transition hover:bg-vibes-50">
-                            <Copy className="mx-auto size-5" />
-                            <span className="mt-1 block">نسخ</span>
-                          </button>
-                          <button onClick={flipSelected} className="rounded-2xl border border-vibes-200 p-3 text-sm font-black text-vibes-800 transition hover:bg-vibes-50">
-                            <FlipHorizontal2 className="mx-auto size-5" />
-                            <span className="mt-1 block">قلب</span>
-                          </button>
-                          <button onClick={() => moveLayer('forward')} className="rounded-2xl border border-vibes-200 p-3 text-sm font-black text-vibes-800 transition hover:bg-vibes-50">
-                            <ArrowUp className="mx-auto size-5" />
-                            <span className="mt-1 block">للأمام</span>
-                          </button>
-                          <button onClick={() => moveLayer('backward')} className="rounded-2xl border border-vibes-200 p-3 text-sm font-black text-vibes-800 transition hover:bg-vibes-50">
-                            <ArrowDown className="mx-auto size-5" />
-                            <span className="mt-1 block">للخلف</span>
-                          </button>
-                        </div>
+              {customerSources.length === 0 ? (
+                <button
+                  type="button"
+                  onClick={() => uploadInputRef.current?.click()}
+                  className="flex min-h-28 w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed border-vibes-300 bg-vibes-50 p-4 text-vibes-700 transition hover:bg-vibes-100"
+                >
+                  <ImagePlus className="size-8" />
+                  <span className="mt-2 text-sm font-black">ارفع أول ملصق شفاف (PNG)</span>
+                  <span className="mt-1 text-xs text-vibes-500">لتحصل على بطاقة فاخرة</span>
+                </button>
+              ) : (
+                <div className="grid grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-1">
+                  {customerStickers.map((sticker) => {
+                    const source = customerSources.find((item) => item.id === sticker.id)
+                    if (!source) return null
 
-                        <button onClick={deleteSelected} className="flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-red-600 to-red-500 font-black text-white shadow-lg transition hover:scale-105">
-                          <Trash2 className="size-5" />
-                          حذف الملصق
+                    return (
+                      <div key={sticker.id} className="group relative aspect-square rounded-2xl border-2 border-vibes-100 bg-white p-2">
+                        <button type="button" onClick={() => void addSourceToCanvas(source)} className="size-full">
+                          <img src={source.url} alt={source.name} className="size-full object-contain" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => void deleteCustomerSticker(sticker)}
+                          className="absolute left-1 top-1 grid size-7 place-items-center rounded-full bg-red-600 text-white opacity-0 transition group-hover:opacity-100"
+                          aria-label="حذف الملصق"
+                        >
+                          <Trash2 className="size-3.5" />
                         </button>
                       </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
+                    )
+                  })}
+                </div>
+              )}
+              <p className="mt-3 text-xs leading-6 text-vibes-500 flex items-center gap-2">
+                <AlertCircle className="size-4" />
+                PNG شفافة فقط – للحصول على أفضل جودة
+              </p>
+            </section>
           </aside>
 
-          {/* الوسط: معاينة البطاقة */}
-          <section className="order-1 lg:order-2">
-            <div className="rounded-[2rem] bg-white/90 p-4 shadow-2xl backdrop-blur-sm">
+          {/* منتصف الصفحة - معرض البطاقة */}
+          <section className="order-1 min-w-0 xl:order-2">
+            <div className="rounded-[2.5rem] bg-white/80 p-5 shadow-2xl backdrop-blur-xl border border-white/50">
               <div
                 ref={cardRef}
-                className="relative mx-auto aspect-[1.586/1] w-full max-w-[1015px] overflow-hidden rounded-[2rem] bg-gradient-to-br from-vibes-900 via-vibes-700 to-vibes-500 shadow-2xl"
+                className="relative mx-auto aspect-[1.586/1] w-full max-w-[1015px] overflow-hidden rounded-[2.5rem] shadow-2xl ring-1 ring-white/20"
               >
+                {/* الخلفية */}
                 {selectedBackgroundData ? (
                   <img
                     src={selectedBackgroundData.image_url}
@@ -1585,35 +1498,44 @@ export function CardDesignerPage() {
                   <div className="absolute inset-0 bg-gradient-to-br from-vibes-900 via-vibes-700 to-vibes-500" />
                 )}
 
-                <div className="absolute inset-0 bg-black/10" />
+                {/* تأثير زجاجي خفيف */}
+                <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px]" />
+
+                {/* طبقة Fabric Canvas */}
                 <canvas ref={htmlCanvasRef} />
 
-                {/* طبقة الواجهة الأمامية */}
+                {/* طبقة الواجهة الثابتة (بيانات البطاقة) */}
                 <div className="pointer-events-none absolute inset-0 z-20 text-white">
-                  {/* العلامة التجارية */}
+                  {/* الشعار */}
                   <div className="absolute right-[5.5%] top-[7%] text-right">
                     <p className="text-[clamp(12px,1.6vw,22px)] font-bold text-white/80 drop-shadow-lg">VIBES COFFEE</p>
-                    <h2 className="mt-1 text-[clamp(26px,4vw,54px)] font-black leading-none drop-shadow-lg">فايبز</h2>
-                    <p className="mt-2 text-[clamp(10px,1.25vw,17px)] font-bold text-white/70 drop-shadow">كل كوب يقرّبك من مكافأتك</p>
+                    <h2 className="mt-1 text-[clamp(26px,4vw,54px)] font-black leading-none drop-shadow-2xl">فايبز</h2>
+                    <p className="mt-2 text-[clamp(10px,1.25vw,17px)] font-bold text-white/90 drop-shadow">
+                      كل كوب يقرّبك من مكافأتك
+                    </p>
                   </div>
 
-                  {/* عداد الأكواب */}
-                  <div className="absolute left-[5.5%] top-[7%] rounded-2xl bg-white/15 px-4 py-2 backdrop-blur-md">
+                  {/* عدّاد الأكواب */}
+                  <div className="absolute left-[5.5%] top-[7%] rounded-[1.5rem] bg-white/20 px-[3%] py-[2%] backdrop-blur-md ring-1 ring-white/30">
                     <p className="text-[clamp(9px,1.1vw,14px)] font-bold text-white/80">أكواب الولاء</p>
-                    <p className="mt-1 text-[clamp(22px,3.2vw,42px)] font-black">{activeCups} / {cupsRequired || '—'}</p>
+                    <p className="mt-1 text-[clamp(22px,3.2vw,42px)] font-black">
+                      {activeCups} / {cupsRequired || '—'}
+                    </p>
                   </div>
 
-                  {/* بيانات العضو */}
+                  {/* اسم العضو ورقم العضوية */}
                   <div className="absolute bottom-[8%] right-[5.5%] max-w-[46%] text-right">
                     <p className="text-[clamp(9px,1.05vw,14px)] font-bold text-white/70 drop-shadow">اسم العضو</p>
-                    <h3 className="mt-1 truncate text-[clamp(18px,2.8vw,38px)] font-black drop-shadow-lg">{profile.name?.trim() || 'ضيف فايبز'}</h3>
-                    <p className="mt-2 text-[clamp(10px,1.35vw,18px)] font-black tracking-wide drop-shadow-lg">
+                    <h3 className="mt-1 truncate text-[clamp(18px,2.8vw,38px)] font-black drop-shadow-2xl">
+                      {profile.name?.trim() || 'ضيف فايبز'}
+                    </h3>
+                    <p className="mt-2 text-[clamp(10px,1.35vw,18px)] font-black tracking-wide drop-shadow">
                       {formatMembershipNumber(profile.membership_number)}
                     </p>
                   </div>
 
                   {/* QR Code */}
-                  <div className="absolute bottom-[7%] left-[5%] rounded-2xl bg-white p-1.5 shadow-xl">
+                  <div className="absolute bottom-[7%] left-[5%] rounded-[1.5rem] bg-white/90 p-[1.2%] shadow-2xl backdrop-blur-sm ring-1 ring-white/50">
                     {profile.membership_qr_token ? (
                       <QRCodeSVG
                         value={`VIB-MEMBER:${profile.membership_qr_token}`}
@@ -1629,34 +1551,311 @@ export function CardDesignerPage() {
                   </div>
                 </div>
               </div>
+
+              {/* شريط أدوات سريع */}
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => void undo()}
+                  className="rounded-2xl bg-white/80 p-3 text-vibes-800 shadow-lg backdrop-blur transition hover:bg-vibes-100"
+                  aria-label="تراجع"
+                >
+                  <Undo2 className="size-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void redo()}
+                  className="rounded-2xl bg-white/80 p-3 text-vibes-800 shadow-lg backdrop-blur transition hover:bg-vibes-100"
+                  aria-label="إعادة"
+                >
+                  <Redo2 className="size-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void resetDesign()}
+                  className="rounded-2xl bg-white/80 p-3 text-vibes-800 shadow-lg backdrop-blur transition hover:bg-vibes-100"
+                  aria-label="إعادة التصميم"
+                >
+                  <RotateCcw className="size-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void shareCard()}
+                  disabled={exporting}
+                  className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-vibes-700 to-vibes-900 px-6 py-3 font-black text-white shadow-lg transition hover:scale-105 disabled:opacity-60"
+                >
+                  <Share2 className="size-5" />
+                  مشاركة
+                </button>
+              </div>
             </div>
           </section>
-        </div>
 
-        {/* شريط سفلي للجوال */}
-        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-vibes-100 bg-white/95 p-3 backdrop-blur lg:hidden">
-          <div className="mx-auto flex max-w-xl items-center gap-2">
-            <button
-              onClick={() => uploadInputRef.current?.click()}
-              className="grid size-12 place-items-center rounded-2xl border border-vibes-200 text-vibes-800"
-            >
-              <ImagePlus className="size-5" />
-            </button>
-            <button onClick={() => void undo()} className="grid size-12 place-items-center rounded-2xl border border-vibes-200 text-vibes-800">
-              <Undo2 className="size-5" />
-            </button>
-            <button onClick={() => void redo()} className="grid size-12 place-items-center rounded-2xl border border-vibes-200 text-vibes-800">
-              <Redo2 className="size-5" />
-            </button>
-            <button
-              onClick={() => void saveDesign(false)}
-              disabled={saving}
-              className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-vibes-800 font-black text-white disabled:opacity-60"
-            >
-              {saving ? <LoaderCircle className="size-5 animate-spin" /> : <Save className="size-5" />}
-              حفظ
-            </button>
-          </div>
+          {/* الشريط الجانبي الأيمن - الأدوات */}
+          <aside className="order-3 space-y-5">
+            {/* التحكم بالتصميم */}
+            <section className="rounded-3xl bg-white/80 p-5 shadow-xl backdrop-blur-xl border border-white/50">
+              <h2 className="text-lg font-black text-vibes-900 flex items-center gap-2">
+                <Palette className="size-5 text-vibes-700" />
+                التصميم
+              </h2>
+              <label className="mt-4 block">
+                <span className="mb-2 block text-sm font-bold text-vibes-800">اسم التصميم</span>
+                <input
+                  value={designName}
+                  onChange={(event) => setDesignName(event.target.value)}
+                  maxLength={80}
+                  className="h-12 w-full rounded-2xl border-2 border-vibes-200 bg-white/50 px-4 font-bold text-vibes-900 backdrop-blur focus:border-vibes-600 focus:outline-none"
+                />
+              </label>
+
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => void saveDesign(false)}
+                  disabled={saving}
+                  className="rounded-2xl bg-gradient-to-r from-vibes-700 to-vibes-900 px-4 py-3 text-sm font-black text-white shadow-lg transition hover:scale-105 disabled:opacity-60"
+                >
+                  حفظ
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void saveDesign(true)}
+                  disabled={saving}
+                  className="rounded-2xl border-2 border-vibes-200 bg-white/50 px-4 py-3 text-sm font-black text-vibes-800 backdrop-blur transition hover:bg-vibes-50 disabled:opacity-60"
+                >
+                  حفظ باسم
+                </button>
+              </div>
+            </section>
+
+            {/* الخلفيات */}
+            <section className="rounded-3xl bg-white/80 p-5 shadow-xl backdrop-blur-xl border border-white/50">
+              <h2 className="text-lg font-black text-vibes-900 flex items-center gap-2">
+                <Image className="size-5 text-vibes-700" />
+                الخلفيات
+              </h2>
+              {backgrounds.length === 0 ? (
+                <p className="mt-3 rounded-2xl bg-vibes-50 p-4 text-sm text-vibes-600">ما فيه خلفيات مفعلة.</p>
+              ) : (
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  {backgrounds.map((background) => (
+                    <button
+                      key={background.id}
+                      type="button"
+                      onClick={() => changeBackground(background.id)}
+                      className={`aspect-[1.586/1] overflow-hidden rounded-2xl border-4 p-1 transition hover:scale-105 ${
+                        selectedBackground === background.id
+                          ? 'border-vibes-700 shadow-lg'
+                          : 'border-transparent hover:border-vibes-300'
+                      }`}
+                      title={background.name}
+                    >
+                      <img src={background.image_url} alt={background.name} className="size-full rounded-xl object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            {/* خصائص الملصق المحدد (شريط أدوات عائم) */}
+            <section className="rounded-3xl bg-white/80 p-5 shadow-xl backdrop-blur-xl border border-white/50">
+              <h2 className="text-lg font-black text-vibes-900 flex items-center gap-2">
+                <Zap className="size-5 text-vibes-700" />
+                خصائص الملصق
+              </h2>
+              {!selectedObject ? (
+                <p className="mt-3 rounded-2xl bg-vibes-50/80 p-4 text-sm leading-6 text-vibes-600 backdrop-blur">
+                  اضغط على ملصق داخل البطاقة لتظهر أدوات التحكم الفاخرة.
+                </p>
+              ) : (
+                <div className="mt-4 space-y-5">
+                  {/* الشفافية */}
+                  <label className="block">
+                    <div className="flex items-center justify-between text-sm font-bold text-vibes-800">
+                      <span className="flex items-center gap-2">
+                        <Contrast className="size-4" />
+                        الشفافية
+                      </span>
+                      <span className="rounded-full bg-vibes-100 px-3 py-1 text-xs">
+                        {Math.round(selectedOpacity * 100)}%
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0.15"
+                      max="1"
+                      step="0.05"
+                      value={selectedOpacity}
+                      onChange={(event) => changeOpacity(Number(event.target.value))}
+                      onPointerUp={commitOpacity}
+                      className="mt-2 h-2 w-full appearance-none rounded-full bg-vibes-200 accent-vibes-700"
+                    />
+                  </label>
+
+                  {/* أزرار التحكم */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => void cloneSelected()}
+                      className="group flex flex-col items-center gap-1 rounded-2xl border-2 border-vibes-200 bg-white/50 p-3 font-black text-vibes-800 transition hover:border-vibes-400 hover:bg-vibes-50"
+                    >
+                      <Copy className="size-5 transition group-hover:scale-110" />
+                      <span className="text-xs">نسخ</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={flipSelected}
+                      className="group flex flex-col items-center gap-1 rounded-2xl border-2 border-vibes-200 bg-white/50 p-3 font-black text-vibes-800 transition hover:border-vibes-400 hover:bg-vibes-50"
+                    >
+                      <FlipHorizontal2 className="size-5 transition group-hover:scale-110" />
+                      <span className="text-xs">قلب</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveLayer('forward')}
+                      className="group flex flex-col items-center gap-1 rounded-2xl border-2 border-vibes-200 bg-white/50 p-3 font-black text-vibes-800 transition hover:border-vibes-400 hover:bg-vibes-50"
+                    >
+                      <ArrowUp className="size-5 transition group-hover:scale-110" />
+                      <span className="text-xs">للأمام</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveLayer('backward')}
+                      className="group flex flex-col items-center gap-1 rounded-2xl border-2 border-vibes-200 bg-white/50 p-3 font-black text-vibes-800 transition hover:border-vibes-400 hover:bg-vibes-50"
+                    >
+                      <ArrowDown className="size-5 transition group-hover:scale-110" />
+                      <span className="text-xs">للخلف</span>
+                    </button>
+                  </div>
+
+                  {/* حذف الملصق */}
+                  <button
+                    type="button"
+                    onClick={deleteSelected}
+                    className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-red-600 to-red-700 font-black text-white shadow-lg transition hover:scale-105"
+                  >
+                    <Trash2 className="size-5" />
+                    حذف الملصق
+                  </button>
+                </div>
+              )}
+            </section>
+
+            {/* قائمة التصاميم المحفوظة */}
+            <section className="rounded-3xl bg-white/80 p-5 shadow-xl backdrop-blur-xl border border-white/50">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-lg font-black text-vibes-900 flex items-center gap-2">
+                  <Layers className="size-5 text-vibes-700" />
+                  تصاميمي
+                </h2>
+                <span className="rounded-full bg-vibes-100 px-3 py-1 text-xs font-black text-vibes-700">
+                  {designs.length}
+                </span>
+              </div>
+
+              {designs.length === 0 ? (
+                <p className="mt-3 rounded-2xl bg-vibes-50/80 p-4 text-sm text-vibes-600 backdrop-blur">
+                  احفظ أول تصميم عشان يظهر هنا.
+                </p>
+              ) : (
+                <div className="mt-3 max-h-72 space-y-3 overflow-y-auto pr-1">
+                  {designs.map((design) => (
+                    <article
+                      key={design.id}
+                      className={`rounded-2xl border-2 p-4 transition ${
+                        design.is_active
+                          ? 'border-vibes-500 bg-gradient-to-r from-vibes-50 to-white shadow-lg'
+                          : 'border-vibes-200 bg-white/50 hover:border-vibes-300'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <h3 className="truncate text-sm font-black text-vibes-900">
+                            {design.design_name}
+                          </h3>
+                          <p className="mt-1 text-[11px] text-vibes-500">
+                            {new Intl.DateTimeFormat('ar-SA', { dateStyle: 'short' }).format(
+                              new Date(design.updated_at),
+                            )}
+                          </p>
+                        </div>
+                        {design.is_active && (
+                          <span className="rounded-full bg-emerald-100 px-3 py-1 text-[10px] font-black text-emerald-700 ring-1 ring-emerald-300">
+                            نشط
+                          </span>
+                        )}
+                      </div>
+                      <div className="mt-3 grid grid-cols-3 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => void openDesign(design)}
+                          className="rounded-xl border-2 border-vibes-200 bg-white/50 px-2 py-2 text-xs font-black text-vibes-800 transition hover:bg-vibes-50"
+                        >
+                          فتح
+                        </button>
+                        <button
+                          type="button"
+                          disabled={design.is_active || saving}
+                          onClick={() => void activateDesign(design)}
+                          className="rounded-xl bg-gradient-to-r from-vibes-700 to-vibes-900 px-2 py-2 text-xs font-black text-white shadow transition hover:scale-105 disabled:opacity-40"
+                        >
+                          تفعيل
+                        </button>
+                        <button
+                          type="button"
+                          disabled={design.is_active}
+                          onClick={() => void deleteDesign(design)}
+                          className="rounded-xl bg-red-50 px-2 py-2 text-xs font-black text-red-700 transition hover:bg-red-100 disabled:opacity-40"
+                        >
+                          حذف
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
+          </aside>
+        </div>
+      </div>
+
+      {/* شريط سفلي للجوال */}
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-vibes-200/50 bg-white/90 p-4 backdrop-blur-xl xl:hidden">
+        <div className="mx-auto flex max-w-xl items-center gap-3">
+          <button
+            type="button"
+            onClick={() => uploadInputRef.current?.click()}
+            className="grid size-12 place-items-center rounded-2xl border-2 border-vibes-200 bg-white/50 text-vibes-800 transition hover:bg-vibes-100"
+            aria-label="رفع ملصق"
+          >
+            <ImagePlus className="size-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => void undo()}
+            className="grid size-12 place-items-center rounded-2xl border-2 border-vibes-200 bg-white/50 text-vibes-800 transition hover:bg-vibes-100"
+            aria-label="تراجع"
+          >
+            <Undo2 className="size-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => void redo()}
+            className="grid size-12 place-items-center rounded-2xl border-2 border-vibes-200 bg-white/50 text-vibes-800 transition hover:bg-vibes-100"
+            aria-label="إعادة"
+          >
+            <Redo2 className="size-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => void saveDesign(false)}
+            disabled={saving}
+            className="flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-vibes-700 to-vibes-900 font-black text-white shadow-lg transition hover:scale-105 disabled:opacity-60"
+          >
+            {saving ? <LoaderCircle className="size-5 animate-spin" /> : <Save className="size-5" />}
+            حفظ
+          </button>
         </div>
       </div>
     </main>
