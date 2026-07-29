@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "2.57.4",
+    "fabric": "^6.7.1",
+    "html2canvas": "^1.4.1",
     "lucide-react": "0.468.0",
     "qrcode.react": "4.2.0",
     "react": "19.1.1",
