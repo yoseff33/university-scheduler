@@ -20,12 +20,8 @@ export interface LoyaltyReward {
   used_at: string | null
 }
 
-/**
- * جلب الأكواب النشطة للمستخدم
- */
 export async function getActiveCups(userId: string): Promise<LoyaltyCup[]> {
   if (!supabase) throw new Error('Supabase not configured')
-  // استخدام as any لتجاوز مشكلة النوع
   const { data, error } = await (supabase as any)
     .from('loyalty_cups')
     .select('*')
@@ -36,9 +32,6 @@ export async function getActiveCups(userId: string): Promise<LoyaltyCup[]> {
   return data ?? []
 }
 
-/**
- * جلب جميع الأكواب (للسجل)
- */
 export async function getAllCups(userId: string): Promise<LoyaltyCup[]> {
   if (!supabase) throw new Error('Supabase not configured')
   const { data, error } = await (supabase as any)
@@ -50,9 +43,6 @@ export async function getAllCups(userId: string): Promise<LoyaltyCup[]> {
   return data ?? []
 }
 
-/**
- * جلب المكافآت النشطة للمستخدم
- */
 export async function getActiveRewards(userId: string): Promise<LoyaltyReward[]> {
   if (!supabase) throw new Error('Supabase not configured')
   const { data, error } = await (supabase as any)
@@ -65,16 +55,11 @@ export async function getActiveRewards(userId: string): Promise<LoyaltyReward[]>
   return data ?? []
 }
 
-/**
- * منح كوب جديد (يُستدعى بعد إتمام الطلب)
- * ملاحظة: يجب أن تكون الدالة grant_cup موجودة في Supabase
- */
 export async function grantCup(userId: string, orderId: string, orderTotal: number): Promise<LoyaltyCup> {
   if (!supabase) throw new Error('Supabase not configured')
   if (orderTotal < 12) {
     throw new Error('قيمة الطلب أقل من الحد الأدنى لمنح الكوب')
   }
-  // استدعاء الدالة المخزنة (استخدام as any)
   const { data, error } = await (supabase as any).rpc('grant_cup', {
     p_customer_id: userId,
     p_order_id: orderId,
@@ -84,9 +69,6 @@ export async function grantCup(userId: string, orderId: string, orderTotal: numb
   return data as LoyaltyCup
 }
 
-/**
- * استبدال 6 أكواب نشطة بمكافأة (كوب مجاني)
- */
 export async function redeemReward(userId: string): Promise<LoyaltyReward> {
   if (!supabase) throw new Error('Supabase not configured')
   const { data, error } = await (supabase as any).rpc('redeem_reward', {
@@ -96,9 +78,6 @@ export async function redeemReward(userId: string): Promise<LoyaltyReward> {
   return data as LoyaltyReward
 }
 
-/**
- * إلغاء كوب (عند إلغاء الطلب)
- */
 export async function revokeCup(cupId: string): Promise<void> {
   if (!supabase) throw new Error('Supabase not configured')
   const { error } = await (supabase as any).rpc('revoke_cup', {
