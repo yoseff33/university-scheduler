@@ -14,10 +14,12 @@ interface LoyaltyData {
 
 interface Transaction {
   id: string
-  type: 'earn' | 'redeem' | 'adjustment' | 'expired' | 'refund'
-  points: number
-  balance_after: number
-  description: string | null
+  transaction_type?: string
+  quantity?: number
+  points?: number
+  balance_after?: number
+  reason?: string | null
+  description?: string | null
   created_at: string
 }
 
@@ -31,7 +33,7 @@ function isMissingRelationError(error: unknown) {
   return (
     code === 'PGRST205' ||
     code === '42P01' ||
-    message.includes('loyalty_transactions') && message.toLowerCase().includes('not found')
+    (message.includes('loyalty_transactions') && message.toLowerCase().includes('not found'))
   )
 }
 
@@ -72,8 +74,7 @@ export function LoyaltyPage() {
           name: typeof profile.name === 'string' ? profile.name : null,
         })
 
-       // جلب سجل النقاط إذا لم تُشغّل المهاجرة بعد نعرض السجل فارغاً
-        // بدلاً من تعطيل بطاقة العضوية بالكامل
+        // جلب سجل النقاط بفلتر customer_id
         const { data: trans, error: transError } = await client
           .from('loyalty_transactions')
           .select('*')
@@ -96,7 +97,7 @@ export function LoyaltyPage() {
 
   if (loading) return <PageLoader label="جاري تحميل الولاء..." />
   if (error) return <div className="p-4 text-center text-red-600">{error}</div>
-  if (!data) return <div className="p-4 text-center">لا توجد بيانات</div>e="p-4 text-center">لا توجد بيانات</div>
+  if (!data) return <div className="p-4 text-center">لا توجد بيانات</div>
 
   // حساب التقدم نحو المكافأة (مثلاً 100 نقطة)
   const target = 100
@@ -149,18 +150,20 @@ export function LoyaltyPage() {
             ) : (
               <div className="mt-3 space-y-3">
                 {transactions.map(t => {
-                  const isPositive = t.points >= 0
+                  const pointsVal = t.quantity ?? t.points ?? 0
+                  const isPositive = pointsVal >= 0
+                  const desc = t.reason ?? t.description ?? 'تعديل نقاط'
                   return (
                     <div key={t.id} className="flex items-center justify-between border-b border-vibes-100 pb-2 last:border-0">
                       <div className="flex items-center gap-3">
                         <span className={`text-sm font-bold ${isPositive ? 'text-emerald-600' : 'text-red-500'}`}>
-                          {isPositive ? '+' : '-'}{Math.abs(t.points)}
+                          {isPositive ? '+' : '-'}{Math.abs(pointsVal)}
                         </span>
-                        <span className="text-sm text-vibes-600">{t.description ?? 'تعديل نقاط'}</span>
+                        <span className="text-sm text-vibes-600">{desc}</span>
                       </div>
                       <div className="text-right text-xs text-vibes-500">
                         {new Date(t.created_at).toLocaleDateString('ar-SA')}
-                        <span className="mr-2">الرصيد: {t.balance_after}</span>
+                        {t.balance_after !== undefined && <span className="mr-2">الرصيد: {t.balance_after}</span>}
                       </div>
                     </div>
                   )
