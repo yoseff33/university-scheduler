@@ -39,7 +39,7 @@ import type { Profile } from '../types/database';
 import { maskPhone } from '../utils/phone';
 
 // --- الثوابت ---
-const REWARD_THRESHOLD = 100; // يمكن جلبها من جدول الإعدادات مستقبلاً
+const DEFAULT_CUPS_FOR_REWARD = 6; // القيمة الافتراضية إذا لم توجد إعدادات
 
 // --- دالة مساعدة للتحقق من وجود supabase ---
 function requireSupabase() {
@@ -58,8 +58,8 @@ interface AccountState {
   pendingAvatar: File | null;
   previewUrl: string | null;
   userRole: string | null;
-  loyaltyPoints: number;
-  lifetimePoints: number;
+  activeCups: number;
+  targetCups: number;
   loading: boolean;
   saving: boolean;
   error: string | null;
@@ -75,7 +75,8 @@ type AccountAction =
   | { type: 'SET_PENDING_AVATAR'; payload: File | null }
   | { type: 'SET_PREVIEW_URL'; payload: string | null }
   | { type: 'SET_USER_ROLE'; payload: string | null }
-  | { type: 'SET_LOYALTY'; payload: { points: number; lifetime: number } }
+  | { type: 'SET_ACTIVE_CUPS'; payload: number }
+  | { type: 'SET_TARGET_CUPS'; payload: number }
   | { type: 'SET_SAVING'; payload: boolean }
   | { type: 'SET_ERROR'; payload: string | null }
   | { type: 'SET_SUCCESS'; payload: string | null }
@@ -89,8 +90,8 @@ const initialState: AccountState = {
   pendingAvatar: null,
   previewUrl: null,
   userRole: null,
-  loyaltyPoints: 0,
-  lifetimePoints: 0,
+  activeCups: 0,
+  targetCups: DEFAULT_CUPS_FOR_REWARD,
   loading: true,
   saving: false,
   error: null,
@@ -115,8 +116,10 @@ function accountReducer(state: AccountState, action: AccountAction): AccountStat
       return { ...state, previewUrl: action.payload };
     case 'SET_USER_ROLE':
       return { ...state, userRole: action.payload };
-    case 'SET_LOYALTY':
-      return { ...state, loyaltyPoints: action.payload.points, lifetimePoints: action.payload.lifetime };
+    case 'SET_ACTIVE_CUPS':
+      return { ...state, activeCups: action.payload };
+    case 'SET_TARGET_CUPS':
+      return { ...state, targetCups: action.payload };
     case 'SET_SAVING':
       return { ...state, saving: action.payload };
     case 'SET_ERROR':
@@ -130,7 +133,7 @@ function accountReducer(state: AccountState, action: AccountAction): AccountStat
   }
 }
 
-// --- Hook مخصص لجلب بيانات الحساب (مع دعم الإلغاء عبر التحقق من signal) ---
+// --- Hook مخصص لجلب بيانات الحساب (مع دعم الإلغاء) ---
 function useProfileData(userId: string) {
   const [state, dispatch] = useReducer(accountReducer, initialState);
 
@@ -157,35 +160,43 @@ function useProfileData(userId: string) {
           dispatch({ type: 'SET_AVATAR_URL', payload: signedUrl });
         }
 
-        // 3. جلب دور المستخدم (بدون abortSignal، نعتمد على التحقق اليدوي)
+        // 3. جلب دور المستخدم
         const { data: roleData, error: roleError } = await supabaseClient
           .from('user_roles')
           .select('role')
           .eq('user_id', userId)
-          .maybeSingle(); // 'single' هو الافتراضي
+          .maybeSingle();
 
         if (!signal.aborted && !roleError && roleData) {
           dispatch({ type: 'SET_USER_ROLE', payload: roleData.role });
         }
 
-        // 4. جلب نقاط الولاء من جدول loyalty_accounts
+        // 4. جلب الأكواب النشطة من loyalty_accounts
         const { data: loyaltyData, error: loyaltyError } = await supabaseClient
           .from('loyalty_accounts')
-          .select('points_balance, lifetime_points')
+          .select('active_cups')
           .eq('user_id', userId)
-          .maybeSingle(); // 'single' هو الافتراضي
+          .maybeSingle();
 
         if (!signal.aborted) {
           if (loyaltyError) {
             console.warn('Loyalty fetch error:', loyaltyError);
           } else {
-            dispatch({
-              type: 'SET_LOYALTY',
-              payload: {
-                points: loyaltyData?.points_balance ?? 0,
-                lifetime: loyaltyData?.lifetime_points ?? 0,
-              },
-            });
+            dispatch({ type: 'SET_ACTIVE_CUPS', payload: loyaltyData?.active_cups ?? 0 });
+          }
+        }
+
+        // 5. جلب الهدف من loyalty_settings
+        const { data: settingsData, error: settingsError } = await supabaseClient
+          .from('loyalty_settings')
+          .select('cups_for_reward')
+          .maybeSingle();
+
+        if (!signal.aborted) {
+          if (settingsError) {
+            console.warn('Settings fetch error:', settingsError);
+          } else {
+            dispatch({ type: 'SET_TARGET_CUPS', payload: settingsData?.cups_for_reward ?? DEFAULT_CUPS_FOR_REWARD });
           }
         }
       } catch (err: unknown) {
@@ -204,7 +215,7 @@ function useProfileData(userId: string) {
     fetchData();
 
     return () => {
-      abortController.abort(); // يمنع تحديث الحالة بعد فك التركيب
+      abortController.abort();
     };
   }, [userId]);
 
@@ -328,22 +339,38 @@ export function AccountPage() {
     pendingAvatar,
     previewUrl,
     userRole,
-    loyaltyPoints,
-    lifetimePoints,
+    activeCups,
+    targetCups,
     loading,
     saving,
     error,
     success,
   } = state;
 
-  // تحسين عرض رقم العضوية لتفادي VIB-null
+  // دالة لتنسيق رقم العضوية – منع تكرار البادئة
+  const formatMembership = useCallback((number: string | null | undefined): string => {
+    if (!number) return '—';
+    const trimmed = number.trim();
+    if (trimmed.startsWith('VIB-')) return trimmed;
+    return `VIB-${trimmed}`;
+  }, []);
+
   const membershipLabel = useMemo(
-    () =>
-      profile?.membership_number
-        ? `VIB-${profile.membership_number}`
-        : '—',
-    [profile?.membership_number],
+    () => formatMembership(profile?.membership_number),
+    [profile?.membership_number, formatMembership]
   );
+
+  // قيمة QR – استخلاص الرقم بدون بادئة مكررة
+  const qrValue = useMemo(() => {
+    const number = profile?.membership_number;
+    if (!number) return '';
+    const clean = number.trim().startsWith('VIB-') ? number.trim().slice(4) : number.trim();
+    return `VIB:${clean}`;
+  }, [profile?.membership_number]);
+
+  // حساب الأكواب المتبقية
+  const cupsRemaining = Math.max(targetCups - activeCups, 0);
+  const isEligible = activeCups >= targetCups;
 
   const selectAvatar = useCallback(
     (file: File | undefined) => {
@@ -364,7 +391,7 @@ export function AccountPage() {
       dispatch({ type: 'SET_PENDING_AVATAR', payload: file });
       dispatch({ type: 'SET_PREVIEW_URL', payload: URL.createObjectURL(file) });
     },
-    [previewUrl],
+    [previewUrl]
   );
 
   const saveProfile = useCallback(
@@ -417,7 +444,7 @@ export function AccountPage() {
         dispatch({ type: 'SET_SAVING', payload: false });
       }
     },
-    [profile, userId, pendingAvatar, name, marketingConsent],
+    [profile, userId, pendingAvatar, name, marketingConsent]
   );
 
   const handleSignOut = useCallback(async () => {
@@ -483,7 +510,7 @@ export function AccountPage() {
           </div>
         )}
 
-        {/* روابط سريعة - تأكد من أن صفحة /admin تسمح لـ branch_manager أيضاً */}
+        {/* روابط سريعة */}
         <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           <Link
             to="/menu"
@@ -554,11 +581,11 @@ export function AccountPage() {
                 </p>
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <span className="rounded-full bg-vibes-700 px-3 py-1 text-xs font-bold text-vibes-200">
-                    🏆 {loyaltyPoints} نقطة
+                    🏆 {activeCups} كوب
                   </span>
-                  {lifetimePoints > 0 && (
+                  {targetCups > 0 && (
                     <span className="rounded-full bg-vibes-700 px-3 py-1 text-xs font-bold text-vibes-200">
-                      ♾️ {lifetimePoints} مدى الحياة
+                      🎯 الهدف {targetCups}
                     </span>
                   )}
                 </div>
@@ -587,9 +614,9 @@ export function AccountPage() {
                 className="rounded-2xl bg-white p-2 text-vibes-900"
                 aria-label={`رمز عضوية ${membershipLabel}`}
               >
-                {profile ? (
+                {profile && qrValue ? (
                   <QRCodeSVG
-                    value={`VIB:${profile.membership_number}`}
+                    value={qrValue}
                     size={88}
                     level="M"
                     includeMargin={false}
@@ -600,34 +627,34 @@ export function AccountPage() {
               </div>
             </div>
 
-            {/* شريط تقدم الولاء */}
+            {/* شريط تقدم الأكواب – مع اتجاه RTL */}
             <div className="mt-6">
               <div className="flex justify-between text-xs font-bold text-vibes-200">
-                <span>نقاط الولاء</span>
-                <span>{loyaltyPoints} / {REWARD_THRESHOLD}</span>
+                <span>الأكواب النشطة</span>
+                <span>{activeCups} / {targetCups}</span>
               </div>
-              <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-vibes-700">
+              <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-vibes-700" dir="rtl">
                 <div
                   className="h-full rounded-full bg-vibes-300 transition-all duration-500"
-                  style={{ width: `${Math.min((loyaltyPoints / REWARD_THRESHOLD) * 100, 100)}%` }}
+                  style={{ width: `${Math.min((activeCups / targetCups) * 100, 100)}%` }}
                 />
               </div>
               <p className="mt-1 text-xs text-vibes-300">
-                {loyaltyPoints >= REWARD_THRESHOLD
-                  ? '🟢 مؤهل للحصول على مكافأة'
-                  : `🔵 تحتاج ${REWARD_THRESHOLD - loyaltyPoints} نقطة للمكافأة`}
+                {isEligible
+                  ? '🟢 مؤهل للحصول على كوب مجاني'
+                  : `🔵 باقي لك ${cupsRemaining} كوب${cupsRemaining === 1 ? '' : 'ات'} للحصول على كوبك المجاني`}
               </p>
             </div>
 
             <div className="mt-8 grid grid-cols-2 gap-3">
               <div className="rounded-2xl bg-white/10 p-4">
-                <p className="text-xs font-bold text-vibes-200">أكواب الولاء</p>
-                <p className="mt-2 text-sm font-black">{Math.floor(loyaltyPoints / 10)} كوب</p>
+                <p className="text-xs font-bold text-vibes-200">الأكواب النشطة</p>
+                <p className="mt-2 text-sm font-black">{activeCups} كوب</p>
               </div>
               <div className="rounded-2xl bg-white/10 p-4">
                 <p className="text-xs font-bold text-vibes-200">الحالة</p>
                 <p className="mt-2 text-sm font-black">
-                  {loyaltyPoints >= REWARD_THRESHOLD ? '🟢 مؤهل' : '🔵 قيد التقدم'}
+                  {isEligible ? '🟢 مؤهل' : '🔵 قيد التقدم'}
                 </p>
               </div>
             </div>
