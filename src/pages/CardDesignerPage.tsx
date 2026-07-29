@@ -670,12 +670,10 @@ export function CardDesignerPage() {
 
         if (signedError) throw signedError
 
-        // Fix: ensure the map keys are always strings (path cannot be null)
+        // Fix: safely filter and map without type predicate conflict
         const signedItems = (signedData ?? [])
-          .filter((item): item is { path: string; signedUrl: string } =>
-            Boolean(item.signedUrl) && Boolean(item.path)
-          )
-          .map((item) => [item.path, item.signedUrl] as [string, string])
+          .filter((item) => Boolean(item.signedUrl) && Boolean(item.path))
+          .map((item) => [item.path!, item.signedUrl] as [string, string])
 
         signedUrlByPath = new Map(signedItems)
       }
