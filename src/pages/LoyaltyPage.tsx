@@ -1,69 +1,97 @@
 // src/pages/LoyaltyPage.tsx
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
-import { useAuth } from '../features/auth/useAuth';
-import { PageLoader } from '../components/PageLoader';
-import { Alert } from '../components/Alert';
-import { ArrowRight, Award, History, Coffee, Gift } from 'lucide-react';
-import { getActiveCupsCount, getCupsAndRewards, redeemReward, LoyaltyCup, LoyaltyReward } from '../services/loyaltyService';
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { supabase } from '../lib/supabase'
+import { useAuth } from '../features/auth/useAuth'
+import { PageLoader } from '../components/PageLoader'
+import { Alert } from '../components/Alert'
+import { ArrowRight, Award, History, Coffee, Gift } from 'lucide-react'
+import { getActiveCups, getAllCups, redeemReward, getActiveRewards, type LoyaltyCup, type LoyaltyReward } from '../services/loyaltyService'
+
+interface ProfileData {
+  membership_number: string
+  name: string | null
+}
 
 export function LoyaltyPage() {
-  const { session } = useAuth();
-  const [activeCups, setActiveCups] = useState<number>(0);
-  const [cups, setCups] = useState<LoyaltyCup[]>([]);
-  const [rewards, setRewards] = useState<LoyaltyReward[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [redeeming, setRedeeming] = useState(false);
+  const { session } = useAuth()
+  const [profile, setProfile] = useState<ProfileData | null>(null)
+  const [activeCups, setActiveCups] = useState<LoyaltyCup[]>([])
+  const [allCups, setAllCups] = useState<LoyaltyCup[]>([])
+  const [rewards, setRewards] = useState<LoyaltyReward[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
+  const [redeeming, setRedeeming] = useState(false)
 
-  const targetCups = 6;
-
-  const fetchData = async () => {
-    if (!session) return;
-    try {
-      setLoading(true);
-      const [count, { cups: cupsData, rewards: rewardsData }] = await Promise.all([
-        getActiveCupsCount(session.user.id),
-        getCupsAndRewards(session.user.id),
-      ]);
-      setActiveCups(count);
-      setCups(cupsData);
-      setRewards(rewardsData);
-    } catch (err) {
-      console.error(err);
-      setError('تعذر تحميل بيانات الولاء');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const userId = session?.user.id
 
   useEffect(() => {
-    fetchData();
-  }, [session]);
+    if (!userId) return
+
+    const fetchData = async () => {
+      setLoading(true)
+      setError(null)
+      try {
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('membership_number, name')
+          .eq('id', userId)
+          .maybeSingle()
+        if (profileError) throw profileError
+        setProfile(profileData)
+
+        const cups = await getActiveCups(userId)
+        setActiveCups(cups)
+
+        const all = await getAllCups(userId)
+        setAllCups(all)
+
+        const rewardsData = await getActiveRewards(userId)
+        setRewards(rewardsData)
+      } catch (err: any) {
+        console.error(err)
+        setError(err.message || 'تعذر تحميل بيانات الولاء')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [userId])
 
   const handleRedeem = async () => {
-    if (!session || activeCups < targetCups) return;
-    setRedeeming(true);
-    setError(null);
-    setSuccess(null);
-    try {
-      await redeemReward(session.user.id);
-      setSuccess('تم استبدال المكافأة بنجاح! 🎉');
-      await fetchData(); // تحديث البيانات
-    } catch (err: any) {
-      setError(err.message || 'فشل استبدال المكافأة');
-    } finally {
-      setRedeeming(false);
+    if (!userId) return
+    if (activeCups.length < 6) {
+      setError('يجب أن تمتلك 6 أكواب نشطة لاستبدال المكافأة')
+      return
     }
-  };
+    setRedeeming(true)
+    setError(null)
+    setSuccess(null)
+    try {
+      const reward = await redeemReward(userId)
+      setSuccess(`تم استبدال المكافأة بنجاح! كود: ${reward.reward_code || 'مشروب مجاني'}`)
+      const updatedCups = await getActiveCups(userId)
+      setActiveCups(updatedCups)
+      const all = await getAllCups(userId)
+      setAllCups(all)
+      const rewardsData = await getActiveRewards(userId)
+      setRewards(rewardsData)
+    } catch (err: any) {
+      setError(err.message || 'فشل استبدال المكافأة')
+    } finally {
+      setRedeeming(false)
+    }
+  }
 
-  if (loading) return <PageLoader label="جاري تحميل الولاء..." />;
-  if (error) return <div className="p-4 text-center text-red-600">{error}</div>;
+  if (loading) return <PageLoader label="جاري تحميل الولاء..." />
+  if (error && !profile) return <div className="p-4 text-center text-red-600">{error}</div>
 
-  const progress = Math.min((activeCups / targetCups) * 100, 100);
-  const canRedeem = activeCups >= targetCups;
+  const cupCount = activeCups.length
+  const target = 6
+  const progress = Math.min((cupCount / target) * 100, 100)
+  const canRedeem = cupCount >= target
 
   return (
     <main className="min-h-screen bg-vibes-pattern px-4 py-6 pb-20">
@@ -79,103 +107,104 @@ export function LoyaltyPage() {
         {success && <Alert type="success">{success}</Alert>}
 
         <div className="space-y-6">
-          {/* البطاقة */}
           <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-vibes-800 to-vibes-600 p-6 text-white shadow-lg">
             <div className="flex justify-between">
               <div>
                 <p className="text-sm text-vibes-200">فايبز | Vibes</p>
-                <p className="mt-1 text-lg font-black">{session?.user?.email || 'ضيف'}</p>
-                <p className="text-sm text-vibes-300">رقم العضوية: {session?.user?.id.slice(0, 8)}</p>
+                <p className="mt-1 text-lg font-black">{profile?.name || 'ضيف'}</p>
+                <p className="text-sm text-vibes-300">رقم العضوية: {profile?.membership_number || '—'}</p>
               </div>
-              <Award className="size-12 text-vibes-300" />
+              <Coffee className="size-12 text-vibes-300" />
             </div>
-
-            {/* عداد الأكواب */}
-            <div className="mt-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Coffee className="size-5 text-vibes-200" />
-                  <span className="font-bold">الأكواب المجمعة</span>
-                </div>
-                <span className="text-2xl font-black">{activeCups} / {targetCups}</span>
+            <div className="mt-6 flex items-end justify-between">
+              <div>
+                <p className="text-sm text-vibes-200">الأكواب النشطة</p>
+                <p className="text-3xl font-black">{cupCount} / {target}</p>
               </div>
-              <div className="mt-2 h-4 w-full overflow-hidden rounded-full bg-vibes-700">
-                <div className="h-full rounded-full bg-vibes-200 transition-all duration-500" style={{ width: `${progress}%` }} />
-              </div>
-              {canRedeem && (
-                <p className="mt-2 text-sm font-bold text-vibes-200 animate-pulse">
-                  🎉 مبروك! أنت جاهز لاستبدال مشروب مجاني!
+              <div className="text-left">
+                <p className="text-sm text-vibes-200">المكافأة القادمة</p>
+                <p className="text-lg font-bold">
+                  {canRedeem ? '🎉 جاهز للاستبدال!' : `${target - cupCount} كوب متبقي`}
                 </p>
-              )}
+              </div>
             </div>
-
-            <button
-              onClick={handleRedeem}
-              disabled={!canRedeem || redeeming}
-              className={`mt-4 w-full rounded-xl py-3 font-bold transition ${
-                canRedeem
-                  ? 'bg-white text-vibes-800 hover:bg-vibes-100'
-                  : 'bg-vibes-700 text-vibes-300 cursor-not-allowed'
-              }`}
-            >
-              {redeeming ? 'جاري الاستبدال...' : canRedeem ? 'استبدال المكافأة 🎁' : 'أنت بحاجة لـ 6 أكواب'}
-            </button>
+            <div className="mt-4 h-3 rounded-full bg-vibes-700">
+              <div
+                className="h-full rounded-full bg-vibes-200 transition-all"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            {canRedeem && (
+              <button
+                onClick={handleRedeem}
+                disabled={redeeming}
+                className="mt-4 w-full rounded-2xl bg-white py-3 font-black text-vibes-800 transition hover:bg-vibes-100 disabled:opacity-50"
+              >
+                {redeeming ? 'جاري الاستبدال...' : 'استبدال المكافأة 🎁'}
+              </button>
+            )}
           </div>
 
-          {/* سجل الحركات */}
+          {rewards.length > 0 && (
+            <div className="rounded-2xl bg-white p-6 shadow-sm">
+              <h2 className="flex items-center gap-2 font-bold text-vibes-900">
+                <Gift className="size-5" />
+                المكافآت المتاحة
+              </h2>
+              <div className="mt-3 space-y-2">
+                {rewards.map((r) => (
+                  <div key={r.id} className="flex items-center justify-between border-b border-vibes-100 pb-2">
+                    <span className="text-sm font-bold text-emerald-600">
+                      {r.reward_code ? `كود: ${r.reward_code}` : 'مشروب مجاني'}
+                    </span>
+                    <span className="text-xs text-vibes-500">
+                      {new Date(r.created_at).toLocaleDateString('ar-SA')}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="rounded-2xl bg-white p-6 shadow-sm">
             <h2 className="flex items-center gap-2 font-bold text-vibes-900">
               <History className="size-5" />
-              سجل الأكواب والمكافآت
+              سجل الأكواب
             </h2>
-            {cups.length === 0 && rewards.length === 0 ? (
+            {allCups.length === 0 ? (
               <p className="mt-4 text-center text-sm text-vibes-600">لا توجد حركات</p>
             ) : (
               <div className="mt-3 space-y-3">
-                {cups.map((cup) => (
-                  <div key={cup.id} className="flex items-center justify-between border-b border-vibes-100 pb-2 last:border-0">
-                    <div className="flex items-center gap-3">
-                      <Coffee className="size-4 text-vibes-600" />
-                      <span className="text-sm">كوب #{cup.order_id?.slice(0, 6) || 'بدون طلب'}</span>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${
-                        cup.status === 'active' ? 'bg-emerald-100 text-emerald-700' :
-                        cup.status === 'redeemed' ? 'bg-blue-100 text-blue-700' :
-                        'bg-red-100 text-red-700'
-                      }`}>
-                        {cup.status === 'active' ? 'نشط' : cup.status === 'redeemed' ? 'مستبدل' : 'ملغي'}
-                      </span>
+                {allCups.map((cup) => {
+                  const statusMap = {
+                    active: '🟢 نشط',
+                    redeemed: '🔵 مستخدم',
+                    revoked: '🔴 ملغي'
+                  }
+                  return (
+                    <div key={cup.id} className="flex items-center justify-between border-b border-vibes-100 pb-2 last:border-0">
+                      <div className="flex items-center gap-3">
+                        <Coffee className="size-4 text-vibes-600" />
+                        <span className="text-sm text-vibes-600">{statusMap[cup.status]}</span>
+                      </div>
+                      <div className="text-right text-xs text-vibes-500">
+                        {new Date(cup.created_at).toLocaleDateString('ar-SA')}
+                      </div>
                     </div>
-                    <div className="text-right text-xs text-vibes-500">
-                      {new Date(cup.created_at).toLocaleDateString('ar-SA')}
-                    </div>
-                  </div>
-                ))}
-                {rewards.map((reward) => (
-                  <div key={reward.id} className="flex items-center justify-between border-b border-vibes-100 pb-2 last:border-0">
-                    <div className="flex items-center gap-3">
-                      <Gift className="size-4 text-vibes-600" />
-                      <span className="text-sm">مكافأة: {reward.reward_code}</span>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${
-                        reward.status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-700'
-                      }`}>
-                        {reward.status === 'active' ? 'غير مستخدمة' : 'مستخدمة'}
-                      </span>
-                    </div>
-                    <div className="text-right text-xs text-vibes-500">
-                      {new Date(reward.created_at).toLocaleDateString('ar-SA')}
-                    </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             )}
           </div>
 
-          {/* رابط تصميم البطاقة */}
-          <Link to="/card-designer" className="block w-full rounded-2xl bg-vibes-800 py-3.5 text-center font-bold text-white transition hover:bg-vibes-700">
+          <Link
+            to="/card-designer"
+            className="block w-full rounded-2xl bg-vibes-800 py-3.5 text-center font-bold text-white transition hover:bg-vibes-700"
+          >
             تخصيص بطاقتي 🎨
           </Link>
         </div>
       </div>
     </main>
-  );
+  )
 }
