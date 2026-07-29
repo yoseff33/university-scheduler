@@ -39,7 +39,7 @@ import type { Profile } from '../types/database';
 import { maskPhone } from '../utils/phone';
 
 // --- الثوابت ---
-const DEFAULT_CUPS_FOR_REWARD = 6; // القيمة الافتراضية إذا لم توجد إعدادات
+const DEFAULT_CUPS_FOR_REWARD = 6;
 
 // --- دالة مساعدة للتحقق من وجود supabase ---
 function requireSupabase() {
@@ -172,6 +172,7 @@ function useProfileData(userId: string) {
         }
 
         // 4. جلب الأكواب النشطة من loyalty_accounts
+        // @ts-ignore - سيتم تحديث الأنواع بعد تشغيل `supabase gen types`
         const { data: loyaltyData, error: loyaltyError } = await supabaseClient
           .from('loyalty_accounts')
           .select('active_cups')
@@ -182,11 +183,13 @@ function useProfileData(userId: string) {
           if (loyaltyError) {
             console.warn('Loyalty fetch error:', loyaltyError);
           } else {
+            // @ts-ignore
             dispatch({ type: 'SET_ACTIVE_CUPS', payload: loyaltyData?.active_cups ?? 0 });
           }
         }
 
         // 5. جلب الهدف من loyalty_settings
+        // @ts-ignore - سيتم تحديث الأنواع بعد تشغيل `supabase gen types`
         const { data: settingsData, error: settingsError } = await supabaseClient
           .from('loyalty_settings')
           .select('cups_for_reward')
@@ -196,6 +199,7 @@ function useProfileData(userId: string) {
           if (settingsError) {
             console.warn('Settings fetch error:', settingsError);
           } else {
+            // @ts-ignore
             dispatch({ type: 'SET_TARGET_CUPS', payload: settingsData?.cups_for_reward ?? DEFAULT_CUPS_FOR_REWARD });
           }
         }
