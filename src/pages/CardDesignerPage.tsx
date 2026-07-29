@@ -1064,13 +1064,13 @@ export function CardDesignerPage() {
     let generatedPreviewPath: string | null = null
 
     try {
-      const { data, error: saveError } = await client.rpc('save_loyalty_card_design', {
-        p_design_id: saveAsNew ? null : activeDesign?.id ?? null,
-        p_design_name: trimmedName,
-        p_design_data: designData as unknown as Json,
-        p_preview_image_url: null,
-        p_activate: true,
-      })
+   client.rpc('save_loyalty_card_design', {
+  p_design_name: trimmedName,
+  p_design_data: designData as unknown as Json,
+  p_preview_image_url: null,
+  p_activate: true,
+  p_design_id: saveAsNew ? null : activeDesign?.id ?? null,
+})
 
       if (saveError) throw saveError
 
