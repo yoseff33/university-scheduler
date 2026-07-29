@@ -28,12 +28,18 @@ export function LoyaltyPage() {
 
   useEffect(() => {
     if (!userId) return
+    const client = supabase
+    if (!client) {
+      setError('خدمة قاعدة البيانات غير مفعلة')
+      setLoading(false)
+      return
+    }
 
     const fetchData = async () => {
       setLoading(true)
       setError(null)
       try {
-        const { data: profileData, error: profileError } = await supabase
+        const { data: profileData, error: profileError } = await client
           .from('profiles')
           .select('membership_number, name')
           .eq('id', userId)
