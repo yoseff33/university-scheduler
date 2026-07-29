@@ -72,12 +72,12 @@ export function LoyaltyPage() {
           name: typeof profile.name === 'string' ? profile.name : null,
         })
 
-        // جلب سجل النقاط. إذا لم تُشغّل المهاجرة بعد، نعرض السجل فارغاً
-        // بدلاً من تعطيل بطاقة العضوية بالكامل.
+       // جلب سجل النقاط إذا لم تُشغّل المهاجرة بعد نعرض السجل فارغاً
+        // بدلاً من تعطيل بطاقة العضوية بالكامل
         const { data: trans, error: transError } = await client
           .from('loyalty_transactions')
           .select('*')
-          .eq('user_id', session.user.id)
+          .eq('customer_id', session.user.id)
           .order('created_at', { ascending: false })
           .limit(20)
 
@@ -96,7 +96,7 @@ export function LoyaltyPage() {
 
   if (loading) return <PageLoader label="جاري تحميل الولاء..." />
   if (error) return <div className="p-4 text-center text-red-600">{error}</div>
-  if (!data) return <div className="p-4 text-center">لا توجد بيانات</div>
+  if (!data) return <div className="p-4 text-center">لا توجد بيانات</div>e="p-4 text-center">لا توجد بيانات</div>
 
   // حساب التقدم نحو المكافأة (مثلاً 100 نقطة)
   const target = 100
