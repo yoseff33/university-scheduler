@@ -1160,13 +1160,13 @@ export function CardDesignerPage() {
     setSuccess(null)
 
     try {
-      const { data, error: activateError } = await client.rpc('save_loyalty_card_design', {
-        p_design_id: design.id,
-        p_design_name: design.design_name,
-        p_design_data: design.design_data,
-        p_preview_image_url: design.preview_image_url,
-        p_activate: true,
-      })
+ client.rpc('save_loyalty_card_design', {
+  p_design_name: trimmedName,
+  p_design_data: designData as unknown as Json,
+  p_preview_image_url: null,
+  p_activate: true,
+  p_design_id: saveAsNew ? null : activeDesign?.id ?? null,
+})
 
       if (activateError) throw activateError
       const activated = parseDesignRow(extractRpcRow(data))
