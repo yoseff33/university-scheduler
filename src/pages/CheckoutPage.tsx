@@ -20,6 +20,93 @@ interface CustomerCar {
   is_default: boolean
 }
 
+interface SupabaseErrorLike {
+  code?: unknown
+  message?: unknown
+  details?: unknown
+  hint?: unknown
+}
+
+function readErrorField(value: unknown): string | null {
+  return typeof value === 'string' && value.trim() ? value.trim() : null
+}
+
+function extractErrorDetails(error: unknown) {
+  if (!error || typeof error !== 'object') {
+    return {
+      code: null,
+      message: error instanceof Error ? error.message : null,
+      details: null,
+      hint: null,
+    }
+  }
+
+  const candidate = error as SupabaseErrorLike
+
+  return {
+    code: readErrorField(candidate.code),
+    message: readErrorField(candidate.message),
+    details: readErrorField(candidate.details),
+    hint: readErrorField(candidate.hint),
+  }
+}
+
+function getCheckoutErrorMessage(error: unknown): string {
+  const { code, message, details, hint } = extractErrorDetails(error)
+  const normalized = [message, details, hint].filter(Boolean).join(' ').toLowerCase()
+
+  if (normalized.includes('authentication is required') || code === '42501') {
+    return 'انتهت جلسة تسجيل الدخول. سجّل دخولك من جديد ثم أعد المحاولة.'
+  }
+
+  if (normalized.includes('cart was not found')) {
+    return 'تعذر العثور على السلة الحالية. ارجع للسلة وأضف المنتجات من جديد.'
+  }
+
+  if (normalized.includes('cart does not belong')) {
+    return 'السلة الحالية غير مرتبطة بحسابك. حدّث الصفحة ثم أعد المحاولة.'
+  }
+
+  if (normalized.includes('cart is not open')) {
+    return 'تم إغلاق السلة أو إنشاء الطلب مسبقاً. ارجع للسلة وابدأ طلباً جديداً.'
+  }
+
+  if (normalized.includes('cart is empty') || normalized.includes('cart total must be greater than zero')) {
+    return 'السلة فارغة أو إجماليها غير صالح.'
+  }
+
+  if (normalized.includes('selected branch is not accepting orders')) {
+    return 'الفرع المحدد لا يستقبل الطلبات حالياً. اختر فرعاً آخر.'
+  }
+
+  if (normalized.includes('selected branch does not support car delivery')) {
+    return 'الفرع المحدد ما يدعم التوصيل للسيارة. اختر الاستلام من الفرع أو فرعاً آخر.'
+  }
+
+  if (normalized.includes('a car is required for car delivery')) {
+    return 'لازم تختار سيارة قبل تأكيد طلب التوصيل للسيارة.'
+  }
+
+  if (normalized.includes('selected car does not belong')) {
+    return 'السيارة المحددة غير مرتبطة بحسابك. اختر سيارة مسجلة في حسابك.'
+  }
+
+  if (normalized.includes('invalid fulfillment type')) {
+    return 'طريقة الاستلام المحددة غير مدعومة.'
+  }
+
+  if (code === 'PGRST202') {
+    return 'دالة إنشاء الطلب غير ظاهرة لخدمة Supabase حالياً. أعد تحميل Schema Cache.'
+  }
+
+  if (code === 'PGRST203') {
+    return 'يوجد أكثر من إصدار لدالة إنشاء الطلب في قاعدة البيانات.'
+  }
+
+  const rawMessage = [message, details, hint].filter(Boolean).join(' — ')
+  return rawMessage || 'تعذر إنشاء الطلب بسبب خطأ غير معروف.'
+}
+
 export function CheckoutPage() {
   const { session } = useAuth()
   const navigate = useNavigate()
@@ -35,7 +122,10 @@ export function CheckoutPage() {
   const [success, setSuccess] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!session) return
+    if (!session) {
+      setLoading(false)
+      return
+    }
 
     const client = supabase
     if (!client) {
@@ -44,46 +134,70 @@ export function CheckoutPage() {
       return
     }
 
+    let cancelled = false
+
     const fetchData = async () => {
+      setLoading(true)
+      setError(null)
+
       try {
-        const { data: branchesData, error: branchesError } = await client
-          .from('branches')
-          .select('id, name, address')
-          .eq('is_active', true)
-          .eq('accepts_orders', true)
+        const [branchesResult, carsResult] = await Promise.all([
+          client
+            .from('branches')
+            .select('id, name, address')
+            .eq('is_active', true)
+            .eq('accepts_orders', true)
+            .order('name'),
+          client
+            .from('customer_cars')
+            .select('id, name, plate_number, is_default')
+            .eq('user_id', session.user.id)
+            .order('is_default', { ascending: false })
+            .order('created_at', { ascending: false }),
+        ])
 
-        if (branchesError) throw branchesError
+        if (branchesResult.error) throw branchesResult.error
+        if (carsResult.error) throw carsResult.error
+        if (cancelled) return
 
-        const availableBranches = branchesData ?? []
+        const availableBranches = branchesResult.data ?? []
+        const customerCars = carsResult.data ?? []
+
         setBranches(availableBranches)
-        if (availableBranches.length > 0) {
-          setSelectedBranch(availableBranches[0].id)
-        }
-
-        const { data: carsData, error: carsError } = await client
-          .from('customer_cars')
-          .select('id, name, plate_number, is_default')
-          .eq('user_id', session.user.id)
-
-        if (carsError) throw carsError
-
-        const customerCars = carsData ?? []
         setCars(customerCars)
-        const defaultCar = customerCars.find((car) => car.is_default)
-        if (defaultCar) setSelectedCar(defaultCar.id)
-      } catch (err) {
-        console.error(err)
-        setError('تعذر تحميل البيانات')
+
+        setSelectedBranch((current) => {
+          if (current && availableBranches.some((branch) => branch.id === current)) {
+            return current
+          }
+          return availableBranches[0]?.id ?? ''
+        })
+
+        setSelectedCar((current) => {
+          if (current && customerCars.some((car) => car.id === current)) {
+            return current
+          }
+          return customerCars.find((car) => car.is_default)?.id ?? customerCars[0]?.id ?? null
+        })
+      } catch (err: unknown) {
+        if (cancelled) return
+
+        console.error('CHECKOUT_LOAD_ERROR:', extractErrorDetails(err))
+        setError(getCheckoutErrorMessage(err))
       } finally {
-        setLoading(false)
+        if (!cancelled) setLoading(false)
       }
     }
 
     void fetchData()
+
+    return () => {
+      cancelled = true
+    }
   }, [session])
 
   const handleSubmit = async () => {
-    if (!session) return
+    if (!session || submitting) return
 
     const client = supabase
     if (!client) {
@@ -111,59 +225,60 @@ export function CheckoutPage() {
         .select('id')
         .eq('user_id', session.user.id)
         .eq('status', 'open')
-        .single()
+        .maybeSingle()
 
-      if (cartError || !cart) throw cartError ?? new Error('لا توجد سلة نشطة')
+      if (cartError) throw cartError
+      if (!cart) throw new Error('لا توجد سلة نشطة')
 
-      const { data: cartItems, error: itemsError } = await client
+      const { count: itemCount, error: countError } = await client
         .from('cart_items')
-        .select(`
-          id,
-          quantity,
-          unit_price,
-          size:product_sizes(price_adjustment),
-          cart_item_addons(addon_option:addon_options(price))
-        `)
+        .select('id', { count: 'exact', head: true })
         .eq('cart_id', cart.id)
 
-      if (itemsError) throw itemsError
+      if (countError) throw countError
+      if (!itemCount) throw new Error('السلة فارغة')
 
-      let calculatedTotal = 0
-      for (const item of cartItems ?? []) {
-        let itemTotal = item.unit_price * item.quantity
-        for (const addon of item.cart_item_addons ?? []) {
-          itemTotal += (addon.addon_option?.price ?? 0) * item.quantity
-        }
-        calculatedTotal += itemTotal
-      }
-
-      if (calculatedTotal <= 0) {
-        throw new Error('السلة فارغة')
-      }
-
-      const { data: orderId, error: orderError } = await client.rpc('create_order_from_cart', {
+      const rpcArguments = {
         p_cart_id: cart.id,
         p_branch_id: selectedBranch,
         p_fulfillment_type: fulfillmentType,
         p_car_id: fulfillmentType === 'car_delivery' ? selectedCar : null,
-        p_customer_notes: notes || null,
+        p_customer_notes: notes.trim() || null,
         p_payment_method: 'pay_at_branch',
-      })
+      }
 
-      if (orderError) throw orderError
-      if (!orderId) throw new Error('لم يتم إرجاع رقم الطلب')
+      const { data: orderResult, error: orderError } = await client.rpc(
+        'create_order_from_cart',
+        rpcArguments,
+      )
+
+      if (orderError) {
+        console.error('CREATE_ORDER_RPC_ERROR:', {
+          ...extractErrorDetails(orderError),
+          arguments: rpcArguments,
+        })
+        throw orderError
+      }
+
+      const orderId = typeof orderResult === 'string' ? orderResult : null
+      if (!orderId) {
+        console.error('CREATE_ORDER_INVALID_RESULT:', orderResult)
+        throw new Error('لم يتم إرجاع رقم الطلب من قاعدة البيانات')
+      }
 
       setSuccess('تم إنشاء الطلب بنجاح!')
-      window.setTimeout(() => navigate(`/orders/${orderId}`), 1500)
-    } catch (err) {
-      console.error(err)
-      setError('تعذر إنشاء الطلب')
+      window.setTimeout(() => navigate(`/orders/${orderId}`), 1200)
+    } catch (err: unknown) {
+      console.error('CHECKOUT_SUBMIT_ERROR:', extractErrorDetails(err))
+      setError(getCheckoutErrorMessage(err))
     } finally {
       setSubmitting(false)
     }
   }
 
   if (loading) return <PageLoader label="جاري التحميل..." />
+
+  const carSelectionMissing = fulfillmentType === 'car_delivery' && !selectedCar
 
   return (
     <main className="min-h-screen bg-vibes-pattern px-4 py-6 pb-20">
@@ -181,41 +296,63 @@ export function CheckoutPage() {
         <div className="mt-4 space-y-6">
           <div className="rounded-2xl bg-white p-6 shadow-sm">
             <h2 className="font-bold text-vibes-900">الفرع</h2>
-            <div className="mt-3 space-y-2">
-              {branches.map((branch) => (
-                <button
-                  key={branch.id}
-                  onClick={() => setSelectedBranch(branch.id)}
-                  className={`flex w-full items-center gap-3 rounded-xl p-3 transition ${
-                    selectedBranch === branch.id ? 'border border-vibes-600 bg-vibes-100' : 'bg-vibes-50'
-                  }`}
-                >
-                  <MapPin className="size-5 text-vibes-700" />
-                  <div className="text-right">
-                    <p className="font-bold text-vibes-900">{branch.name}</p>
-                    <p className="text-sm text-vibes-600">{branch.address ?? ''}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
+
+            {branches.length === 0 ? (
+              <p className="mt-3 rounded-xl bg-vibes-50 p-4 text-center text-sm text-vibes-600">
+                ما فيه فروع تستقبل الطلبات حالياً.
+              </p>
+            ) : (
+              <div className="mt-3 space-y-2">
+                {branches.map((branch) => (
+                  <button
+                    key={branch.id}
+                    type="button"
+                    onClick={() => setSelectedBranch(branch.id)}
+                    disabled={submitting}
+                    className={`flex w-full items-center gap-3 rounded-xl p-3 transition disabled:opacity-60 ${
+                      selectedBranch === branch.id
+                        ? 'border border-vibes-600 bg-vibes-100'
+                        : 'bg-vibes-50'
+                    }`}
+                  >
+                    <MapPin className="size-5 shrink-0 text-vibes-700" />
+                    <div className="min-w-0 text-right">
+                      <p className="font-bold text-vibes-900">{branch.name}</p>
+                      {branch.address && (
+                        <p className="truncate text-sm text-vibes-600">{branch.address}</p>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="rounded-2xl bg-white p-6 shadow-sm">
             <h2 className="font-bold text-vibes-900">طريقة الاستلام</h2>
             <div className="mt-3 flex gap-3">
               <button
+                type="button"
                 onClick={() => setFulfillmentType('pickup')}
-                className={`flex-1 rounded-xl p-3 text-center transition ${
-                  fulfillmentType === 'pickup' ? 'bg-vibes-800 text-white' : 'bg-vibes-100 text-vibes-700'
+                disabled={submitting}
+                className={`flex-1 rounded-xl p-3 text-center transition disabled:opacity-60 ${
+                  fulfillmentType === 'pickup'
+                    ? 'bg-vibes-800 text-white'
+                    : 'bg-vibes-100 text-vibes-700'
                 }`}
               >
                 <span className="block text-lg">🏬</span>
                 <span className="text-sm font-bold">استلام من الفرع</span>
               </button>
+
               <button
+                type="button"
                 onClick={() => setFulfillmentType('car_delivery')}
-                className={`flex-1 rounded-xl p-3 text-center transition ${
-                  fulfillmentType === 'car_delivery' ? 'bg-vibes-800 text-white' : 'bg-vibes-100 text-vibes-700'
+                disabled={submitting}
+                className={`flex-1 rounded-xl p-3 text-center transition disabled:opacity-60 ${
+                  fulfillmentType === 'car_delivery'
+                    ? 'bg-vibes-800 text-white'
+                    : 'bg-vibes-100 text-vibes-700'
                 }`}
               >
                 <span className="block text-lg">🚗</span>
@@ -227,10 +364,14 @@ export function CheckoutPage() {
           {fulfillmentType === 'car_delivery' && (
             <div className="rounded-2xl bg-white p-6 shadow-sm">
               <h2 className="font-bold text-vibes-900">سيارتي</h2>
+
               {cars.length === 0 ? (
                 <div className="mt-3 text-center">
                   <p className="text-sm text-vibes-600">لا توجد سيارات مسجلة</p>
-                  <Link to="/cars" className="mt-2 inline-block text-sm font-bold text-vibes-700 underline">
+                  <Link
+                    to="/cars"
+                    className="mt-2 inline-block text-sm font-bold text-vibes-700 underline"
+                  >
                     أضف سيارة
                   </Link>
                 </div>
@@ -239,19 +380,34 @@ export function CheckoutPage() {
                   {cars.map((car) => (
                     <button
                       key={car.id}
+                      type="button"
                       onClick={() => setSelectedCar(car.id)}
-                      className={`flex w-full items-center gap-3 rounded-xl p-3 transition ${
-                        selectedCar === car.id ? 'border border-vibes-600 bg-vibes-100' : 'bg-vibes-50'
+                      disabled={submitting}
+                      className={`flex w-full items-center gap-3 rounded-xl p-3 transition disabled:opacity-60 ${
+                        selectedCar === car.id
+                          ? 'border border-vibes-600 bg-vibes-100'
+                          : 'bg-vibes-50'
                       }`}
                     >
-                      <Car className="size-5 text-vibes-700" />
-                      <div className="text-right">
-                        <p className="font-bold text-vibes-900">{car.name}</p>
-                        <p className="text-sm text-vibes-600">{car.plate_number ?? ''}</p>
+                      <Car className="size-5 shrink-0 text-vibes-700" />
+                      <div className="min-w-0 text-right">
+                        <p className="font-bold text-vibes-900">
+                          {car.name}
+                          {car.is_default && (
+                            <span className="mr-2 text-xs font-medium text-vibes-600">الافتراضية</span>
+                          )}
+                        </p>
+                        {car.plate_number && (
+                          <p className="text-sm text-vibes-600">{car.plate_number}</p>
+                        )}
                       </div>
                     </button>
                   ))}
-                  <Link to="/cars" className="mt-2 inline-block text-sm font-bold text-vibes-700 underline">
+
+                  <Link
+                    to="/cars"
+                    className="mt-2 inline-block text-sm font-bold text-vibes-700 underline"
+                  >
                     إدارة السيارات
                   </Link>
                 </div>
@@ -265,15 +421,19 @@ export function CheckoutPage() {
               value={notes}
               onChange={(event) => setNotes(event.target.value)}
               placeholder="أي ملاحظات إضافية ..."
-              className="mt-3 w-full rounded-xl border border-vibes-200 p-3 text-sm focus:border-vibes-600 focus:outline-none"
+              className="mt-3 w-full resize-y rounded-xl border border-vibes-200 p-3 text-sm focus:border-vibes-600 focus:outline-none disabled:opacity-60"
               rows={3}
+              maxLength={500}
+              disabled={submitting}
             />
+            <p className="mt-1 text-left text-xs text-vibes-500">{notes.length}/500</p>
           </div>
 
           <button
+            type="button"
             onClick={() => void handleSubmit()}
-            disabled={submitting || !selectedBranch}
-            className="w-full rounded-2xl bg-vibes-800 py-4 text-lg font-black text-white transition hover:bg-vibes-700 disabled:opacity-50"
+            disabled={submitting || !selectedBranch || carSelectionMissing}
+            className="w-full rounded-2xl bg-vibes-800 py-4 text-lg font-black text-white transition hover:bg-vibes-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {submitting ? 'جاري إنشاء الطلب...' : 'تأكيد الطلب'}
           </button>
