@@ -614,7 +614,7 @@ export interface Database {
           points_balance: number
           lifetime_points: number
           tier: 'bronze' | 'silver' | 'gold' | 'platinum'
-          active_cups: number  // <-- أضيف هذا العمود
+          active_cups: number  // تمت إضافته
           created_at: string
           updated_at: string
         }
@@ -624,7 +624,7 @@ export interface Database {
           points_balance?: number
           lifetime_points?: number
           tier?: 'bronze' | 'silver' | 'gold' | 'platinum'
-          active_cups?: number  // <-- أضيف هذا العمود
+          active_cups?: number
           created_at?: string
           updated_at?: string
         }
@@ -632,7 +632,7 @@ export interface Database {
           points_balance?: number
           lifetime_points?: number
           tier?: 'bronze' | 'silver' | 'gold' | 'platinum'
-          active_cups?: number  // <-- أضيف هذا العمود
+          active_cups?: number
           updated_at?: string
         }
         Relationships: [{ foreignKeyName: 'loyalty_accounts_user_id_fkey', columns: ['user_id'], referencedRelation: 'users', referencedColumns: ['id'] }]
@@ -640,7 +640,7 @@ export interface Database {
       loyalty_settings: {
         Row: {
           id: number
-          cups_required: number          // موجود بالفعل
+          cups_required: number
           minimum_order_amount: number
           reward_type: string
           reward_expiry_days: number | null
@@ -669,23 +669,433 @@ export interface Database {
         }
         Relationships: [{ foreignKeyName: 'loyalty_settings_updated_by_fkey', columns: ['updated_by'], referencedRelation: 'profiles', referencedColumns: ['id'] }]
       }
-      // باقي الجداول كما هي ...
-      loyalty_cups: { /* ... */ },
-      loyalty_rewards: { /* ... */ },
-      loyalty_reward_cups: { /* ... */ },
-      loyalty_transactions: { /* ... */ },
-      card_backgrounds: { /* ... */ },
-      card_stickers: { /* ... */ },
-      customer_card_designs: { /* ... */ },
-      stickers_library: { /* ... */ },
-      customer_achievements: { /* ... */ },
-      customer_stickers: { /* ... */ },
-      loyalty_card_designs: { /* ... */ },
-      notifications: { /* ... */ }
+      loyalty_cups: {
+        Row: {
+          id: string
+          customer_id: string
+          order_id: string | null
+          status: 'active' | 'redeemed' | 'revoked'
+          source: 'order' | 'manual_adjustment' | 'promotion' | 'compensation'
+          order_amount: number | null
+          created_at: string
+          redeemed_at: string | null
+          revoked_at: string | null
+          revoked_reason: string | null
+          metadata: Json
+        }
+        Insert: {
+          id?: string
+          customer_id: string
+          order_id?: string | null
+          status?: 'active' | 'redeemed' | 'revoked'
+          source?: 'order' | 'manual_adjustment' | 'promotion' | 'compensation'
+          order_amount?: number | null
+          created_at?: string
+          redeemed_at?: string | null
+          revoked_at?: string | null
+          revoked_reason?: string | null
+          metadata?: Json
+        }
+        Update: {
+          status?: 'active' | 'redeemed' | 'revoked'
+          redeemed_at?: string | null
+          revoked_at?: string | null
+          revoked_reason?: string | null
+          metadata?: Json
+        }
+        Relationships: [{ foreignKeyName: 'loyalty_cups_customer_id_fkey', columns: ['customer_id'], referencedRelation: 'profiles', referencedColumns: ['id'] }]
+      }
+      loyalty_rewards: {
+        Row: {
+          id: string
+          customer_id: string
+          reward_code: string
+          reward_type: string
+          discount_value: number | null
+          status: 'active' | 'used' | 'expired' | 'cancelled'
+          created_at: string
+          expires_at: string | null
+          used_at: string | null
+          used_order_id: string | null
+          metadata: Json
+        }
+        Insert: {
+          id?: string
+          customer_id: string
+          reward_code: string
+          reward_type?: string
+          discount_value?: number | null
+          status?: 'active' | 'used' | 'expired' | 'cancelled'
+          created_at?: string
+          expires_at?: string | null
+          used_at?: string | null
+          used_order_id?: string | null
+          metadata?: Json
+        }
+        Update: {
+          status?: 'active' | 'used' | 'expired' | 'cancelled'
+          expires_at?: string | null
+          used_at?: string | null
+          used_order_id?: string | null
+          metadata?: Json
+        }
+        Relationships: [{ foreignKeyName: 'loyalty_rewards_customer_id_fkey', columns: ['customer_id'], referencedRelation: 'profiles', referencedColumns: ['id'] }]
+      }
+      loyalty_reward_cups: {
+        Row: {
+          id: string
+          reward_id: string
+          cup_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          reward_id: string
+          cup_id: string
+          created_at?: string
+        }
+        Update: never
+        Relationships: [
+          { foreignKeyName: 'loyalty_reward_cups_reward_id_fkey', columns: ['reward_id'], referencedRelation: 'loyalty_rewards', referencedColumns: ['id'] },
+          { foreignKeyName: 'loyalty_reward_cups_cup_id_fkey', columns: ['cup_id'], referencedRelation: 'loyalty_cups', referencedColumns: ['id'] }
+        ]
+      }
+      loyalty_transactions: {
+        Row: {
+          id: string
+          customer_id: string
+          transaction_type: 'cup_granted' | 'cup_redeemed' | 'cup_revoked' | 'reward_created' | 'reward_used' | 'reward_expired' | 'manual_adjustment'
+          cup_id: string | null
+          reward_id: string | null
+          order_id: string | null
+          description: string | null
+          created_by: string | null
+          created_at: string
+          metadata: Json
+        }
+        Insert: {
+          id?: string
+          customer_id: string
+          transaction_type: 'cup_granted' | 'cup_redeemed' | 'cup_revoked' | 'reward_created' | 'reward_used' | 'reward_expired' | 'manual_adjustment'
+          cup_id?: string | null
+          reward_id?: string | null
+          order_id?: string | null
+          description?: string | null
+          created_by?: string | null
+          created_at?: string
+          metadata?: Json
+        }
+        Update: never
+        Relationships: [
+          { foreignKeyName: 'loyalty_transactions_customer_id_fkey', columns: ['customer_id'], referencedRelation: 'profiles', referencedColumns: ['id'] },
+          { foreignKeyName: 'loyalty_transactions_cup_id_fkey', columns: ['cup_id'], referencedRelation: 'loyalty_cups', referencedColumns: ['id'] },
+          { foreignKeyName: 'loyalty_transactions_reward_id_fkey', columns: ['reward_id'], referencedRelation: 'loyalty_rewards', referencedColumns: ['id'] },
+          { foreignKeyName: 'loyalty_transactions_created_by_fkey', columns: ['created_by'], referencedRelation: 'profiles', referencedColumns: ['id'] }
+        ]
+      }
+      card_backgrounds: {
+        Row: {
+          id: string
+          name: string
+          image_url: string
+          is_active: boolean
+          sort_order: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          image_url: string
+          is_active?: boolean
+          sort_order?: number
+          created_at?: string
+        }
+        Update: {
+          name?: string
+          image_url?: string
+          is_active?: boolean
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      card_stickers: {
+        Row: {
+          id: string
+          name: string
+          image_url: string
+          category: string | null
+          is_active: boolean
+          sort_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          image_url: string
+          category?: string | null
+          is_active?: boolean
+          sort_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          name?: string
+          image_url?: string
+          category?: string | null
+          is_active?: boolean
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      customer_card_designs: {
+        Row: {
+          id: string
+          user_id: string
+          background_id: string | null
+          design_data: Json
+          preview_image_url: string | null
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          background_id?: string | null
+          design_data?: Json
+          preview_image_url?: string | null
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          background_id?: string | null
+          design_data?: Json
+          preview_image_url?: string | null
+          is_active?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          { foreignKeyName: 'customer_card_designs_user_id_fkey', columns: ['user_id'], referencedRelation: 'users', referencedColumns: ['id'] },
+          { foreignKeyName: 'customer_card_designs_background_id_fkey', columns: ['background_id'], referencedRelation: 'card_backgrounds', referencedColumns: ['id'] }
+        ]
+      }
+      stickers_library: {
+        Row: {
+          id: string
+          name: string
+          image_url: string
+          storage_path: string | null
+          category: string | null
+          is_active: boolean
+          is_vip_only: boolean
+          required_achievement_id: string | null
+          sort_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          image_url: string
+          storage_path?: string | null
+          category?: string | null
+          is_active?: boolean
+          is_vip_only?: boolean
+          required_achievement_id?: string | null
+          sort_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          name?: string
+          image_url?: string
+          storage_path?: string | null
+          category?: string | null
+          is_active?: boolean
+          is_vip_only?: boolean
+          required_achievement_id?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      customer_achievements: {
+        Row: {
+          id: string
+          customer_id: string
+          achievement_id: string
+          unlocked_at: string
+          metadata: Json
+        }
+        Insert: {
+          id?: string
+          customer_id: string
+          achievement_id: string
+          unlocked_at?: string
+          metadata?: Json
+        }
+        Update: {
+          metadata?: Json
+        }
+        Relationships: [{ foreignKeyName: 'customer_achievements_customer_id_fkey', columns: ['customer_id'], referencedRelation: 'profiles', referencedColumns: ['id'] }]
+      }
+      customer_stickers: {
+        Row: {
+          id: string
+          customer_id: string
+          image_url: string
+          storage_path: string
+          original_file_name: string | null
+          file_size: number | null
+          mime_type: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          customer_id: string
+          image_url: string
+          storage_path: string
+          original_file_name?: string | null
+          file_size?: number | null
+          mime_type?: string | null
+          created_at?: string
+        }
+        Update: never
+        Relationships: [{ foreignKeyName: 'customer_stickers_customer_id_fkey', columns: ['customer_id'], referencedRelation: 'profiles', referencedColumns: ['id'] }]
+      }
+      loyalty_card_designs: {
+        Row: {
+          id: string
+          customer_id: string
+          design_name: string
+          design_data: Json
+          design_version: number
+          preview_image_url: string | null
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          customer_id: string
+          design_name: string
+          design_data: Json
+          design_version?: number
+          preview_image_url?: string | null
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          design_name?: string
+          design_data?: Json
+          design_version?: number
+          preview_image_url?: string | null
+          is_active?: boolean
+          updated_at?: string
+        }
+        Relationships: [{ foreignKeyName: 'loyalty_card_designs_customer_id_fkey', columns: ['customer_id'], referencedRelation: 'profiles', referencedColumns: ['id'] }]
+      }
+      notifications: {
+        Row: {
+          id: string
+          user_id: string
+          title: string
+          message: string | null
+          type: string
+          entity_type: string | null
+          entity_id: string | null
+          is_read: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          title: string
+          message?: string | null
+          type?: string
+          entity_type?: string | null
+          entity_id?: string | null
+          is_read?: boolean
+          created_at?: string
+        }
+        Update: {
+          is_read?: boolean
+        }
+        Relationships: [{ foreignKeyName: 'notifications_user_id_fkey', columns: ['user_id'], referencedRelation: 'users', referencedColumns: ['id'] }]
+      }
     }
     Views: {}
-    Functions: { /* ... */ }
-    Enums: { app_role: AppRole }
+    Functions: {
+      has_role: {
+        Args: { requested_role: AppRole }
+        Returns: boolean
+      }
+      update_my_profile: {
+        Args: {
+          p_name: string | null
+          p_avatar_url: string | null
+          p_marketing_consent: boolean
+        }
+        Returns: Database['public']['Tables']['profiles']['Row']
+      }
+      redeem_reward: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      grant_cup: {
+        Args: {
+          p_customer_id: string
+          p_order_id: string | null
+          p_order_amount?: number | null
+          p_source?: 'order' | 'manual_adjustment' | 'promotion' | 'compensation'
+          p_metadata?: Json
+        }
+        Returns: Json
+      }
+      revoke_cup: {
+        Args: {
+          p_cup_id: string
+          p_reason: string
+        }
+        Returns: Json
+      }
+      use_reward: {
+        Args: {
+          p_reward_code: string
+          p_customer_id: string
+          p_order_id?: string | null
+        }
+        Returns: Json
+      }
+      save_loyalty_card_design: {
+        Args: {
+          p_design_id: string | null
+          p_design_name: string
+          p_design_data: Json
+          p_preview_image_url?: string | null
+          p_activate?: boolean
+        }
+        Returns: Database['public']['Tables']['loyalty_card_designs']['Row']
+      }
+      create_order_from_cart: {
+        Args: {
+          p_cart_id: string
+          p_branch_id: string
+          p_fulfillment_type: 'pickup' | 'car_delivery' | 'dine_in'
+          p_car_id?: string | null
+          p_customer_notes?: string | null
+          p_payment_method?: string
+        }
+        Returns: string
+      }
+    }
+    Enums: {
+      app_role: AppRole
+    }
   }
 }
 
@@ -696,4 +1106,3 @@ export type Product = Database['public']['Tables']['products']['Row']
 export type Order = Database['public']['Tables']['orders']['Row']
 export type Cart = Database['public']['Tables']['carts']['Row']
 export type CustomerCar = Database['public']['Tables']['customer_cars']['Row']
-// يمكن إضافة أنواع أخرى حسب الحاجة
