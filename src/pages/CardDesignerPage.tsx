@@ -6,7 +6,7 @@ import { supabase } from '../lib/supabase'
 import { useAuth } from '../features/auth/useAuth'
 import { PageLoader } from '../components/PageLoader'
 import { Alert } from '../components/Alert'
-import * as fabric from 'fabric'
+import { Canvas, Image as FabricImage, loadImage } from 'fabric'
 import type { Json } from '../types/database'
 
 interface Sticker {
@@ -28,7 +28,6 @@ interface PlacedSticker {
   rotation: number
 }
 
-// دوال مساعدة للتحويل من Json إلى PlacedSticker[]
 function parsePlacedSticker(value: Json): PlacedSticker | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null
   const obj = value as Record<string, unknown>
@@ -66,7 +65,7 @@ function toDesignJson(stickers: PlacedSticker[]): Json {
 export function CardDesignerPage() {
   const { session } = useAuth()
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas | null>(null)
+  const [fabricCanvas, setFabricCanvas] = useState<Canvas | null>(null)
   const [backgrounds, setBackgrounds] = useState<Background[]>([])
   const [stickers, setStickers] = useState<Sticker[]>([])
   const [selectedBackground, setSelectedBackground] = useState<string | null>(null)
@@ -122,7 +121,7 @@ export function CardDesignerPage() {
   // تهيئة Fabric Canvas
   useEffect(() => {
     if (loading || !canvasRef.current) return
-    const canvas = new fabric.Canvas(canvasRef.current, {
+    const canvas = new Canvas(canvasRef.current, {
       width: 400,
       height: 640,
       backgroundColor: '#ffffff',
@@ -147,21 +146,21 @@ export function CardDesignerPage() {
       if (selectedBackground) {
         const bg = backgrounds.find(b => b.id === selectedBackground)
         if (bg) {
-          fabric.Image.fromURL(bg.image_url, (img: fabric.Image) => {
-            img.set({
+          try {
+            const img = await loadImage(bg.image_url, { crossOrigin: 'anonymous' })
+            const fabricImg = new FabricImage(img, {
               left: 0,
               top: 0,
-              width: 400,
-              height: 640,
-              scaleX: 400 / (img.width || 400),
-              scaleY: 640 / (img.height || 640),
+              scaleX: 400 / img.width,
+              scaleY: 640 / img.height,
               selectable: false,
               evented: false,
             })
-            fabricCanvas.add(img)
-            fabricCanvas.sendToBack(img)
+            fabricCanvas.add(fabricImg)
             fabricCanvas.renderAll()
-          }, { crossOrigin: 'anonymous' })
+          } catch (e) {
+            console.warn('Failed to load background', e)
+          }
         }
       }
 
@@ -169,24 +168,24 @@ export function CardDesignerPage() {
       for (const ps of placedStickers) {
         const stickerData = stickers.find(s => s.id === ps.id)
         if (!stickerData) continue
-        await new Promise<void>((resolve) => {
-          fabric.Image.fromURL(stickerData.image_url, (img: fabric.Image) => {
-            img.set({
-              left: ps.x - 30 * ps.scale,
-              top: ps.y - 30 * ps.scale,
-              scaleX: ps.scale,
-              scaleY: ps.scale,
-              angle: ps.rotation,
-              originX: 'center',
-              originY: 'center',
-              selectable: true,
-              hasControls: true,
-              hasBorders: true,
-            })
-            fabricCanvas.add(img)
-            resolve()
-          }, { crossOrigin: 'anonymous' })
-        })
+        try {
+          const img = await loadImage(stickerData.image_url, { crossOrigin: 'anonymous' })
+          const fabricImg = new FabricImage(img, {
+            left: ps.x - 30 * ps.scale,
+            top: ps.y - 30 * ps.scale,
+            scaleX: ps.scale,
+            scaleY: ps.scale,
+            angle: ps.rotation,
+            originX: 'center',
+            originY: 'center',
+            selectable: true,
+            hasControls: true,
+            hasBorders: true,
+          })
+          fabricCanvas.add(fabricImg)
+        } catch (e) {
+          console.warn('Failed to load sticker', e)
+        }
       }
       fabricCanvas.renderAll()
     }
@@ -200,23 +199,28 @@ export function CardDesignerPage() {
     const sticker = stickers.find(s => s.id === stickerId)
     if (!sticker) return
 
-    fabric.Image.fromURL(sticker.image_url, (img: fabric.Image) => {
-      img.set({
-        left: 200,
-        top: 320,
-        scaleX: 0.5,
-        scaleY: 0.5,
-        angle: 0,
-        originX: 'center',
-        originY: 'center',
-        selectable: true,
-        hasControls: true,
-        hasBorders: true,
+    loadImage(sticker.image_url, { crossOrigin: 'anonymous' })
+      .then(img => {
+        const fabricImg = new FabricImage(img, {
+          left: 200,
+          top: 320,
+          scaleX: 0.5,
+          scaleY: 0.5,
+          angle: 0,
+          originX: 'center',
+          originY: 'center',
+          selectable: true,
+          hasControls: true,
+          hasBorders: true,
+        })
+        fabricCanvas.add(fabricImg)
+        fabricCanvas.setActiveObject(fabricImg)
+        fabricCanvas.renderAll()
       })
-      fabricCanvas.add(img)
-      fabricCanvas.setActiveObject(img)
-      fabricCanvas.renderAll()
-    }, { crossOrigin: 'anonymous' })
+      .catch(err => {
+        console.warn('Failed to add sticker', err)
+        setError('تعذر تحميل الملصق')
+      })
   }
 
   // حذف العنصر المحدد
@@ -242,6 +246,12 @@ export function CardDesignerPage() {
   // حفظ التصميم (جمع مواقع الملصقات من الكانفاس)
   const saveDesign = async () => {
     if (!fabricCanvas || !userId) return
+    const client = supabase
+    if (!client) {
+      setError('خدمة قاعدة البيانات غير مفعلة')
+      return
+    }
+
     setSaving(true)
     setError(null)
     setSuccess(null)
@@ -251,7 +261,11 @@ export function CardDesignerPage() {
       const stickersData: PlacedSticker[] = []
       for (const obj of objects) {
         if (!obj.selectable) continue
-        const src = (obj as fabric.Image).getSrc?.() || ''
+        // نحاول الحصول على مصدر الصورة
+        let src = ''
+        if (obj instanceof FabricImage) {
+          src = obj.getSrc() || ''
+        }
         const sticker = stickers.find(s => s.image_url === src)
         if (!sticker) continue
         const center = obj.getCenterPoint()
@@ -266,7 +280,7 @@ export function CardDesignerPage() {
 
       const designJson = toDesignJson(stickersData)
 
-      const { data: existing, error: checkErr } = await supabase
+      const { data: existing, error: checkErr } = await client
         .from('customer_card_designs')
         .select('id')
         .eq('user_id', userId)
@@ -276,7 +290,7 @@ export function CardDesignerPage() {
       if (checkErr) throw checkErr
 
       if (existing) {
-        const { error: updateErr } = await supabase
+        const { error: updateErr } = await client
           .from('customer_card_designs')
           .update({
             background_id: selectedBackground,
@@ -285,7 +299,7 @@ export function CardDesignerPage() {
           .eq('id', existing.id)
         if (updateErr) throw updateErr
       } else {
-        const { error: insertErr } = await supabase
+        const { error: insertErr } = await client
           .from('customer_card_designs')
           .insert({
             user_id: userId,
