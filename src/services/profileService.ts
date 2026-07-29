@@ -1,7 +1,10 @@
 import { supabase } from '../lib/supabase'
 import type { Profile } from '../types/database'
 
-function normalizeProfile(value: Partial<Profile> | null | undefined, fallbackId = ''): Profile {
+function normalizeProfile(
+  value: Partial<Profile> | null | undefined,
+  fallbackId = '',
+): Profile {
   const now = new Date().toISOString()
 
   return {
@@ -9,6 +12,8 @@ function normalizeProfile(value: Partial<Profile> | null | undefined, fallbackId
     phone: typeof value?.phone === 'string' ? value.phone : null,
     membership_number:
       typeof value?.membership_number === 'string' ? value.membership_number : '',
+    membership_qr_token:
+      typeof value?.membership_qr_token === 'string' ? value.membership_qr_token : '',
     name: typeof value?.name === 'string' ? value.name : null,
     avatar_url: typeof value?.avatar_url === 'string' ? value.avatar_url : null,
     preferred_branch_id:
@@ -23,11 +28,18 @@ function normalizeProfile(value: Partial<Profile> | null | undefined, fallbackId
   }
 }
 
-export async function getMyProfile(userId: string): Promise<Profile> {
-  if (!supabase) throw new Error('Supabase is not configured')
+function unwrapProfileResult(value: unknown): Partial<Profile> | null {
+  if (Array.isArray(value)) {
+    const first = value[0]
+    return first && typeof first === 'object' ? (first as Partial<Profile>) : null
+  }
 
-  // select('*') keeps the client compatible with older profile schemas while
-  // the runtime repair migration adds any missing columns.
+  return value && typeof value === 'object' ? (value as Partial<Profile>) : null
+}
+
+export async function getMyProfile(userId: string): Promise<Profile> {
+  if (!supabase) throw new Error('خدمة Supabase غير مفعلة')
+
   const { data, error } = await supabase
     .from('profiles')
     .select('*')
@@ -35,7 +47,7 @@ export async function getMyProfile(userId: string): Promise<Profile> {
     .maybeSingle()
 
   if (error) throw error
-  if (!data) throw new Error('Profile not found')
+  if (!data) throw new Error('الملف الشخصي غير موجود')
 
   return normalizeProfile(data, userId)
 }
@@ -45,7 +57,7 @@ export async function updateMyProfile(input: {
   avatarPath: string | null
   marketingConsent: boolean
 }): Promise<Profile> {
-  if (!supabase) throw new Error('Supabase is not configured')
+  if (!supabase) throw new Error('خدمة Supabase غير مفعلة')
 
   const { data, error } = await supabase.rpc('update_my_profile', {
     p_name: input.name,
@@ -54,14 +66,15 @@ export async function updateMyProfile(input: {
   })
 
   if (error) throw error
-  return normalizeProfile(data)
+
+  const profile = unwrapProfileResult(data)
+  if (!profile) throw new Error('لم ترجع دالة تحديث الحساب بيانات صالحة')
+
+  return normalizeProfile(profile)
 }
 
-export async function uploadAvatar(
-  userId: string,
-  file: File
-): Promise<string> {
-  if (!supabase) throw new Error('Supabase is not configured')
+export async function uploadAvatar(userId: string, file: File): Promise<string> {
+  if (!supabase) throw new Error('خدمة Supabase غير مفعلة')
 
   const allowedTypes = ['image/png', 'image/jpeg', 'image/webp']
 
@@ -82,37 +95,29 @@ export async function uploadAvatar(
   const extension = extensionByMime[file.type]
   const path = `${userId}/${crypto.randomUUID()}.${extension}`
 
-  const { error } = await supabase.storage
-    .from('avatars')
-    .upload(path, file, {
-      upsert: false,
-      contentType: file.type,
-      cacheControl: '3600',
-    })
+  const { error } = await supabase.storage.from('avatars').upload(path, file, {
+    upsert: false,
+    contentType: file.type,
+    cacheControl: '3600',
+  })
 
   if (error) throw error
   return path
 }
 
-export async function getAvatarSignedUrl(
-  path: string | null
-): Promise<string | null> {
+export async function getAvatarSignedUrl(path: string | null): Promise<string | null> {
   if (!supabase || !path) return null
 
-  const { data, error } = await supabase.storage
-    .from('avatars')
-    .createSignedUrl(path, 60 * 60)
+  const { data, error } = await supabase.storage.from('avatars').createSignedUrl(path, 60 * 60)
 
   if (error) return null
   return data.signedUrl
 }
 
 export async function removeAvatar(path: string): Promise<void> {
-  if (!supabase) throw new Error('Supabase is not configured')
+  if (!supabase) throw new Error('خدمة Supabase غير مفعلة')
 
-  const { error } = await supabase.storage
-    .from('avatars')
-    .remove([path])
+  const { error } = await supabase.storage.from('avatars').remove([path])
 
   if (error) throw error
 }
