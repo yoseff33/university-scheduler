@@ -670,11 +670,14 @@ export function CardDesignerPage() {
 
         if (signedError) throw signedError
 
-        signedUrlByPath = new Map(
-          (signedData ?? [])
-            .filter((item) => item.signedUrl)
-            .map((item) => [item.path, item.signedUrl as string]),
-        )
+        // Fix: ensure the map keys are always strings (path cannot be null)
+        const signedItems = (signedData ?? [])
+          .filter((item): item is { path: string; signedUrl: string } =>
+            Boolean(item.signedUrl) && Boolean(item.path)
+          )
+          .map((item) => [item.path, item.signedUrl] as [string, string])
+
+        signedUrlByPath = new Map(signedItems)
       }
 
       const backgroundsData = backgroundsResult.data ?? []
