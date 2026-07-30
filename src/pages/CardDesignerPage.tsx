@@ -36,6 +36,7 @@ import {
   X,
   Zap,
   Contrast,
+  LayoutGrid,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../features/auth/useAuth';
@@ -54,9 +55,23 @@ const MIN_OBJECT_SIZE = 48;
 const MAX_OBJECT_SIZE = 420;
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const MAX_CUSTOMER_STICKERS = 50;
-const ALLOWED_IMAGE_TYPES = ['image/png']; // PNG فقط
+const ALLOWED_IMAGE_TYPES = ['image/png'];
 
 type StickerSourceType = 'official' | 'customer';
+
+// ============================================================
+//  خلفيات تدرجية فاخرة (Gradient Presets)
+// ============================================================
+const GRADIENT_PRESETS = [
+  { id: 'gradient-1', name: 'ذهبي فخم', gradient: 'linear-gradient(135deg, #c9a84c, #f7e5a8, #c9a84c)' },
+  { id: 'gradient-2', name: 'أزرق ليلي', gradient: 'linear-gradient(135deg, #0a1628, #1a3a5c, #0a1628)' },
+  { id: 'gradient-3', name: 'وردي ناعم', gradient: 'linear-gradient(135deg, #fbc2eb, #a6c1ee)' },
+  { id: 'gradient-4', name: 'أخضر زمردي', gradient: 'linear-gradient(135deg, #11998e, #38ef7d)' },
+  { id: 'gradient-5', name: 'بنفسجي ملكي', gradient: 'linear-gradient(135deg, #8e2de2, #4a00e0)' },
+  { id: 'gradient-6', name: 'برتقالي غروب', gradient: 'linear-gradient(135deg, #f12711, #f5af19)' },
+  { id: 'gradient-7', name: 'أبيض أنيق', gradient: 'linear-gradient(135deg, #f5f7fa, #c3cfe2)' },
+  { id: 'gradient-8', name: 'أحمر فخم', gradient: 'linear-gradient(135deg, #870000, #190a05)' },
+];
 
 interface CardProfile {
   name: string | null;
@@ -68,6 +83,8 @@ interface Background {
   id: string;
   name: string;
   image_url: string;
+  is_gradient?: boolean;
+  gradient?: string;
 }
 
 interface OfficialSticker {
@@ -144,7 +161,7 @@ type StickerObject = FabricImage & {
 };
 
 // ============================================================
-//  المناطق المحمية (بيانات البطاقة و QR)
+//  المناطق المحمية
 // ============================================================
 const PROTECTED_ZONES: ProtectedZone[] = [
   { id: 'brand', x: 610, y: 34, width: 360, height: 125 },
@@ -326,6 +343,18 @@ export function CardDesignerPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [showRemoveBgModal, setShowRemoveBgModal] = useState(false);
 
+  // ===== دمج التدرجات مع الخلفيات =====
+  const allBackgrounds = useMemo(() => {
+    const gradientBg: Background[] = GRADIENT_PRESETS.map((g) => ({
+      id: g.id,
+      name: g.name,
+      image_url: g.gradient,
+      is_gradient: true,
+      gradient: g.gradient,
+    }));
+    return [...gradientBg, ...backgrounds];
+  }, [backgrounds]);
+
   // ===== صنع المصادر =====
   const officialSources = useMemo<StickerSource[]>(
     () =>
@@ -450,10 +479,14 @@ export function CardDesignerPage() {
     return true;
   }, []);
 
+  // ✅ دالة إضافة الملصق (تم إصلاحها)
   const addSourceToCanvas = useCallback(
     async (source: StickerSource, saved?: SavedSticker) => {
       const canvas = fabricCanvasRef.current;
-      if (!canvas) return;
+      if (!canvas) {
+        setError('الكانفاس غير جاهز. حاول تحديث الصفحة.');
+        return;
+      }
 
       if (!saved && canvas.getObjects().length >= MAX_OBJECTS) {
         setError(`الحد الأعلى ${MAX_OBJECTS} ملصقاً لكل تصميم.`);
@@ -469,8 +502,8 @@ export function CardDesignerPage() {
         const initialScale = Math.min(180 / naturalWidth, 1);
 
         image.set({
-          left: saved?.left ?? CARD_WIDTH / 2,
-          top: saved?.top ?? CARD_HEIGHT / 2,
+          left: saved?.left ?? CARD_WIDTH / 2 + (Math.random() - 0.5) * 100,
+          top: saved?.top ?? CARD_HEIGHT / 2 + (Math.random() - 0.5) * 100,
           originX: 'center',
           originY: 'center',
           scaleX: saved?.scaleX ?? initialScale,
@@ -499,8 +532,11 @@ export function CardDesignerPage() {
         suppressHistoryRef.current = wasHistorySuppressed;
         canvas.requestRenderAll();
         if (!wasHistorySuppressed) pushHistory();
+
+        setSuccess(`تم إضافة "${source.name}" إلى البطاقة`);
+        setTimeout(() => setSuccess(null), 3000);
       } catch (err) {
-        if (import.meta.env.DEV) console.error(err);
+        console.error('خطأ في إضافة الملصق:', err);
         setError('تعذر تحميل صورة الملصق. تأكد من إعدادات CORS في Supabase Storage.');
       }
     },
@@ -849,7 +885,7 @@ export function CardDesignerPage() {
     await restoreDesign(
       {
         version: 1,
-        background_id: backgrounds[0]?.id ?? null,
+        background_id: null,
         stickers: [],
       },
       false,
@@ -857,13 +893,12 @@ export function CardDesignerPage() {
     pushHistory();
   };
 
-  // ===== رفع ملصق خاص (PNG فقط) مع مودال إزالة الخلفية =====
+  // ===== رفع ملصق خاص =====
   const uploadCustomerSticker = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     event.target.value = '';
     if (!file || !session) return;
 
-    // التحقق من الصيغة PNG
     if (file.type !== 'image/png') {
       setShowRemoveBgModal(true);
       return;
@@ -991,30 +1026,100 @@ export function CardDesignerPage() {
   // ===== تصدير البطاقة =====
   const captureCard = async () => {
     const card = cardRef.current;
-    const canvas = fabricCanvasRef.current;
-    if (!card || !canvas) throw new Error('البطاقة غير جاهزة');
+    const fabricCanvas = fabricCanvasRef.current;
+    if (!card || !fabricCanvas) throw new Error('البطاقة غير جاهزة');
 
-    await document.fonts.ready;
-    canvas.discardActiveObject();
-    canvas.requestRenderAll();
+    try {
+      await document.fonts.ready;
+      fabricCanvas.discardActiveObject();
+      fabricCanvas.requestRenderAll();
 
-    return html2canvas(card, {
-      useCORS: true,
-      backgroundColor: '#ffffff',
-      scale: 2,
-      logging: false,
-    });
+      const canvas = await html2canvas(card, {
+        useCORS: true,
+        allowTaint: false,
+        backgroundColor: '#ffffff',
+        scale: 2,
+        logging: false,
+      });
+      return canvas;
+    } catch (err) {
+      console.warn('html2canvas فشل بسبب CORS، جاري استخدام البديل', err);
+
+      // البديل: استخدام Fabric canvas مباشرة مع الخلفية
+      fabricCanvas.discardActiveObject();
+      fabricCanvas.requestRenderAll();
+
+      const offscreenCanvas = document.createElement('canvas');
+      offscreenCanvas.width = CARD_WIDTH * 2;
+      offscreenCanvas.height = CARD_HEIGHT * 2;
+      const ctx = offscreenCanvas.getContext('2d');
+      if (!ctx) throw new Error('تعذر إنشاء context');
+
+      // رسم الخلفية
+      const selectedBg = allBackgrounds.find((bg) => bg.id === selectedBackground);
+      if (selectedBg) {
+        if (selectedBg.is_gradient && selectedBg.gradient) {
+          // رسم تدرج لوني
+          const gradient = ctx.createLinearGradient(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+          // تحويل التدرج النصي إلى ألوان
+          const colors = selectedBg.gradient.match(/#[0-9a-f]{6}|#[0-9a-f]{3}|rgb\([^)]+\)/gi);
+          if (colors && colors.length >= 2) {
+            gradient.addColorStop(0, colors[0]);
+            gradient.addColorStop(1, colors[colors.length - 1]);
+            ctx.fillStyle = gradient;
+          } else {
+            ctx.fillStyle = '#3b1d2a';
+          }
+        } else {
+          // رسم صورة
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.src = selectedBg.image_url;
+          await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+          });
+          ctx.drawImage(img, 0, 0, offscreenCanvas.width, offscreenCanvas.height);
+        }
+      } else {
+        const gradient = ctx.createLinearGradient(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+        gradient.addColorStop(0, '#3b1d2a');
+        gradient.addColorStop(1, '#6f3b50');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+      }
+
+      // رسم محتوى Fabric
+      const fabricDataUrl = fabricCanvas.toDataURL({
+        format: 'png',
+        multiplier: 2,
+      });
+      const fabricImg = new Image();
+      fabricImg.src = fabricDataUrl;
+      await new Promise((resolve, reject) => {
+        fabricImg.onload = resolve;
+        fabricImg.onerror = reject;
+      });
+      ctx.drawImage(fabricImg, 0, 0, offscreenCanvas.width, offscreenCanvas.height);
+
+      const finalCanvas = document.createElement('canvas');
+      finalCanvas.width = offscreenCanvas.width;
+      finalCanvas.height = offscreenCanvas.height;
+      const finalCtx = finalCanvas.getContext('2d');
+      if (!finalCtx) throw new Error('تعذر إنشاء context');
+      finalCtx.drawImage(offscreenCanvas, 0, 0);
+      return finalCanvas;
+    }
   };
 
   const captureCardBlob = async () => {
-    const exportedCanvas = await captureCard();
+    const canvas = await captureCard();
     const blob = await new Promise<Blob>((resolve, reject) => {
-      exportedCanvas.toBlob((result) => {
+      canvas.toBlob((result) => {
         if (result) resolve(result);
         else reject(new Error('تعذر إنشاء صورة البطاقة'));
       }, 'image/png');
     });
-
     return blob;
   };
 
@@ -1265,8 +1370,8 @@ export function CardDesignerPage() {
 
   // ===== بيانات الخلفية المختارة =====
   const selectedBackgroundData = useMemo(
-    () => backgrounds.find((bg) => bg.id === selectedBackground),
-    [backgrounds, selectedBackground],
+    () => allBackgrounds.find((bg) => bg.id === selectedBackground),
+    [allBackgrounds, selectedBackground],
   );
 
   // ===== التصيير =====
@@ -1285,7 +1390,7 @@ export function CardDesignerPage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-vibes-50 via-white to-vibes-100/50 px-4 py-6 pb-28">
       <div className="mx-auto max-w-7xl">
-        {/* الهيدر الفخم */}
+        {/* الهيدر */}
         <header className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-white/80 p-4 shadow-lg backdrop-blur-xl border border-white/30">
           <div className="flex items-center gap-4">
             <Link
@@ -1300,7 +1405,7 @@ export function CardDesignerPage() {
               </h1>
               <p className="text-sm text-vibes-600 flex items-center gap-2">
                 <Sparkles className="size-4" />
-                أضف لمساتك الخاصة بكل احترافية
+                اختر ملصقاً وأضفه إلى البطاقة
               </p>
             </div>
           </div>
@@ -1334,16 +1439,10 @@ export function CardDesignerPage() {
                 <AlertCircle className="size-6 text-red-600 shrink-0 mt-1" />
                 <div>
                   <p className="font-bold">{error}</p>
-                  {error.includes('PNG') && (
-                    <div className="mt-2">
-                      <button
-                        onClick={() => setShowRemoveBgModal(true)}
-                        className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-bold text-vibes-800 shadow hover:bg-vibes-50"
-                      >
-                        <ImageIcon className="size-4" />
-                        اذهب إلى remove.bg لإزالة الخلفية
-                      </button>
-                    </div>
+                  {error.includes('CORS') && (
+                    <p className="mt-2 text-sm">
+                      تأكد من إعدادات CORS في Supabase Storage أو استخدم الصور من مصادر تدعم CORS.
+                    </p>
                   )}
                 </div>
               </div>
@@ -1398,7 +1497,7 @@ export function CardDesignerPage() {
 
         {/* التخطيط الرئيسي */}
         <div className="mt-6 grid gap-6 xl:grid-cols-[320px,minmax(0,1fr),300px]">
-          {/* الشريط الجانبي الأيسر - مكتبة الملصقات */}
+          {/* الشريط الجانبي الأيسر */}
           <aside className="space-y-5 order-2 xl:order-1">
             {/* الملصقات الرسمية */}
             <section className="rounded-3xl bg-white/80 p-5 shadow-xl backdrop-blur-xl border border-white/50">
@@ -1407,7 +1506,7 @@ export function CardDesignerPage() {
                   <Crown className="size-5 text-vibes-700" />
                   مكتبة فايبز
                 </h2>
-                <Layers className="size-5 text-vibes-600" />
+                <span className="text-xs font-bold text-vibes-500">{officialSources.length} ملصق</span>
               </div>
               {officialSources.length === 0 ? (
                 <p className="rounded-2xl bg-vibes-50 p-4 text-sm text-vibes-600">
@@ -1420,19 +1519,21 @@ export function CardDesignerPage() {
                       key={source.id}
                       type="button"
                       onClick={() => void addSourceToCanvas(source)}
-                      className="group relative aspect-square rounded-2xl border-2 border-vibes-100 bg-white p-2 transition hover:border-vibes-400 hover:shadow-lg"
-                      title={source.name}
+                      className="group relative aspect-square rounded-2xl border-2 border-vibes-100 bg-white p-2 transition hover:border-vibes-400 hover:shadow-lg hover:scale-105"
+                      title={`إضافة ${source.name}`}
                     >
                       <img
                         src={source.url}
                         alt={source.name}
                         className="size-full object-contain"
+                        crossOrigin="anonymous"
                       />
                       <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-vibes-900/10 to-transparent opacity-0 transition group-hover:opacity-100" />
                     </button>
                   ))}
                 </div>
               )}
+              <p className="mt-3 text-xs text-vibes-500 text-center">اضغط على أي ملصق لإضافته للبطاقة</p>
             </section>
 
             {/* الملصقات الشخصية */}
@@ -1484,14 +1585,14 @@ export function CardDesignerPage() {
                     return (
                       <div
                         key={sticker.id}
-                        className="group relative aspect-square rounded-2xl border-2 border-vibes-100 bg-white p-2"
+                        className="group relative aspect-square rounded-2xl border-2 border-vibes-100 bg-white p-2 transition hover:border-vibes-400 hover:shadow-lg"
                       >
                         <button
                           type="button"
                           onClick={() => void addSourceToCanvas(source)}
                           className="size-full"
                         >
-                          <img src={source.url} alt={source.name} className="size-full object-contain" />
+                          <img src={source.url} alt={source.name} className="size-full object-contain" crossOrigin="anonymous" />
                         </button>
                         <button
                           type="button"
@@ -1513,7 +1614,7 @@ export function CardDesignerPage() {
             </section>
           </aside>
 
-          {/* منتصف الصفحة - معرض البطاقة */}
+          {/* منتصف الصفحة - البطاقة */}
           <section className="order-1 min-w-0 xl:order-2">
             <div className="rounded-[2.5rem] bg-white/80 p-5 shadow-2xl backdrop-blur-xl border border-white/50">
               <div
@@ -1522,25 +1623,31 @@ export function CardDesignerPage() {
               >
                 {/* الخلفية */}
                 {selectedBackgroundData ? (
-                  <img
-                    src={selectedBackgroundData.image_url}
-                    alt="خلفية البطاقة"
-                    className="absolute inset-0 size-full object-cover"
-                    crossOrigin="anonymous"
-                  />
+                  selectedBackgroundData.is_gradient ? (
+                    <div
+                      className="absolute inset-0 size-full"
+                      style={{ background: selectedBackgroundData.gradient }}
+                    />
+                  ) : (
+                    <img
+                      src={selectedBackgroundData.image_url}
+                      alt="خلفية البطاقة"
+                      className="absolute inset-0 size-full object-cover"
+                      crossOrigin="anonymous"
+                    />
+                  )
                 ) : (
                   <div className="absolute inset-0 bg-gradient-to-br from-vibes-900 via-vibes-700 to-vibes-500" />
                 )}
 
                 {/* تأثير زجاجي خفيف */}
-                <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px]" />
+                <div className="absolute inset-0 bg-black/5 backdrop-blur-[1px]" />
 
                 {/* طبقة Fabric Canvas */}
                 <canvas ref={htmlCanvasRef} />
 
-                {/* طبقة الواجهة الثابتة (بيانات البطاقة) */}
+                {/* طبقة الواجهة الثابتة */}
                 <div className="pointer-events-none absolute inset-0 z-20 text-white">
-                  {/* الشعار */}
                   <div className="absolute right-[5.5%] top-[7%] text-right">
                     <p className="text-[clamp(12px,1.6vw,22px)] font-bold text-white/80 drop-shadow-lg">
                       VIBES COFFEE
@@ -1553,7 +1660,6 @@ export function CardDesignerPage() {
                     </p>
                   </div>
 
-                  {/* عدّاد الأكواب */}
                   <div className="absolute left-[5.5%] top-[7%] rounded-[1.5rem] bg-white/20 px-[3%] py-[2%] backdrop-blur-md ring-1 ring-white/30">
                     <p className="text-[clamp(9px,1.1vw,14px)] font-bold text-white/80">أكواب الولاء</p>
                     <p className="mt-1 text-[clamp(22px,3.2vw,42px)] font-black">
@@ -1561,7 +1667,6 @@ export function CardDesignerPage() {
                     </p>
                   </div>
 
-                  {/* اسم العضو ورقم العضوية */}
                   <div className="absolute bottom-[8%] right-[5.5%] max-w-[46%] text-right">
                     <p className="text-[clamp(9px,1.05vw,14px)] font-bold text-white/70 drop-shadow">
                       اسم العضو
@@ -1574,7 +1679,6 @@ export function CardDesignerPage() {
                     </p>
                   </div>
 
-                  {/* QR Code */}
                   <div className="absolute bottom-[7%] left-[5%] rounded-[1.5rem] bg-white/90 p-[1.2%] shadow-2xl backdrop-blur-sm ring-1 ring-white/50">
                     {profile.membership_qr_token ? (
                       <QRCodeSVG
@@ -1631,7 +1735,7 @@ export function CardDesignerPage() {
             </div>
           </section>
 
-          {/* الشريط الجانبي الأيمن - الأدوات */}
+          {/* الشريط الجانبي الأيمن */}
           <aside className="order-3 space-y-5">
             {/* التحكم بالتصميم */}
             <section className="rounded-3xl bg-white/80 p-5 shadow-xl backdrop-blur-xl border border-white/50">
@@ -1669,42 +1773,47 @@ export function CardDesignerPage() {
               </div>
             </section>
 
-            {/* الخلفيات */}
+            {/* الخلفيات + التدرجات */}
             <section className="rounded-3xl bg-white/80 p-5 shadow-xl backdrop-blur-xl border border-white/50">
               <h2 className="text-lg font-black text-vibes-900 flex items-center gap-2">
-                <ImageIcon className="size-5 text-vibes-700" />
-                الخلفيات
+                <LayoutGrid className="size-5 text-vibes-700" />
+                الخلفيات والتدرجات
               </h2>
-              {backgrounds.length === 0 ? (
-                <p className="mt-3 rounded-2xl bg-vibes-50 p-4 text-sm text-vibes-600">
-                  ما فيه خلفيات مفعلة.
-                </p>
-              ) : (
-                <div className="mt-4 grid grid-cols-2 gap-3">
-                  {backgrounds.map((background) => (
-                    <button
-                      key={background.id}
-                      type="button"
-                      onClick={() => changeBackground(background.id)}
-                      className={`aspect-[1.586/1] overflow-hidden rounded-2xl border-4 p-1 transition hover:scale-105 ${
-                        selectedBackground === background.id
-                          ? 'border-vibes-700 shadow-lg'
-                          : 'border-transparent hover:border-vibes-300'
-                      }`}
-                      title={background.name}
-                    >
-                      <img
-                        src={background.image_url}
-                        alt={background.name}
-                        className="size-full rounded-xl object-cover"
+              <div className="mt-4 grid grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-1">
+                {allBackgrounds.map((bg) => (
+                  <button
+                    key={bg.id}
+                    type="button"
+                    onClick={() => changeBackground(bg.id)}
+                    className={`aspect-[1.586/1] overflow-hidden rounded-2xl border-4 p-1 transition hover:scale-105 ${
+                      selectedBackground === bg.id
+                        ? 'border-vibes-700 shadow-lg ring-2 ring-vibes-300'
+                        : 'border-transparent hover:border-vibes-300'
+                    }`}
+                    title={bg.name}
+                  >
+                    {bg.is_gradient ? (
+                      <div
+                        className="size-full rounded-xl"
+                        style={{ background: bg.gradient }}
                       />
-                    </button>
-                  ))}
-                </div>
-              )}
+                    ) : (
+                      <img
+                        src={bg.image_url}
+                        alt={bg.name}
+                        className="size-full rounded-xl object-cover"
+                        crossOrigin="anonymous"
+                      />
+                    )}
+                    <p className="mt-1 text-[10px] font-bold text-vibes-700 text-center truncate">
+                      {bg.name}
+                    </p>
+                  </button>
+                ))}
+              </div>
             </section>
 
-            {/* خصائص الملصق المحدد (شريط أدوات عائم) */}
+            {/* خصائص الملصق المحدد */}
             <section className="rounded-3xl bg-white/80 p-5 shadow-xl backdrop-blur-xl border border-white/50">
               <h2 className="text-lg font-black text-vibes-900 flex items-center gap-2">
                 <Zap className="size-5 text-vibes-700" />
@@ -1716,7 +1825,6 @@ export function CardDesignerPage() {
                 </p>
               ) : (
                 <div className="mt-4 space-y-5">
-                  {/* الشفافية */}
                   <label className="block">
                     <div className="flex items-center justify-between text-sm font-bold text-vibes-800">
                       <span className="flex items-center gap-2">
@@ -1739,7 +1847,6 @@ export function CardDesignerPage() {
                     />
                   </label>
 
-                  {/* أزرار التحكم */}
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       type="button"
@@ -1775,7 +1882,6 @@ export function CardDesignerPage() {
                     </button>
                   </div>
 
-                  {/* حذف الملصق */}
                   <button
                     type="button"
                     onClick={deleteSelected}
@@ -1788,7 +1894,7 @@ export function CardDesignerPage() {
               )}
             </section>
 
-            {/* قائمة التصاميم المحفوظة */}
+            {/* تصاميمي المحفوظة */}
             <section className="rounded-3xl bg-white/80 p-5 shadow-xl backdrop-blur-xl border border-white/50">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="text-lg font-black text-vibes-900 flex items-center gap-2">
